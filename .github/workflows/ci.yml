@@ -30,7 +30,7 @@ jobs:
       - name: Mypy
         run: mypy src
 
-      - name: Pytest (pyvmomi mocke, aucun vCenter requis)
+      - name: Pytest (mocked pyvmomi, no vCenter required)
         run: pytest -q
 
   container:

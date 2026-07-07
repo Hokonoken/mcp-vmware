@@ -5,58 +5,58 @@
 [![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](pyproject.toml)
 [![MCP](https://img.shields.io/badge/protocol-MCP-8A2BE2)](https://modelcontextprotocol.io)
 
-Serveur MCP pour piloter un vCenter VMware (vSphere 7/8) depuis Claude Code ou tout
-client MCP, avec **deux modes de deploiement** selon votre topologie reseau :
+MCP server to pilot a VMware vCenter (vSphere 7/8) from Claude Code or any MCP
+client, with **two deployment modes** depending on your network topology:
 
-- **Direct** : la machine qui execute le client MCP a une route vers le vCenter
-  (homelab, poste d'admin). Demarrage en 2 minutes via Docker ou pip.
-- **Jump host** : le poste de travail n'a pas d'acces au reseau de management
-  (cas frequent en entreprise). Le serveur tourne sur une machine rebond et le
-  client s'y connecte en stdio a travers SSH — les credentials vCenter ne
-  quittent jamais la zone securisee.
+- **Direct**: the machine running the MCP client has a route to vCenter
+  (homelab, admin workstation). Up and running in 2 minutes via Docker or pip.
+- **Jump host**: the workstation has no access to the management network (a
+  common enterprise setup). The server runs on a bastion machine and the client
+  talks to it over SSH stdio — vCenter credentials never leave the secured
+  zone.
 
-Points cles :
+Highlights:
 
-- **39 outils** couvrant VMs (inventaire, power, snapshots, clone, migration),
-  clusters (HA, DRS, regles d'affinite) et hotes ESXi (maintenance, services,
-  firewall, stockage, parametres avances — equivalent esxcli via l'API officielle,
-  sans SSH vers les hotes).
-- **4 roles a groupes de droits** (viewer/operator/vm_admin/infra_admin) : les
-  outils hors role ne sont meme pas exposes au LLM.
-- **Ergonomie LLM** : listings en markdown compact ou JSON structure
-  (structuredContent), pagination uniforme, progression en temps reel des
-  operations longues.
-- **Carte d'API versionnee au build vCenter** : la surface complete de l'API
-  (1409 methodes SOAP, 1064 operations REST) est cartographiee et versionnee, la
-  matrice de couverture pilote l'evolution du serveur.
+- **39 tools** covering VMs (inventory, power, snapshots, clone, migration),
+  clusters (HA, DRS, affinity rules) and ESXi hosts (maintenance, services,
+  firewall, storage, advanced settings — esxcli equivalent through the official
+  API, no SSH to the hosts).
+- **4 roles with permission groups** (viewer/operator/vm_admin/infra_admin):
+  tools outside the active role are not even exposed to the LLM.
+- **LLM ergonomics**: compact markdown or structured JSON listings
+  (structuredContent), uniform pagination, real-time progress for long
+  operations.
+- **API map versioned to the vCenter build**: the full API surface
+  (1409 SOAP methods, 1064 REST operations) is mapped and versioned; the
+  coverage matrix drives the server's evolution.
 
-## Demarrage rapide (acces direct au vCenter)
+## Quick start (direct access to vCenter)
 
 ```bash
 cp .vcenter.env.example .vcenter.env && chmod 600 .vcenter.env && vi .vcenter.env
 
-# Docker / Podman (rien d'autre a installer) :
+# Docker / Podman (nothing else to install):
 docker build -t mcp-vmware -f Containerfile .
 docker run -i --rm --env-file .vcenter.env mcp-vmware
 
-# ou en Python (>= 3.12) :
+# or with Python (>= 3.12):
 pip install . && MCP_VMWARE_ENV_FILE=./.vcenter.env python -m mcp_vmware
 ```
 
-Declaration dans `.mcp.json` (le client MCP parle stdio au conteneur) :
+Declaration in `.mcp.json` (the MCP client talks stdio to the container):
 
 ```json
 {
   "mcpServers": {
     "vmware": {
       "command": "docker",
-      "args": ["run", "-i", "--rm", "--env-file", "/chemin/.vcenter.env", "mcp-vmware"]
+      "args": ["run", "-i", "--rm", "--env-file", "/path/.vcenter.env", "mcp-vmware"]
     }
   }
 }
 ```
 
-Build derriere un proxy d'entreprise (interception TLS comprise) :
+Building behind a corporate proxy (TLS interception included):
 
 ```bash
 docker build --network=host \
@@ -65,43 +65,43 @@ docker build --network=host \
   -t mcp-vmware -f Containerfile .
 ```
 
-## Mode jump host (reseaux d'entreprise cloisonnes)
+## Jump host mode (segmented enterprise networks)
 
-Quand le vCenter vit dans un reseau de management inaccessible depuis les postes
-de travail, le serveur s'installe sur la machine rebond officielle. MCP parle
-stdio a travers SSH nativement : pas de tunnel, pas de port expose.
+When vCenter lives in a management network unreachable from workstations, the
+server installs on the official jump host. MCP speaks stdio over SSH natively:
+no tunnel, no exposed port.
 
 ```
-Poste de travail (Claude Code / client MCP)
-   |  spawn: ssh jumphost VMware/mcp-vmware/run.sh   (stdio = protocole MCP)
+Workstation (Claude Code / MCP client)
+   |  spawn: ssh jumphost VMware/mcp-vmware/run.sh   (stdio = MCP protocol)
    v
-jumphost (Linux, venv Python 3.12)
+jumphost (Linux, Python 3.12 venv)
    |  pyvmomi (SOAP vim25)
    v
 vcenter.example.com (vSphere 8)
 ```
 
-Avantages : cloisonnement reseau respecte, credentials confines a la machine
-rebond (`~/VMware/.vcenter.env`, chmod 600, jamais dans le repo ni sur le poste),
-point d'audit unique.
+Benefits: network segmentation respected, credentials confined to the jump host
+(`~/VMware/.vcenter.env`, chmod 600, never in the repo nor on the workstation),
+single audit point.
 
 ```bash
-# 1. Machine rebond : venv (une fois)
+# 1. Jump host: venv (once)
 ssh jumphost 'mkdir -p ~/VMware && python3.12 -m venv ~/VMware/venv'
 
-# 2. Identifiants sur la machine rebond
+# 2. Credentials on the jump host
 scp .vcenter.env.example jumphost:VMware/.vcenter.env
 ssh jumphost 'chmod 600 ~/VMware/.vcenter.env && vi ~/VMware/.vcenter.env'
 
-# 3. Deployer le serveur (rsync + pip install -e)
+# 3. Deploy the server (rsync + pip install -e)
 ./deploy.sh
 
-# 4. Adapter .mcp.json :
+# 4. Adjust .mcp.json:
 #    {"mcpServers": {"vmware": {"command": "ssh",
 #                               "args": ["jumphost", "VMware/mcp-vmware/run.sh"]}}}
 ```
 
-Verification rapide hors client MCP :
+Quick check outside any MCP client:
 
 ```bash
 ssh jumphost 'VMware/mcp-vmware/run.sh' <<'EOF'
@@ -109,56 +109,58 @@ ssh jumphost 'VMware/mcp-vmware/run.sh' <<'EOF'
 EOF
 ```
 
-## Roles et groupes de droits
+## Roles and permission groups
 
-L'acces est pilote par `MCP_VMWARE_ROLE` dans `.vcenter.env` (voir `docs/roles.md`
-pour le detail et les templates de privileges vCenter correspondants) :
+Access is driven by `MCP_VMWARE_ROLE` in `.vcenter.env` (see `docs/roles.md`
+for details and the matching vCenter privilege templates):
 
-| Role | Outils exposes | Contenu |
+| Role | Exposed tools | Scope |
 |---|---|---|
-| `viewer` (defaut) | 20 | lecture seule de tout (inventaire + config hotes) |
-| `operator` | 24 | + power et snapshots des VMs |
-| `vm_admin` | 28 | + reconfiguration, clone, delete, migration des VMs |
-| `infra_admin` | 39 | + HA/DRS/regles cluster, operations et config fine des hotes (equivalent esxcli) |
+| `viewer` (default) | 20 | read-only over everything (inventory + host config) |
+| `operator` | 24 | + VM power and snapshots |
+| `vm_admin` | 28 | + VM reconfiguration, clone, delete, migration |
+| `infra_admin` | 39 | + cluster HA/DRS/rules, host operations and fine-grained host config (esxcli equivalent) |
 
-Les outils hors role ne sont pas enregistres : le LLM ne les voit pas dans
-tools/list. Protections supplementaires : `vmware_delete_vm`,
-`vmware_host_maintenance` (enter) et `vmware_host_power` exigent `confirm=true` ;
-reboot/shutdown d'hote refuse hors maintenance sauf `force=true`.
+Tools outside the role are not registered: the LLM never sees them in
+tools/list. Additional protections: `vmware_delete_vm`,
+`vmware_host_maintenance` (enter) and `vmware_host_power` require
+`confirm=true`; host reboot/shutdown is refused outside maintenance mode unless
+`force=true`.
 
-Defense en profondeur : utiliser un compte de service vCenter dont le role vSphere
-correspond au plafond du role MCP (templates dans `docs/roles.md`), un fichier env
-par compte (`MCP_VMWARE_ENV_FILE`).
+Defense in depth: use a vCenter service account whose vSphere role matches the
+ceiling of the MCP role (templates in `docs/roles.md`), one env file per
+account (`MCP_VMWARE_ENV_FILE`).
 
-## Carte d'API versionnee (pilotage de l'evolution)
+## Versioned API map (drives the evolution)
 
-L'evolution du serveur est pilotee par une cartographie complete de l'API,
-versionnee au build du vCenter :
+The server's evolution is driven by a complete map of the API, versioned to the
+vCenter build:
 
-- `tools/build_api_map.py` (execute la ou le vCenter est joignable) genere
-  `api-map/<version>-<build>/` : surface SOAP vim25 complete (introspection pyvmomi)
-  et surface REST vAPI (metamodel du vCenter live).
-- `api-map/coverage.yaml` relie chaque zone d'API a un outil MCP avec un statut
-  (todo / in_progress / done / wontdo) et porte le backlog v2.
-- A chaque upgrade du vCenter : relancer le script, committer le nouveau snapshot,
-  le diff git montre l'evolution de l'API.
+- `tools/build_api_map.py` (run wherever vCenter is reachable) generates
+  `api-map/<version>-<build>/`: the full vim25 SOAP surface (pyvmomi
+  introspection) and the REST vAPI surface (live vCenter metamodel).
+- `api-map/coverage.yaml` links each API area to an MCP tool with a status
+  (todo / in_progress / done / wontdo) and carries the v2 backlog.
+- On every vCenter upgrade: rerun the script, commit the new snapshot, and the
+  git diff shows how the API evolved.
 
-## Developpement
+## Development
 
 ```bash
 ./.venv/bin/ruff check src tools tests && ./.venv/bin/ruff format src tools tests
 ./.venv/bin/mypy src
-./.venv/bin/pytest          # suite locale, pyvmomi mocke, aucun vCenter requis
+./.venv/bin/pytest          # local suite, mocked pyvmomi, no vCenter required
 ```
 
-Ajout d'un outil : implementer dans le module `tools_*.py` adequat avec le
-decorateur `tool(name, title, group=...)` (les outils write appellent `_gate()` en
-tete), mettre a jour `api-map/coverage.yaml` dans le meme commit, deployer,
-smoke test.
+Adding a tool: implement it in the relevant `tools_*.py` module with the
+`tool(name, title, group=...)` decorator (write tools call `_gate()` first),
+update `api-map/coverage.yaml` in the same commit, deploy, smoke test.
 
-## Avertissement
+See [CONTRIBUTING.md](CONTRIBUTING.md).
 
-Ce serveur donne a un LLM la capacite d'agir sur une infrastructure de
-virtualisation. Commencer en role `viewer`, utiliser un compte de service vCenter
-aux privileges alignes sur le role choisi (`docs/roles.md`), et ne monter en
-privileges qu'apres avoir valide les outils d'ecriture sur un perimetre de test.
+## Warning
+
+This server gives an LLM the ability to act on virtualization infrastructure.
+Start with the `viewer` role, use a vCenter service account with privileges
+aligned to the chosen role (`docs/roles.md`), and only raise privileges after
+validating the write tools on a test scope.
