@@ -6,3 +6,9 @@ venv/
 .mypy_cache/
 .ruff_cache/
 .claude/
+
+# Never commit credentials
+.env
+.vcenter*.env
+*.pem
+*.key
