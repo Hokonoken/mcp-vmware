@@ -16,8 +16,8 @@ This server gives an LLM the ability to act on virtualization infrastructure:
 security reports are taken seriously.
 
 - **Do not open a public issue** for a vulnerability.
-- Use [GitHub Security Advisories](../../security/advisories/new) (private
-  reporting).
+- Use [GitHub Security Advisories](https://github.com/Hokonoken/mcp-vmware/security/advisories/new)
+  (private reporting).
 - Describe the impact, reproduction steps and the affected version.
 
 Initial response within 7 days.

@@ -9,7 +9,7 @@
   "snapshotDate": "2026-07-07T07:14:57.668877+00:00",
   "pyvmomiVersion": "?",
   "python": "3.12.13",
-  "note": "kind (read/write) est une heuristique sur le nom de la methode/operation",
+  "note": "kind (read/write) is a heuristic based on the method/operation name",
   "stats": {
     "vim25_managed_objects": 198,
     "vim25_methods": 1409,

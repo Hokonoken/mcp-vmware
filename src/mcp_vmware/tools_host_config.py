@@ -1,13 +1,13 @@
 # SPDX-License-Identifier: MIT
 # SPDX-FileCopyrightText: 2026 Hokonoken
 
-"""Outils de configuration fine des hotes ESXi — equivalent des namespaces esxcli.
+"""Fine-grained ESXi host configuration tools — equivalent of the esxcli namespaces.
 
-Lecture (groupe read) : services, reseau, stockage, firewall, parametres avances,
-VIBs, capteurs sante. Ecriture (groupe host.config) : actions sur services, toggle
-de rulesets firewall, modification de parametres avances, rescan stockage.
+Read (read group): services, network, storage, firewall, advanced settings,
+VIBs, health sensors. Write (host.config group): service actions, firewall
+ruleset toggles, advanced setting changes, storage rescan.
 
-Tout passe par host.configManager.* (API officielle), pas par SSH sur les hotes.
+Everything goes through host.configManager.* (official API), not SSH to the hosts.
 """
 
 from typing import Annotated, Any
@@ -29,7 +29,7 @@ from .roles import deny_message, group_allowed
 SERVICE_ACTIONS = ("start", "stop", "restart")
 SERVICE_POLICIES = ("on", "off", "automatic")
 
-FORMAT_FIELD = Field(description="markdown (defaut, tableau compact) ou json (structure complete)")
+FORMAT_FIELD = Field(description="markdown (default, compact table) or json (full structure)")
 
 
 def _gate(group: str) -> str | None:
@@ -39,22 +39,22 @@ def _gate(group: str) -> str | None:
 def _manager(host: vim.HostSystem, name: str) -> Any:
     mgr = getattr(host.configManager, name, None)
     if mgr is None:
-        raise RuntimeError(f"{name} indisponible sur '{host.name}'.")
+        raise RuntimeError(f"{name} unavailable on '{host.name}'.")
     return mgr
 
 
 # ------------------------------------------------------------------------ read
 
 
-@tool("vmware_host_services", "Services d'un hote", group="read", read=True, idempotent=True)
+@tool("vmware_host_services", "Services of a host", group="read", read=True, idempotent=True)
 def vmware_host_services(
-    host: Annotated[str, Field(description="Nom de l'hote ESXi")],
+    host: Annotated[str, Field(description="Name of the ESXi host")],
     response_format: Annotated[ResponseFormat, FORMAT_FIELD] = ResponseFormat.MARKDOWN,
 ) -> dict[str, Any] | str:
-    """Liste les services d'un hote ESXi (equivalent esxcli system service list).
+    """Lists the services of an ESXi host (equivalent of esxcli system service list).
 
-    En json : {host, count, services:[{key, label, running, policy, required}]}.
-    Agir dessus avec vmware_host_service_action (host.config).
+    In json: {host, count, services:[{key, label, running, policy, required}]}.
+    Act on them with vmware_host_service_action (host.config).
     """
     try:
         h = find_host(host)
@@ -70,7 +70,7 @@ def vmware_host_services(
             for s in svc_system.serviceInfo.service
         ]
         return render_listing(
-            f"Services de {h.name}",
+            f"Services of {h.name}",
             "services",
             rows,
             response_format,
@@ -82,18 +82,18 @@ def vmware_host_services(
 
 @tool(
     "vmware_host_network_config",
-    "Config reseau d'un hote",
+    "Network config of a host",
     group="read",
     read=True,
     idempotent=True,
 )
 def vmware_host_network_config(
-    host: Annotated[str, Field(description="Nom de l'hote ESXi")],
+    host: Annotated[str, Field(description="Name of the ESXi host")],
 ) -> dict[str, Any] | str:
-    """Configuration reseau d'un hote (equivalent esxcli network) : vSwitches,
-    portgroups, interfaces vmkernel, NICs physiques.
+    """Network configuration of a host (equivalent of esxcli network): vSwitches,
+    portgroups, vmkernel interfaces, physical NICs.
 
-    Retourne un objet structure {host, vswitches:[...], portgroups:[...],
+    Returns a structured object {host, vswitches:[...], portgroups:[...],
     vmkernel_nics:[...], physical_nics:[...]}.
     """
     try:
@@ -144,19 +144,19 @@ def vmware_host_network_config(
         return error_text(e)
 
 
-@tool("vmware_host_storage", "Stockage d'un hote", group="read", read=True, idempotent=True)
+@tool("vmware_host_storage", "Storage of a host", group="read", read=True, idempotent=True)
 def vmware_host_storage(
-    host: Annotated[str, Field(description="Nom de l'hote ESXi")],
-    limit: Annotated[int, Field(ge=1, le=500, description="Nombre max de LUNs")] = 50,
-    offset: Annotated[int, Field(ge=0, description="Decalage de pagination des LUNs")] = 0,
+    host: Annotated[str, Field(description="Name of the ESXi host")],
+    limit: Annotated[int, Field(ge=1, le=500, description="Maximum number of LUNs")] = 50,
+    offset: Annotated[int, Field(ge=0, description="Pagination offset for LUNs")] = 0,
     response_format: Annotated[ResponseFormat, FORMAT_FIELD] = ResponseFormat.MARKDOWN,
 ) -> dict[str, Any] | str:
-    """Stockage d'un hote (equivalent esxcli storage) : adaptateurs HBA et LUNs pagines
-    avec chemins multipath.
+    """Storage of a host (equivalent of esxcli storage): HBA adapters and paginated LUNs
+    with multipath paths.
 
-    En json : {host, adapters:[...], total, count, offset, has_more, next_offset,
+    In json: {host, adapters:[...], total, count, offset, has_more, next_offset,
     luns:[{canonical_name, model, type, capacity, operational_state, paths}]}.
-    Rescan avec vmware_host_rescan_storage (host.config).
+    Rescan with vmware_host_rescan_storage (host.config).
     """
     try:
         h = find_host(host)
@@ -200,14 +200,14 @@ def vmware_host_storage(
 
         return "\n".join(
             [
-                f"# Stockage de {h.name}",
+                f"# Storage of {h.name}",
                 "",
-                f"## Adaptateurs ({len(adapters)})",
+                f"## Adapters ({len(adapters)})",
                 "",
                 md_table(adapters),
                 "",
-                f"## LUNs ({meta['count']} affichees sur {meta['total']}"
-                + (f", suite avec offset={meta['next_offset']})" if meta["has_more"] else ")"),
+                f"## LUNs ({meta['count']} shown of {meta['total']}"
+                + (f", more with offset={meta['next_offset']})" if meta["has_more"] else ")"),
                 "",
                 md_table(page),
             ]
@@ -216,16 +216,16 @@ def vmware_host_storage(
         return error_text(e)
 
 
-@tool("vmware_host_firewall", "Firewall d'un hote", group="read", read=True, idempotent=True)
+@tool("vmware_host_firewall", "Firewall of a host", group="read", read=True, idempotent=True)
 def vmware_host_firewall(
-    host: Annotated[str, Field(description="Nom de l'hote ESXi")],
-    enabled_only: Annotated[bool, Field(description="Ne montrer que les rulesets actifs")] = False,
+    host: Annotated[str, Field(description="Name of the ESXi host")],
+    enabled_only: Annotated[bool, Field(description="Show only enabled rulesets")] = False,
 ) -> dict[str, Any] | str:
-    """Firewall d'un hote (equivalent esxcli network firewall) : politique par defaut
-    et rulesets.
+    """Firewall of a host (equivalent of esxcli network firewall): default policy
+    and rulesets.
 
-    Retourne un objet structure {host, default_policy, count, rulesets:[{key, label,
-    enabled, all_ips_allowed, allowed_ips}]}. Toggle avec vmware_host_firewall_ruleset.
+    Returns a structured object {host, default_policy, count, rulesets:[{key, label,
+    enabled, all_ips_allowed, allowed_ips}]}. Toggle with vmware_host_firewall_ruleset.
     """
     try:
         h = find_host(host)
@@ -258,27 +258,26 @@ def vmware_host_firewall(
 
 @tool(
     "vmware_host_advanced_settings",
-    "Parametres avances d'un hote",
+    "Advanced settings of a host",
     group="read",
     read=True,
     idempotent=True,
 )
 def vmware_host_advanced_settings(
-    host: Annotated[str, Field(description="Nom de l'hote ESXi")],
+    host: Annotated[str, Field(description="Name of the ESXi host")],
     filter_prefix: Annotated[
         str,
         Field(
             min_length=2,
-            description="Prefixe de cle, ex: Net., Mem., NFS., UserVars. "
-            "(obligatoire, >1000 parametres)",
+            description="Key prefix, e.g. Net., Mem., NFS., UserVars. (required, >1000 settings)",
         ),
     ],
 ) -> dict[str, Any] | str:
-    """Parametres avances d'un hote (equivalent esxcli system settings advanced list),
-    filtres par prefixe de cle.
+    """Advanced settings of a host (equivalent of esxcli system settings advanced list),
+    filtered by key prefix.
 
-    Retourne un objet structure {host, filter, count, settings:[{key, value}]}.
-    Modifier avec vmware_host_set_advanced_setting (host.config).
+    Returns a structured object {host, filter, count, settings:[{key, value}]}.
+    Modify with vmware_host_set_advanced_setting (host.config).
     """
     try:
         h = find_host(host)
@@ -286,7 +285,7 @@ def vmware_host_advanced_settings(
         try:
             options = adv.QueryOptions(filter_prefix)
         except vim.fault.InvalidName:
-            return f"Erreur: aucun parametre ne commence par '{filter_prefix}' sur '{h.name}'."
+            return f"Error: no setting starts with '{filter_prefix}' on '{h.name}'."
         settings = [{"key": o.key, "value": o.value} for o in options]
         return {
             "host": h.name,
@@ -298,21 +297,21 @@ def vmware_host_advanced_settings(
         return error_text(e)
 
 
-@tool("vmware_host_vibs", "VIBs installes sur un hote", group="read", read=True, idempotent=True)
+@tool("vmware_host_vibs", "VIBs installed on a host", group="read", read=True, idempotent=True)
 def vmware_host_vibs(
-    host: Annotated[str, Field(description="Nom de l'hote ESXi")],
+    host: Annotated[str, Field(description="Name of the ESXi host")],
     name_filter: Annotated[
-        str | None, Field(description="Sous-chaine a chercher dans le nom du VIB")
+        str | None, Field(description="Substring to search for in the VIB name")
     ] = None,
-    limit: Annotated[int, Field(ge=1, le=500, description="Nombre max de resultats")] = 100,
-    offset: Annotated[int, Field(ge=0, description="Decalage de pagination")] = 0,
+    limit: Annotated[int, Field(ge=1, le=500, description="Maximum number of results")] = 100,
+    offset: Annotated[int, Field(ge=0, description="Pagination offset")] = 0,
     response_format: Annotated[ResponseFormat, FORMAT_FIELD] = ResponseFormat.MARKDOWN,
 ) -> dict[str, Any] | str:
-    """Paquets logiciels (VIBs) installes sur un hote (equivalent esxcli software vib list)
-    et profil d'image.
+    """Software packages (VIBs) installed on a host (equivalent of esxcli software vib list)
+    and image profile.
 
-    En json : {host, image_profile, total, count, offset, has_more, next_offset,
-    vibs:[{name, version, vendor, acceptance_level}]}. En markdown : tableau.
+    In json: {host, image_profile, total, count, offset, has_more, next_offset,
+    vibs:[{name, version, vendor, acceptance_level}]}. In markdown: table.
     """
     try:
         h = find_host(host)
@@ -336,7 +335,7 @@ def vmware_host_vibs(
             for p in page
         ]
         return render_listing(
-            f"VIBs de {h.name} (profil: {profile})",
+            f"VIBs of {h.name} (profile: {profile})",
             "vibs",
             rows,
             response_format,
@@ -346,18 +345,18 @@ def vmware_host_vibs(
         return error_text(e)
 
 
-@tool("vmware_host_health", "Sante materielle d'un hote", group="read", read=True)
+@tool("vmware_host_health", "Hardware health of a host", group="read", read=True)
 def vmware_host_health(
-    host: Annotated[str, Field(description="Nom de l'hote ESXi")],
+    host: Annotated[str, Field(description="Name of the ESXi host")],
     all_sensors: Annotated[
-        bool, Field(description="Lister tous les capteurs (defaut: seulement les anormaux)")
+        bool, Field(description="List all sensors (default: only abnormal ones)")
     ] = False,
 ) -> dict[str, Any] | str:
-    """Capteurs de sante materielle d'un hote (equivalent esxcli hardware) : etat
-    global CPU/memoire/stockage et capteurs en alerte.
+    """Hardware health sensors of a host (equivalent of esxcli hardware): overall
+    CPU/memory/storage state and alerting sensors.
 
-    Retourne un objet structure {host, sensor_count, summary:{green, yellow, red, unknown},
-    sensors:[{name, state, reading}]} — par defaut seuls les capteurs non verts sont listes.
+    Returns a structured object {host, sensor_count, summary:{green, yellow, red, unknown},
+    sensors:[{name, state, reading}]} — by default only non-green sensors are listed.
     """
     try:
         h = find_host(host)
@@ -391,40 +390,40 @@ def vmware_host_health(
 # ----------------------------------------------------------------- host.config
 
 
-@tool("vmware_host_service_action", "Agir sur un service d'hote", group="host.config")
+@tool("vmware_host_service_action", "Act on a host service", group="host.config")
 def vmware_host_service_action(
-    host: Annotated[str, Field(description="Nom de l'hote ESXi")],
+    host: Annotated[str, Field(description="Name of the ESXi host")],
     service_key: Annotated[
-        str, Field(description="Cle du service (cf. vmware_host_services), ex: ntpd, TSM-SSH")
+        str, Field(description="Service key (see vmware_host_services), e.g. ntpd, TSM-SSH")
     ],
     action: Annotated[
         str | None, Field(description=f"Action: {', '.join(SERVICE_ACTIONS)}")
     ] = None,
     policy: Annotated[
         str | None,
-        Field(description=f"Politique de demarrage: {', '.join(SERVICE_POLICIES)}"),
+        Field(description=f"Startup policy: {', '.join(SERVICE_POLICIES)}"),
     ] = None,
 ) -> dict[str, Any] | str:
-    """Demarre/arrete/redemarre un service d'hote et/ou change sa politique de demarrage
-    (equivalent esxcli system service).
+    """Starts/stops/restarts a host service and/or changes its startup policy
+    (equivalent of esxcli system service).
 
-    Fournir action et/ou policy. Retourne un objet {action, status, host, service, running}.
+    Provide action and/or policy. Returns an object {action, status, host, service, running}.
     """
     if msg := _gate("host.config"):
         return msg
     if action is None and policy is None:
-        return "Erreur: fournir action et/ou policy."
+        return "Error: provide action and/or policy."
     if action is not None and action not in SERVICE_ACTIONS:
-        return f"Erreur: action invalide, choisir parmi: {', '.join(SERVICE_ACTIONS)}."
+        return f"Error: invalid action, choose from: {', '.join(SERVICE_ACTIONS)}."
     if policy is not None and policy not in SERVICE_POLICIES:
-        return f"Erreur: policy invalide, choisir parmi: {', '.join(SERVICE_POLICIES)}."
+        return f"Error: invalid policy, choose from: {', '.join(SERVICE_POLICIES)}."
     try:
         h = find_host(host)
         svc_system = _manager(h, "serviceSystem")
         known = {s.key: s for s in svc_system.serviceInfo.service}
         if service_key not in known:
             return (
-                f"Erreur: service '{service_key}' inconnu sur '{h.name}'. "
+                f"Error: service '{service_key}' unknown on '{h.name}'. "
                 f"Services: {', '.join(sorted(known))}"
             )
         if policy is not None:
@@ -449,16 +448,16 @@ def vmware_host_service_action(
         return error_text(e)
 
 
-@tool("vmware_host_firewall_ruleset", "Toggle d'un ruleset firewall", group="host.config")
+@tool("vmware_host_firewall_ruleset", "Toggle a firewall ruleset", group="host.config")
 def vmware_host_firewall_ruleset(
-    host: Annotated[str, Field(description="Nom de l'hote ESXi")],
-    ruleset_key: Annotated[str, Field(description="Cle du ruleset (cf. vmware_host_firewall)")],
-    enabled: Annotated[bool, Field(description="true pour activer, false pour desactiver")],
+    host: Annotated[str, Field(description="Name of the ESXi host")],
+    ruleset_key: Annotated[str, Field(description="Ruleset key (see vmware_host_firewall)")],
+    enabled: Annotated[bool, Field(description="true to enable, false to disable")],
 ) -> dict[str, Any] | str:
-    """Active ou desactive un ruleset du firewall d'un hote (equivalent esxcli network
+    """Enables or disables a ruleset of a host's firewall (equivalent of esxcli network
     firewall ruleset set).
 
-    Retourne un objet {action, status, host, ruleset, enabled}.
+    Returns an object {action, status, host, ruleset, enabled}.
     """
     if msg := _gate("host.config"):
         return msg
@@ -468,8 +467,7 @@ def vmware_host_firewall_ruleset(
         known = [r.key for r in fw.firewallInfo.ruleset or []]
         if ruleset_key not in known:
             return (
-                f"Erreur: ruleset '{ruleset_key}' inconnu sur '{h.name}' "
-                "(cf. vmware_host_firewall)."
+                f"Error: ruleset '{ruleset_key}' unknown on '{h.name}' (see vmware_host_firewall)."
             )
         if enabled:
             fw.EnableRuleset(id=ruleset_key)
@@ -486,16 +484,16 @@ def vmware_host_firewall_ruleset(
         return error_text(e)
 
 
-@tool("vmware_host_set_advanced_setting", "Modifier un parametre avance", group="host.config")
+@tool("vmware_host_set_advanced_setting", "Modify an advanced setting", group="host.config")
 def vmware_host_set_advanced_setting(
-    host: Annotated[str, Field(description="Nom de l'hote ESXi")],
-    key: Annotated[str, Field(description="Cle exacte du parametre, ex: NFS.MaxVolumes")],
-    value: Annotated[str, Field(description="Nouvelle valeur (convertie au type actuel)")],
+    host: Annotated[str, Field(description="Name of the ESXi host")],
+    key: Annotated[str, Field(description="Exact setting key, e.g. NFS.MaxVolumes")],
+    value: Annotated[str, Field(description="New value (converted to the current type)")],
 ) -> dict[str, Any] | str:
-    """Modifie un parametre avance d'un hote (equivalent esxcli system settings advanced
-    set). La valeur est convertie au type de la valeur actuelle (bool/int/str).
+    """Modifies an advanced setting of a host (equivalent of esxcli system settings advanced
+    set). The value is converted to the type of the current value (bool/int/str).
 
-    Retourne un objet {action, status, host, key, old_value, new_value}.
+    Returns an object {action, status, host, key, old_value, new_value}.
     """
     if msg := _gate("host.config"):
         return msg
@@ -505,11 +503,11 @@ def vmware_host_set_advanced_setting(
         try:
             current = adv.QueryOptions(key)
         except vim.fault.InvalidName:
-            return f"Erreur: parametre '{key}' inconnu sur '{h.name}'."
+            return f"Error: setting '{key}' unknown on '{h.name}'."
         exact = [o for o in current if o.key == key]
         if not exact:
             return (
-                f"Erreur: '{key}' est un prefixe, pas une cle exacte. Candidats: "
+                f"Error: '{key}' is a prefix, not an exact key. Candidates: "
                 f"{', '.join(o.key for o in current[:10])}"
             )
         old = exact[0].value
@@ -533,17 +531,15 @@ def vmware_host_set_advanced_setting(
         return error_text(e)
 
 
-@tool("vmware_host_rescan_storage", "Rescan du stockage d'un hote", group="host.config")
+@tool("vmware_host_rescan_storage", "Rescan a host's storage", group="host.config")
 def vmware_host_rescan_storage(
-    host: Annotated[str, Field(description="Nom de l'hote ESXi")],
-    rescan_vmfs: Annotated[
-        bool, Field(description="Chercher aussi de nouveaux volumes VMFS")
-    ] = True,
+    host: Annotated[str, Field(description="Name of the ESXi host")],
+    rescan_vmfs: Annotated[bool, Field(description="Also look for new VMFS volumes")] = True,
 ) -> dict[str, Any] | str:
-    """Rescan des HBA d'un hote pour detecter de nouvelles LUNs, et optionnellement de
-    nouveaux volumes VMFS (equivalent esxcli storage core adapter rescan).
+    """Rescans a host's HBAs to detect new LUNs, and optionally new VMFS volumes
+    (equivalent of esxcli storage core adapter rescan).
 
-    Operation sans risque mais qui peut durer 1 a 2 minutes. Retourne un objet
+    Risk-free operation but it may take 1 to 2 minutes. Returns an object
     {action, status, host}.
     """
     if msg := _gate("host.config"):

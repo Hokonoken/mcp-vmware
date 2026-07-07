@@ -1,14 +1,14 @@
 # SPDX-License-Identifier: MIT
 # SPDX-FileCopyrightText: 2026 Hokonoken
 
-"""Gestion de la session vCenter : connexion paresseuse et reconnexion.
+"""vCenter session management: lazy connection and reconnection.
 
-Les identifiants sont lus depuis un fichier env (defaut ~/VMware/.vcenter.env,
-surchargable par MCP_VMWARE_ENV_FILE) :
+Credentials are read from an env file (default ~/VMware/.vcenter.env,
+overridable via MCP_VMWARE_ENV_FILE):
     VC_HOST=vcenter.example.com
-    VC_USER=user@domaine
+    VC_USER=user@domain
     VC_PASS=...
-    MCP_VMWARE_ROLE=viewer|operator|vm_admin|infra_admin   (defaut viewer, cf. roles.py)
+    MCP_VMWARE_ROLE=viewer|operator|vm_admin|infra_admin   (default viewer, see roles.py)
 """
 
 import atexit
@@ -42,8 +42,8 @@ def _connect() -> vim.ServiceInstance:
     missing = [k for k in ("VC_HOST", "VC_USER", "VC_PASS") if not os.environ.get(k)]
     if missing:
         raise RuntimeError(
-            f"Variables manquantes: {', '.join(missing)}. "
-            f"Renseigner {ENV_FILE} (VC_HOST/VC_USER/VC_PASS)."
+            f"Missing variables: {', '.join(missing)}. "
+            f"Set them in {ENV_FILE} (VC_HOST/VC_USER/VC_PASS)."
         )
     ctx = ssl._create_unverified_context()
     return SmartConnect(
@@ -63,7 +63,7 @@ def _session_alive(si: vim.ServiceInstance) -> bool:
 
 
 def get_si() -> vim.ServiceInstance:
-    """Retourne une session vCenter valide, en (re)connectant si necessaire."""
+    """Return a valid vCenter session, (re)connecting if necessary."""
     global _si
     with _lock:
         if _si is None or not _session_alive(_si):

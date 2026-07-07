@@ -1,10 +1,10 @@
 # SPDX-License-Identifier: MIT
 # SPDX-FileCopyrightText: 2026 Hokonoken
 
-"""Outils MCP en lecture seule — toujours actifs.
+"""Read-only MCP tools — always active.
 
-Les listings acceptent response_format (markdown par defaut, json pour la structure
-complete) et sont pagines. Les outils de detail retournent un objet structure.
+Listings accept response_format (markdown by default, json for the full
+structure) and are paginated. Detail tools return a structured object.
 """
 
 from typing import Annotated, Any
@@ -27,26 +27,26 @@ from .helpers import (
     vm_summary,
 )
 
-FORMAT_FIELD = Field(description="markdown (defaut, tableau compact) ou json (structure complete)")
+FORMAT_FIELD = Field(description="markdown (default, compact table) or json (full structure)")
 
 
-@tool("vmware_list_vms", "Lister les VMs", group="read", read=True, idempotent=True)
+@tool("vmware_list_vms", "List VMs", group="read", read=True, idempotent=True)
 def vmware_list_vms(
     name_filter: Annotated[
-        str | None, Field(description="Sous-chaine a chercher dans le nom (insensible a la casse)")
+        str | None, Field(description="Substring to search for in the name (case-insensitive)")
     ] = None,
     power_state: Annotated[
         str | None,
-        Field(description="Filtre d'etat: poweredOn, poweredOff ou suspended"),
+        Field(description="State filter: poweredOn, poweredOff or suspended"),
     ] = None,
-    limit: Annotated[int, Field(ge=1, le=500, description="Nombre max de resultats")] = 50,
-    offset: Annotated[int, Field(ge=0, description="Decalage de pagination")] = 0,
+    limit: Annotated[int, Field(ge=1, le=500, description="Maximum number of results")] = 50,
+    offset: Annotated[int, Field(ge=0, description="Pagination offset")] = 0,
     response_format: Annotated[ResponseFormat, FORMAT_FIELD] = ResponseFormat.MARKDOWN,
 ) -> dict[str, Any] | str:
-    """Liste les VMs du vCenter avec filtres et pagination.
+    """Lists the vCenter VMs with filters and pagination.
 
-    En json : {total, count, offset, has_more, next_offset, vms:[{name, moid, power_state,
-    guest_os, ip, hostname, cpu, memory_mb, host, vmware_tools}]}. En markdown : tableau.
+    In json: {total, count, offset, has_more, next_offset, vms:[{name, moid, power_state,
+    guest_os, ip, hostname, cpu, memory_mb, host, vmware_tools}]}. In markdown: table.
     """
     try:
         with container_view(vim.VirtualMachine) as vms:
@@ -62,14 +62,14 @@ def vmware_list_vms(
         return error_text(e)
 
 
-@tool("vmware_get_vm", "Detail d'une VM", group="read", read=True, idempotent=True)
+@tool("vmware_get_vm", "Details of a VM", group="read", read=True, idempotent=True)
 def vmware_get_vm(
-    vm: Annotated[str, Field(description="Nom exact ou MoID (ex: vm-123) de la VM")],
+    vm: Annotated[str, Field(description="Exact name or MoID (e.g. vm-123) of the VM")],
 ) -> dict[str, Any] | str:
-    """Detail complet d'une VM : config, CPU/RAM, disques, NICs, IPs guest, snapshots.
+    """Full details of a VM: config, CPU/RAM, disks, NICs, guest IPs, snapshots.
 
-    Retourne un objet structure avec uuid, path, hardware_version, disks[], nics[],
-    guest_ips[], snapshots[] (arbre), resource_pool, folder, en plus du resume standard.
+    Returns a structured object with uuid, path, hardware_version, disks[], nics[],
+    guest_ips[], snapshots[] (tree), resource_pool, folder, on top of the standard summary.
     """
     try:
         return vm_detail(find_vm(vm))
@@ -77,17 +77,17 @@ def vmware_get_vm(
         return error_text(e)
 
 
-@tool("vmware_list_hosts", "Lister les hotes ESXi", group="read", read=True, idempotent=True)
+@tool("vmware_list_hosts", "List ESXi hosts", group="read", read=True, idempotent=True)
 def vmware_list_hosts(
-    limit: Annotated[int, Field(ge=1, le=500, description="Nombre max de resultats")] = 50,
-    offset: Annotated[int, Field(ge=0, description="Decalage de pagination")] = 0,
+    limit: Annotated[int, Field(ge=1, le=500, description="Maximum number of results")] = 50,
+    offset: Annotated[int, Field(ge=0, description="Pagination offset")] = 0,
     response_format: Annotated[ResponseFormat, FORMAT_FIELD] = ResponseFormat.MARKDOWN,
 ) -> dict[str, Any] | str:
-    """Liste les hotes ESXi : etat, version, modele, charge CPU/RAM, nombre de VMs.
+    """Lists the ESXi hosts: state, version, model, CPU/RAM load, VM count.
 
-    En json : {total, count, ..., hosts:[{name, moid, connection_state, power_state,
+    In json: {total, count, ..., hosts:[{name, moid, connection_state, power_state,
     in_maintenance, version, model, cpu_cores, cpu_usage_mhz, cpu_total_mhz, memory_total,
-    memory_usage, vms}]}. En markdown : tableau.
+    memory_usage, vms}]}. In markdown: table.
     """
     try:
         with container_view(vim.HostSystem) as hosts:
@@ -116,19 +116,19 @@ def vmware_list_hosts(
                         "vms": len(h.vm),
                     }
                 )
-        return render_listing("Hotes ESXi", "hosts", rows, response_format, meta)
+        return render_listing("ESXi hosts", "hosts", rows, response_format, meta)
     except Exception as e:
         return error_text(e)
 
 
-@tool("vmware_list_clusters", "Lister les clusters", group="read", read=True, idempotent=True)
+@tool("vmware_list_clusters", "List clusters", group="read", read=True, idempotent=True)
 def vmware_list_clusters(
     response_format: Annotated[ResponseFormat, FORMAT_FIELD] = ResponseFormat.MARKDOWN,
 ) -> dict[str, Any] | str:
-    """Liste les clusters : HA/DRS, hotes, capacite CPU/RAM agregee.
+    """Lists the clusters: HA/DRS, hosts, aggregated CPU/RAM capacity.
 
-    En json : {count, clusters:[{name, moid, hosts, ha_enabled, drs_enabled, drs_behavior,
-    total_cpu_mhz, total_memory, effective_hosts}]}. En markdown : tableau.
+    In json: {count, clusters:[{name, moid, hosts, ha_enabled, drs_enabled, drs_behavior,
+    total_cpu_mhz, total_memory, effective_hosts}]}. In markdown: table.
     """
     try:
         with container_view(vim.ClusterComputeResource) as clusters:
@@ -155,16 +155,16 @@ def vmware_list_clusters(
         return error_text(e)
 
 
-@tool("vmware_list_datastores", "Lister les datastores", group="read", read=True, idempotent=True)
+@tool("vmware_list_datastores", "List datastores", group="read", read=True, idempotent=True)
 def vmware_list_datastores(
-    limit: Annotated[int, Field(ge=1, le=500, description="Nombre max de resultats")] = 100,
-    offset: Annotated[int, Field(ge=0, description="Decalage de pagination")] = 0,
+    limit: Annotated[int, Field(ge=1, le=500, description="Maximum number of results")] = 100,
+    offset: Annotated[int, Field(ge=0, description="Pagination offset")] = 0,
     response_format: Annotated[ResponseFormat, FORMAT_FIELD] = ResponseFormat.MARKDOWN,
 ) -> dict[str, Any] | str:
-    """Liste les datastores : type, capacite, espace libre, accessibilite.
+    """Lists the datastores: type, capacity, free space, accessibility.
 
-    En json : {total, count, ..., datastores:[{name, moid, type, capacity, free, free_pct,
-    accessible, hosts, vms}]}. En markdown : tableau.
+    In json: {total, count, ..., datastores:[{name, moid, type, capacity, free, free_pct,
+    accessible, hosts, vms}]}. In markdown: table.
     """
     try:
         with container_view(vim.Datastore) as stores:
@@ -192,16 +192,16 @@ def vmware_list_datastores(
         return error_text(e)
 
 
-@tool("vmware_list_networks", "Lister les reseaux", group="read", read=True, idempotent=True)
+@tool("vmware_list_networks", "List networks", group="read", read=True, idempotent=True)
 def vmware_list_networks(
-    limit: Annotated[int, Field(ge=1, le=500, description="Nombre max de resultats")] = 100,
-    offset: Annotated[int, Field(ge=0, description="Decalage de pagination")] = 0,
+    limit: Annotated[int, Field(ge=1, le=500, description="Maximum number of results")] = 100,
+    offset: Annotated[int, Field(ge=0, description="Pagination offset")] = 0,
     response_format: Annotated[ResponseFormat, FORMAT_FIELD] = ResponseFormat.MARKDOWN,
 ) -> dict[str, Any] | str:
-    """Liste les reseaux (portgroups standards et distribues).
+    """Lists the networks (standard and distributed portgroups).
 
-    En json : {total, count, ..., networks:[{name, moid, type, accessible, vms, vlan}]}.
-    vlan n'est renseigne que pour les portgroups distribues. En markdown : tableau.
+    In json: {total, count, ..., networks:[{name, moid, type, accessible, vms, vlan}]}.
+    vlan is only filled in for distributed portgroups. In markdown: table.
     """
     try:
         with container_view(vim.Network) as nets:
@@ -228,18 +228,18 @@ def vmware_list_networks(
                         "vlan": vlan,
                     }
                 )
-        return render_listing("Reseaux", "networks", rows, response_format, meta)
+        return render_listing("Networks", "networks", rows, response_format, meta)
     except Exception as e:
         return error_text(e)
 
 
-@tool("vmware_list_snapshots", "Snapshots d'une VM", group="read", read=True, idempotent=True)
+@tool("vmware_list_snapshots", "Snapshots of a VM", group="read", read=True, idempotent=True)
 def vmware_list_snapshots(
-    vm: Annotated[str, Field(description="Nom exact ou MoID de la VM")],
+    vm: Annotated[str, Field(description="Exact name or MoID of the VM")],
 ) -> dict[str, Any] | str:
-    """Arbre des snapshots d'une VM (nom, description, date, enfants).
+    """Snapshot tree of a VM (name, description, date, children).
 
-    Retourne un objet structure {vm, count, current_snapshot_moid, snapshots:[...arbre...]}.
+    Returns a structured object {vm, count, current_snapshot_moid, snapshots:[...tree...]}.
     """
     try:
         obj = find_vm(vm)
@@ -261,21 +261,21 @@ def vmware_list_snapshots(
         return error_text(e)
 
 
-@tool("vmware_recent_tasks", "Taches recentes", group="read", read=True)
+@tool("vmware_recent_tasks", "Recent tasks", group="read", read=True)
 def vmware_recent_tasks(
-    limit: Annotated[int, Field(ge=1, le=200, description="Nombre max de taches")] = 30,
+    limit: Annotated[int, Field(ge=1, le=200, description="Maximum number of tasks")] = 30,
     response_format: Annotated[ResponseFormat, FORMAT_FIELD] = ResponseFormat.MARKDOWN,
 ) -> dict[str, Any] | str:
-    """Dernieres taches vCenter (operations en cours ou recentes) avec etat et cible.
+    """Latest vCenter tasks (running or recent operations) with state and target.
 
-    En json : {count, tasks:[{key, description, target, state, progress_pct, user, queued,
-    started, completed, error}]}. En markdown : tableau, plus recent en premier.
+    In json: {count, tasks:[{key, description, target, state, progress_pct, user, queued,
+    started, completed, error}]}. In markdown: table, most recent first.
     """
     try:
         si = get_si()
         task_manager = si.content.taskManager
         if task_manager is None:
-            return "Erreur: taskManager indisponible sur ce vCenter."
+            return "Error: taskManager unavailable on this vCenter."
         tasks = list(task_manager.recentTask)[-limit:]
         rows = []
         for t in reversed(tasks):
@@ -294,24 +294,24 @@ def vmware_recent_tasks(
                     "error": getattr(i.error, "msg", None) if i.error else None,
                 }
             )
-        return render_listing("Taches recentes", "tasks", rows, response_format)
+        return render_listing("Recent tasks", "tasks", rows, response_format)
     except Exception as e:
         return error_text(e)
 
 
-@tool("vmware_list_events", "Evenements recents", group="read", read=True)
+@tool("vmware_list_events", "Recent events", group="read", read=True)
 def vmware_list_events(
     vm: Annotated[
-        str | None, Field(description="Limiter aux evenements de cette VM (nom ou MoID)")
+        str | None, Field(description="Limit to events for this VM (name or MoID)")
     ] = None,
-    limit: Annotated[int, Field(ge=1, le=200, description="Nombre max d'evenements")] = 30,
-    offset: Annotated[int, Field(ge=0, description="Decalage de pagination")] = 0,
+    limit: Annotated[int, Field(ge=1, le=200, description="Maximum number of events")] = 30,
+    offset: Annotated[int, Field(ge=0, description="Pagination offset")] = 0,
     response_format: Annotated[ResponseFormat, FORMAT_FIELD] = ResponseFormat.MARKDOWN,
 ) -> dict[str, Any] | str:
-    """Evenements vCenter recents, globaux ou filtres sur une VM.
+    """Recent vCenter events, global or filtered on a VM.
 
-    En json : {total, count, offset, has_more, next_offset, events:[{time, type, user,
-    target, message}]}, du plus recent au plus ancien. En markdown : tableau.
+    In json: {total, count, offset, has_more, next_offset, events:[{time, type, user,
+    target, message}]}, most recent first. In markdown: table.
     """
     try:
         si = get_si()
@@ -323,7 +323,7 @@ def vmware_list_events(
             )
         event_manager = si.content.eventManager
         if event_manager is None:
-            return "Erreur: eventManager indisponible sur ce vCenter."
+            return "Error: eventManager unavailable on this vCenter."
         collector = event_manager.CreateCollectorForEvents(spec)
         try:
             events = list(collector.latestPage)
@@ -340,6 +340,6 @@ def vmware_list_events(
             }
             for e in page
         ]
-        return render_listing("Evenements", "events", rows, response_format, meta)
+        return render_listing("Events", "events", rows, response_format, meta)
     except Exception as e:
         return error_text(e)

@@ -1,14 +1,14 @@
 # SPDX-License-Identifier: MIT
 # SPDX-FileCopyrightText: 2026 Hokonoken
 
-"""Groupes de droits et roles d'acces du serveur MCP.
+"""Permission groups and access roles of the MCP server.
 
-Le role courant est defini par MCP_VMWARE_ROLE dans le fichier env (defaut: viewer).
-Un outil dont le groupe n'est pas couvert par le role n'est pas enregistre du tout
-(invisible dans tools/list) ; une verification a l'appel double la protection.
+The current role is set by MCP_VMWARE_ROLE in the env file (default: viewer).
+A tool whose group is not covered by the role is not registered at all
+(invisible in tools/list); a check at call time doubles the protection.
 
-Les templates de privileges vSphere correspondants (pour creer des comptes de
-service vCenter alignes) sont dans docs/roles.md.
+The matching vSphere privilege templates (to create aligned vCenter service
+accounts) are in docs/roles.md.
 """
 
 import os
@@ -16,15 +16,15 @@ import os
 from .connection import load_env
 
 GROUPS: dict[str, str] = {
-    "read": "lecture seule de tout l'inventaire (VMs, hotes, clusters, stockage, reseau)",
-    "vm.power": "alimentation des VMs (on/off/reset/suspend/shutdown)",
-    "vm.snapshot": "snapshots des VMs (create/revert/delete)",
-    "vm.config": "reconfiguration CPU/RAM des VMs",
-    "vm.lifecycle": "cycle de vie des VMs (clone, suppression, migration)",
-    "cluster.ops": "configuration des clusters (HA, DRS, regles d'affinite)",
-    "host.ops": "operations sur les hotes ESXi (maintenance, reboot, reconnexion)",
-    "host.config": "configuration fine des hotes ESXi (services, firewall, "
-    "parametres avances, rescan stockage — equivalent esxcli)",
+    "read": "read-only access to the whole inventory (VMs, hosts, clusters, storage, network)",
+    "vm.power": "VM power operations (on/off/reset/suspend/shutdown)",
+    "vm.snapshot": "VM snapshots (create/revert/delete)",
+    "vm.config": "VM CPU/RAM reconfiguration",
+    "vm.lifecycle": "VM lifecycle (clone, deletion, migration)",
+    "cluster.ops": "cluster configuration (HA, DRS, affinity rules)",
+    "host.ops": "ESXi host operations (maintenance, reboot, reconnect)",
+    "host.config": "fine-grained ESXi host configuration (services, firewall, "
+    "advanced settings, storage rescan — esxcli equivalent)",
 }
 
 ROLES: dict[str, frozenset[str]] = {
@@ -40,7 +40,7 @@ def current_role() -> str:
     role = os.environ.get("MCP_VMWARE_ROLE", "").strip().lower()
     if role in ROLES:
         return role
-    # Compat avec l'ancien garde-fou binaire.
+    # Compat with the old binary safety switch.
     if os.environ.get("MCP_VMWARE_ALLOW_WRITE", "0").lower() in ("1", "true", "yes"):
         return "vm_admin"
     return "viewer"
@@ -57,8 +57,8 @@ def group_allowed(group: str) -> bool:
 def deny_message(group: str) -> str:
     roles = sorted(r for r, groups in ROLES.items() if group in groups)
     return (
-        f"Erreur: le role courant '{current_role()}' n'autorise pas le groupe "
-        f"'{group}' ({GROUPS.get(group, '?')}). Roles qui l'autorisent: {', '.join(roles)}. "
-        "Modifier MCP_VMWARE_ROLE dans ~/VMware/.vcenter.env sur la machine rebond, "
-        "puis relancer la session MCP."
+        f"Error: the current role '{current_role()}' does not allow the group "
+        f"'{group}' ({GROUPS.get(group, '?')}). Roles that allow it: {', '.join(roles)}. "
+        "Change MCP_VMWARE_ROLE in ~/VMware/.vcenter.env on the jumphost, "
+        "then restart the MCP session."
     )

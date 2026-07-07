@@ -1,10 +1,10 @@
 # SPDX-License-Identifier: MIT
 # SPDX-FileCopyrightText: 2026 Hokonoken
 
-"""Outils hotes ESXi : detail (groupe read) et operations (groupe host.ops).
+"""ESXi host tools: detail (read group) and operations (host.ops group).
 
-Les operations d'hote sont les plus sensibles du serveur : maintenance et
-reboot/shutdown exigent confirm=true.
+Host operations are the most sensitive of the server: maintenance and
+reboot/shutdown require confirm=true.
 """
 
 from typing import Annotated, Any
@@ -22,13 +22,13 @@ def _gate(group: str) -> str | None:
     return None if group_allowed(group) else deny_message(group)
 
 
-@tool("vmware_get_host", "Detail d'un hote ESXi", group="read", read=True, idempotent=True)
+@tool("vmware_get_host", "Details of an ESXi host", group="read", read=True, idempotent=True)
 def vmware_get_host(
-    host: Annotated[str, Field(description="Nom de l'hote (cf. vmware_list_hosts)")],
+    host: Annotated[str, Field(description="Host name (see vmware_list_hosts)")],
 ) -> dict[str, Any] | str:
-    """Detail d'un hote ESXi : etat, uptime, hardware, VMs hebergees, datastores montes.
+    """Details of an ESXi host: state, uptime, hardware, hosted VMs, mounted datastores.
 
-    Retourne un JSON {name, moid, connection_state, power_state, in_maintenance,
+    Returns a JSON {name, moid, connection_state, power_state, in_maintenance,
     in_quarantine, boot_time, uptime_hours, version, model, cpu, memory, vms:[...],
     datastores:[...], networks:[...]}.
     """
@@ -68,27 +68,27 @@ def vmware_get_host(
         return error_text(e)
 
 
-@tool("vmware_host_maintenance", "Mode maintenance d'un hote", group="host.ops", destructive=True)
+@tool("vmware_host_maintenance", "Maintenance mode of a host", group="host.ops", destructive=True)
 async def vmware_host_maintenance(
-    host: Annotated[str, Field(description="Nom de l'hote ESXi")],
-    action: Annotated[str, Field(description="enter ou exit")],
+    host: Annotated[str, Field(description="Name of the ESXi host")],
+    action: Annotated[str, Field(description="enter or exit")],
     ctx: Context,
     confirm: Annotated[
-        bool, Field(description="Doit etre true pour enter (peut evacuer des VMs via DRS)")
+        bool, Field(description="Must be true for enter (may evacuate VMs via DRS)")
     ] = False,
     timeout_s: Annotated[
-        int, Field(ge=60, le=7200, description="Timeout vCenter de l'operation")
+        int, Field(ge=60, le=7200, description="vCenter timeout for the operation")
     ] = 1800,
 ) -> dict[str, Any] | str:
-    """Fait entrer ou sortir un hote ESXi du mode maintenance, avec progression.
+    """Puts an ESXi host into or takes it out of maintenance mode, with progress.
 
-    L'entree en maintenance attend l'evacuation des VMs (DRS). Exige confirm=true pour
-    enter. Retourne un JSON {action, status, host, in_maintenance}.
+    Entering maintenance waits for VM evacuation (DRS). Requires confirm=true for
+    enter. Returns a JSON {action, status, host, in_maintenance}.
     """
     if msg := _gate("host.ops"):
         return msg
     if action not in ("enter", "exit"):
-        return "Erreur: action invalide, choisir enter ou exit."
+        return "Error: invalid action, choose enter or exit."
     try:
 
         def _prepare() -> Any:
@@ -97,15 +97,15 @@ async def vmware_host_maintenance(
             if action == "enter":
                 if not confirm:
                     raise ValueError(
-                        f"Refus: entree en maintenance de '{h.name}' non confirmee "
-                        f"({len(h.vm)} VMs presentes, evacuation DRS possible). Rappeler "
-                        "avec confirm=true apres validation explicite de l'utilisateur."
+                        f"Refused: entering maintenance on '{h.name}' not confirmed "
+                        f"({len(h.vm)} VMs present, DRS evacuation possible). Call again "
+                        "with confirm=true after explicit user validation."
                     )
                 if in_maintenance:
-                    raise ValueError(f"'{h.name}' est deja en maintenance.")
+                    raise ValueError(f"'{h.name}' is already in maintenance mode.")
                 return h, h.EnterMaintenanceMode_Task(timeout=timeout_s)
             if not in_maintenance:
-                raise ValueError(f"'{h.name}' n'est pas en maintenance.")
+                raise ValueError(f"'{h.name}' is not in maintenance mode.")
             return h, h.ExitMaintenanceMode_Task(timeout=timeout_s)
 
         h, task = await anyio.to_thread.run_sync(_prepare)
@@ -125,39 +125,39 @@ async def vmware_host_maintenance(
         return error_text(e)
 
 
-@tool("vmware_host_power", "Reboot/arret d'un hote", group="host.ops", destructive=True)
+@tool("vmware_host_power", "Reboot/shutdown of a host", group="host.ops", destructive=True)
 def vmware_host_power(
-    host: Annotated[str, Field(description="Nom de l'hote ESXi")],
-    action: Annotated[str, Field(description="reboot ou shutdown")],
+    host: Annotated[str, Field(description="Name of the ESXi host")],
+    action: Annotated[str, Field(description="reboot or shutdown")],
     confirm: Annotated[
-        bool, Field(description="Doit etre true pour executer. Sans cela l'outil refuse.")
+        bool, Field(description="Must be true to execute. Otherwise the tool refuses.")
     ] = False,
     force: Annotated[
         bool,
-        Field(description="Forcer meme hors maintenance (DANGEREUX: VMs coupees brutalement)"),
+        Field(description="Force even outside maintenance mode (DANGEROUS: VMs cut abruptly)"),
     ] = False,
 ) -> dict[str, Any] | str:
-    """Redemarre ou eteint un hote ESXi. Refuse hors mode maintenance sauf force=true.
+    """Reboots or shuts down an ESXi host. Refuses outside maintenance mode unless force=true.
 
-    Operation la plus sensible du serveur : exige confirm=true. Retourne un JSON
+    Most sensitive operation of the server: requires confirm=true. Returns a JSON
     {action, status, host}.
     """
     if msg := _gate("host.ops"):
         return msg
     if action not in ("reboot", "shutdown"):
-        return "Erreur: action invalide, choisir reboot ou shutdown."
+        return "Error: invalid action, choose reboot or shutdown."
     try:
         h = find_host(host)
         if not confirm:
             return (
-                f"Refus: {action} de l'hote '{h.name}' non confirme. Rappeler avec "
-                "confirm=true apres validation explicite de l'utilisateur."
+                f"Refused: {action} of host '{h.name}' not confirmed. Call again with "
+                "confirm=true after explicit user validation."
             )
         if not h.summary.runtime.inMaintenanceMode and not force:
             return (
-                f"Erreur: '{h.name}' n'est pas en maintenance. Passer par "
-                "vmware_host_maintenance d'abord, ou force=true en toute connaissance "
-                "de cause."
+                f"Error: '{h.name}' is not in maintenance mode. Go through "
+                "vmware_host_maintenance first, or use force=true fully aware of the "
+                "consequences."
             )
         if action == "reboot":
             wait_for_task(h.RebootHost_Task(force=force))
@@ -168,19 +168,19 @@ def vmware_host_power(
         return error_text(e)
 
 
-@tool("vmware_host_connection", "Connexion d'un hote au vCenter", group="host.ops")
+@tool("vmware_host_connection", "Host connection to vCenter", group="host.ops")
 def vmware_host_connection(
-    host: Annotated[str, Field(description="Nom de l'hote ESXi")],
-    action: Annotated[str, Field(description="reconnect ou disconnect")],
+    host: Annotated[str, Field(description="Name of the ESXi host")],
+    action: Annotated[str, Field(description="reconnect or disconnect")],
 ) -> dict[str, Any] | str:
-    """Reconnecte ou deconnecte un hote ESXi du vCenter (gestion, pas d'impact VMs).
+    """Reconnects or disconnects an ESXi host from vCenter (management only, no VM impact).
 
-    Retourne un JSON {action, status, host, connection_state}.
+    Returns a JSON {action, status, host, connection_state}.
     """
     if msg := _gate("host.ops"):
         return msg
     if action not in ("reconnect", "disconnect"):
-        return "Erreur: action invalide, choisir reconnect ou disconnect."
+        return "Error: invalid action, choose reconnect or disconnect."
     try:
         h = find_host(host)
         if action == "reconnect":

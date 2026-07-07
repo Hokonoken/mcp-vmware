@@ -1,18 +1,18 @@
-# Matrice de couverture API -> outils MCP
+# API coverage matrix -> MCP tools
 #
-# C'est le fichier de pilotage de l'evolution du serveur : chaque zone de l'API
-# cartographiee (api-map/<version>-<build>/) y est rattachee a un outil MCP avec
-# un statut. On le met a jour a chaque ajout d'outil et a chaque nouveau
-# snapshot de la carte (upgrade vCenter).
+# This is the steering file for the server's evolution: each mapped API area
+# (api-map/<version>-<build>/) is tied here to an MCP tool with a status.
+# It is updated every time a tool is added and on every new snapshot of the
+# map (vCenter upgrade).
 #
-# Statuts : todo | in_progress | done | wontdo
-# Kind    : read | write
-# Source  : vim25 (SOAP/pyvmomi) | rest (vAPI)
+# Status : todo | in_progress | done | wontdo
+# Kind   : read | write
+# Source : vim25 (SOAP/pyvmomi) | rest (vAPI)
 
 map_version: 8.0.3-25092719
 
 tools:
-  # ---------------------------------------------------------------- Phase 2 : READ
+  # ---------------------------------------------------------------- Phase 2: READ
   - tool: vmware_list_vms
     kind: read
     status: done
@@ -59,10 +59,10 @@ tools:
     source: vim25
     covers: [vim.event.EventManager.QueryEvents]
 
-  # --------------------------------------------------------------- Phase 3 : WRITE
+  # --------------------------------------------------------------- Phase 3: WRITE
   - tool: vmware_power_vm
     kind: write
-    status: in_progress  # implemente, en attente d'une VM de test
+    status: in_progress  # implemented, waiting for a test VM
     source: vim25
     covers:
       - vim.VirtualMachine.PowerOnVM_Task
@@ -73,41 +73,41 @@ tools:
       - vim.VirtualMachine.RebootGuest
   - tool: vmware_snapshot_create
     kind: write
-    status: in_progress  # implemente, en attente d'une VM de test
+    status: in_progress  # implemented, waiting for a test VM
     source: vim25
     covers: [vim.VirtualMachine.CreateSnapshot_Task]
   - tool: vmware_snapshot_revert
     kind: write
-    status: in_progress  # implemente, en attente d'une VM de test
+    status: in_progress  # implemented, waiting for a test VM
     source: vim25
     covers: [vim.vm.Snapshot.RevertToSnapshot_Task]
   - tool: vmware_snapshot_delete
     kind: write
-    status: in_progress  # implemente, en attente d'une VM de test
+    status: in_progress  # implemented, waiting for a test VM
     source: vim25
     covers: [vim.vm.Snapshot.RemoveSnapshot_Task]
   - tool: vmware_reconfigure_vm
     kind: write
-    status: in_progress  # implemente, en attente d'une VM de test
+    status: in_progress  # implemented, waiting for a test VM
     source: vim25
     covers: [vim.VirtualMachine.ReconfigVM_Task]
   - tool: vmware_clone_vm
     kind: write
-    status: in_progress  # implemente, en attente d'une VM de test
+    status: in_progress  # implemented, waiting for a test VM
     source: vim25
     covers: [vim.VirtualMachine.CloneVM_Task]
   - tool: vmware_delete_vm
     kind: write
-    status: in_progress  # implemente, en attente d'une VM de test
+    status: in_progress  # implemented, waiting for a test VM
     source: vim25
     covers: [vim.VirtualMachine.Destroy_Task]
   - tool: vmware_migrate_vm
     kind: write
-    status: in_progress  # implemente, en attente d'une VM de test
+    status: in_progress  # implemented, waiting for a test VM
     source: vim25
     covers: [vim.VirtualMachine.MigrateVM_Task, vim.VirtualMachine.RelocateVM_Task]
 
-  # ------------------------------------------- Lot cluster/HA/DRS/ESXi (roles)
+  # ------------------------------------------- Cluster/HA/DRS/ESXi batch (roles)
   - tool: vmware_get_cluster_config
     kind: read
     status: done
@@ -132,41 +132,41 @@ tools:
     covers: [vim.HostSystem.summary, vim.HostSystem.runtime]
   - tool: vmware_set_drs
     kind: write
-    status: in_progress  # implemente, en attente de validation sur cluster de test
+    status: in_progress  # implemented, waiting for validation on a test cluster
     source: vim25
     covers: [vim.ClusterComputeResource.reconfigure]
   - tool: vmware_set_ha
     kind: write
-    status: in_progress  # implemente, en attente de validation sur cluster de test
+    status: in_progress  # implemented, waiting for validation on a test cluster
     source: vim25
     covers: [vim.ClusterComputeResource.reconfigure]
   - tool: vmware_apply_drs_recommendation
     kind: write
-    status: in_progress  # implemente, en attente d'une recommandation reelle
+    status: in_progress  # implemented, waiting for a real recommendation
     source: vim25
     covers: [vim.ClusterComputeResource.applyRecommendation]
   - tool: vmware_set_affinity_rule
     kind: write
-    status: in_progress  # implemente, en attente de validation
+    status: in_progress  # implemented, waiting for validation
     source: vim25
     covers: [vim.ClusterComputeResource.reconfigure]
   - tool: vmware_host_maintenance
     kind: write
-    status: in_progress  # implemente, tres sensible (evacuation DRS), confirm requis
+    status: in_progress  # implemented, very sensitive (DRS evacuation), confirm required
     source: vim25
     covers: [vim.HostSystem.enterMaintenanceMode, vim.HostSystem.exitMaintenanceMode]
   - tool: vmware_host_power
     kind: write
-    status: in_progress  # implemente, le plus destructif, confirm + maintenance requis
+    status: in_progress  # implemented, the most destructive, confirm + maintenance required
     source: vim25
     covers: [vim.HostSystem.reboot, vim.HostSystem.shutdown]
   - tool: vmware_host_connection
     kind: write
-    status: in_progress  # implemente
+    status: in_progress  # implemented
     source: vim25
     covers: [vim.HostSystem.reconnect, vim.HostSystem.disconnect]
 
-  # ------------------------------------- Lot equivalent esxcli (host.config)
+  # ------------------------------------- esxcli-equivalent batch (host.config)
   - tool: vmware_host_services
     kind: read
     status: done
@@ -204,37 +204,37 @@ tools:
     covers: [vim.host.HealthStatusSystem.runtime]
   - tool: vmware_host_service_action
     kind: write
-    status: in_progress  # implemente, a valider sur un service anodin (ntpd restart)
+    status: in_progress  # implemented, to be validated on a harmless service (ntpd restart)
     source: vim25
     covers: [vim.host.ServiceSystem.start, vim.host.ServiceSystem.stop,
              vim.host.ServiceSystem.restart, vim.host.ServiceSystem.updatePolicy]
   - tool: vmware_host_firewall_ruleset
     kind: write
-    status: in_progress  # implemente
+    status: in_progress  # implemented
     source: vim25
     covers: [vim.host.FirewallSystem.enableRuleset, vim.host.FirewallSystem.disableRuleset]
   - tool: vmware_host_set_advanced_setting
     kind: write
-    status: in_progress  # implemente
+    status: in_progress  # implemented
     source: vim25
     covers: [vim.option.OptionManager.updateValues]
   - tool: vmware_host_rescan_storage
     kind: write
-    status: in_progress  # implemente, operation sans risque
+    status: in_progress  # implemented, risk-free operation
     source: vim25
     covers: [vim.host.StorageSystem.rescanAllHba, vim.host.StorageSystem.rescanVmfs]
 
-# Systeme de roles (2026-07-07) : 4 profils (viewer/operator/vm_admin/infra_admin)
-# -> groupes read, vm.power, vm.snapshot, vm.config, vm.lifecycle, cluster.ops,
-#    host.ops. Templates de privileges vCenter correspondants : docs/roles.md.
+# Role system (2026-07-07): 4 profiles (viewer/operator/vm_admin/infra_admin)
+# -> groups read, vm.power, vm.snapshot, vm.config, vm.lifecycle, cluster.ops,
+#    host.ops. Matching vCenter privilege templates: docs/roles.md.
 
-# Zones connues non couvertes en v1 (backlog v2+) :
+# Known areas not covered in v1 (backlog v2+):
 backlog:
-  - {area: creation de VM from scratch, api: vim.Folder.CreateVM_Task}
+  - {area: VM creation from scratch, api: vim.Folder.CreateVM_Task}
   - {area: tags, api: com.vmware.cis.tagging (rest)}
   - {area: content library, api: com.vmware.content (rest)}
-  - {area: performances temps reel, api: vim.PerformanceManager}
-  - {area: reseaux en ecriture, api: vim.dvs.*}
-  - {area: datastores / storage vMotion avance, api: vim.StorageResourceManager}
+  - {area: real-time performance, api: vim.PerformanceManager}
+  - {area: network write operations, api: vim.dvs.*}
+  - {area: datastores / advanced storage vMotion, api: vim.StorageResourceManager}
   - {area: permissions / roles, api: vim.AuthorizationManager}
-  - {area: lifecycle vCenter (updates), api: com.vmware.vcenter.lcm (rest)}
+  - {area: vCenter lifecycle (updates), api: com.vmware.vcenter.lcm (rest)}

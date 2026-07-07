@@ -60,7 +60,7 @@ jobs:
           send({"jsonrpc": "2.0", "method": "notifications/initialized"})
           send({"jsonrpc": "2.0", "id": 2, "method": "tools/list"})
           tools = read()["result"]["tools"]
-          assert len(tools) == 39, f"attendu 39 outils, obtenu {len(tools)}"
-          print(f"OK: {len(tools)} outils exposes")
+          assert len(tools) == 39, f"expected 39 tools, got {len(tools)}"
+          print(f"OK: {len(tools)} tools exposed")
           proc.stdin.close(); proc.wait(timeout=15)
           EOF

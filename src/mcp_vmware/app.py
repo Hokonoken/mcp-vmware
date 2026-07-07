@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: MIT
 # SPDX-FileCopyrightText: 2026 Hokonoken
 
-"""Instance FastMCP partagee et enregistrement des outils filtre par role."""
+"""Shared FastMCP instance and role-filtered tool registration."""
 
 from collections.abc import Callable
 from typing import Any
@@ -23,10 +23,10 @@ def tool(
     destructive: bool = False,
     idempotent: bool = False,
 ) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
-    """Enregistre un outil MCP seulement si le role courant couvre son groupe.
+    """Register an MCP tool only if the current role covers its group.
 
-    Un outil non couvert reste une simple fonction : il n'apparait pas dans
-    tools/list, le LLM ne le voit jamais.
+    A tool that is not covered stays a plain function: it does not appear in
+    tools/list, the LLM never sees it.
     """
 
     def decorator(fn: Callable[..., Any]) -> Callable[..., Any]:

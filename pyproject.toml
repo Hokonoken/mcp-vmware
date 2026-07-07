@@ -33,8 +33,8 @@ python_version = "3.12"
 strict = false
 ignore_missing_imports = true
 
-# Les stubs embarques par pyvmomi sont incomplets (attributs presents au runtime
-# mais absents des annotations) : on traite vim/vmodl comme non types.
+# The stubs bundled with pyvmomi are incomplete (attributes present at runtime
+# but missing from the annotations): treat vim/vmodl as untyped.
 [[tool.mypy.overrides]]
 module = ["pyVmomi", "pyVmomi.*", "pyVim", "pyVim.*"]
 follow_imports = "skip"

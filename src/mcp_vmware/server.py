@@ -1,15 +1,15 @@
 # SPDX-License-Identifier: MIT
 # SPDX-FileCopyrightText: 2026 Hokonoken
 
-"""Point d'entree du serveur MCP VMware (transport stdio).
+"""Entry point of the VMware MCP server (stdio transport).
 
-Lance sur la machine rebond ; Claude Code s'y connecte via `ssh jumphost ...`.
-Ne jamais ecrire sur stdout en dehors du protocole MCP (les logs vont sur stderr).
+Runs on the jumphost; Claude Code connects to it via `ssh jumphost ...`.
+Never write to stdout outside the MCP protocol (logs go to stderr).
 """
 
 import sys
 
-# L'import enregistre les outils (filtres par role) sur l'instance FastMCP partagee.
+# Importing registers the tools (filtered by role) on the shared FastMCP instance.
 from . import (
     tools_cluster,  # noqa: F401
     tools_host,  # noqa: F401
@@ -24,7 +24,7 @@ from .roles import allowed_groups, current_role
 def main() -> None:
     role = current_role()
     groups = ", ".join(sorted(allowed_groups()))
-    print(f"mcp-vmware demarre, role={role} groupes=[{groups}]", file=sys.stderr)
+    print(f"mcp-vmware started, role={role} groups=[{groups}]", file=sys.stderr)
     mcp.run()
 
 

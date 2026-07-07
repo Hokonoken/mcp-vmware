@@ -2,16 +2,16 @@
 # SPDX-License-Identifier: MIT
 # SPDX-FileCopyrightText: 2026 Hokonoken
 
-"""Cartographie la surface d'API du vCenter, versionnée au build.
+"""Map the vCenter API surface, versioned by build.
 
-Produit dans api-map/<version>-<build>/ :
-  - meta.json   : identite du vCenter (version, build), date, versions outils
-  - vim25.json  : carte SOAP complete (managed objects, proprietes, methodes)
-  - rest.json   : carte REST vAPI (composants -> services -> operations), lue sur le vCenter live
-  - SUMMARY.md  : statistiques lisibles
+Produces in api-map/<version>-<build>/ :
+  - meta.json   : vCenter identity (version, build), date, tool versions
+  - vim25.json  : full SOAP map (managed objects, properties, methods)
+  - rest.json   : vAPI REST map (components -> services -> operations), read from the live vCenter
+  - SUMMARY.md  : human-readable statistics
 
-S'execute sur la machine rebond (jumphost), dans le venv ~/VMware/venv.
-Usage : build_api_map.py [--out DIR]
+Runs on the jump machine (jumphost), in the ~/VMware/venv venv.
+Usage: build_api_map.py [--out DIR]
 """
 
 import argparse
@@ -200,7 +200,7 @@ def main() -> int:
         "snapshotDate": datetime.now(UTC).isoformat(),
         "pyvmomiVersion": getattr(pyVmomi, "__version__", "?"),
         "python": sys.version.split()[0],
-        "note": "kind (read/write) est une heuristique sur le nom de la methode/operation",
+        "note": "kind (read/write) is a heuristic based on the method/operation name",
     }
 
     vim25 = build_vim25_map()
@@ -230,24 +230,24 @@ def main() -> int:
     (out / "vim25.json").write_text(json.dumps(vim25, indent=2))
     (out / "rest.json").write_text(json.dumps(rest, indent=2))
 
-    summary = f"""# Carte API vCenter — {tag}
+    summary = f"""# vCenter API map — {tag}
 
-- vCenter : {ident["fullName"]}
-- API version : {ident["apiVersion"]}
-- Snapshot : {meta["snapshotDate"]}
-- pyvmomi : {meta["pyvmomiVersion"]}
+- vCenter: {ident["fullName"]}
+- API version: {ident["apiVersion"]}
+- Snapshot: {meta["snapshotDate"]}
+- pyvmomi: {meta["pyvmomiVersion"]}
 
-## Surface SOAP (vim25)
-- Managed objects : {len(vim25)}
-- Methodes : {n_methods} ({n_read} read / {n_methods - n_read} write, heuristique)
+## SOAP surface (vim25)
+- Managed objects: {len(vim25)}
+- Methods: {n_methods} ({n_read} read / {n_methods - n_read} write, heuristic)
 
-## Surface REST (vAPI)
-- Composants : {len(rest)}
-- Services : {n_svc}
-- Operations : {n_ops}
+## REST surface (vAPI)
+- Components: {len(rest)}
+- Services: {n_svc}
+- Operations: {n_ops}
 """
     (out / "SUMMARY.md").write_text(summary)
-    print(f"Carte generee dans {out}")
+    print(f"Map generated in {out}")
     print(json.dumps(meta["stats"], indent=2))
     return 0
 

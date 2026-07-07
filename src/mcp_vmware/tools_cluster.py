@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: MIT
 # SPDX-FileCopyrightText: 2026 Hokonoken
 
-"""Outils cluster : lecture fine HA/DRS (groupe read) et pilotage (groupe cluster.ops)."""
+"""Cluster tools: fine-grained HA/DRS reads (read group) and control (cluster.ops group)."""
 
 from typing import Annotated, Any
 
@@ -38,17 +38,17 @@ def _rule_summary(rule: Any) -> dict[str, Any]:
 
 @tool(
     "vmware_get_cluster_config",
-    "Config HA/DRS d'un cluster",
+    "HA/DRS config of a cluster",
     group="read",
     read=True,
     idempotent=True,
 )
 def vmware_get_cluster_config(
-    cluster: Annotated[str, Field(description="Nom du cluster (cf. vmware_list_clusters)")],
+    cluster: Annotated[str, Field(description="Cluster name (see vmware_list_clusters)")],
 ) -> dict[str, Any] | str:
-    """Configuration detaillee HA (DAS) et DRS d'un cluster + capacite de failover.
+    """Detailed HA (DAS) and DRS configuration of a cluster + failover capacity.
 
-    Retourne un JSON {name, ha:{enabled, admission_control_enabled, failover_level,
+    Returns a JSON {name, ha:{enabled, admission_control_enabled, failover_level,
     restart_priority, current_failover_level}, drs:{enabled, behavior, vmotion_rate},
     rules_count}.
     """
@@ -91,15 +91,15 @@ def vmware_get_cluster_config(
         return error_text(e)
 
 
-@tool("vmware_drs_recommendations", "Recommandations DRS", group="read", read=True)
+@tool("vmware_drs_recommendations", "DRS recommendations", group="read", read=True)
 def vmware_drs_recommendations(
-    cluster: Annotated[str, Field(description="Nom du cluster")],
-    refresh: Annotated[bool, Field(description="Forcer un recalcul avant lecture")] = False,
+    cluster: Annotated[str, Field(description="Cluster name")],
+    refresh: Annotated[bool, Field(description="Force a recomputation before reading")] = False,
 ) -> dict[str, Any] | str:
-    """Liste les recommandations DRS en attente d'un cluster (migrations proposees).
+    """Lists the pending DRS recommendations of a cluster (proposed migrations).
 
-    Retourne un JSON {cluster, count, recommendations:[{key, type, reason, target,
-    actions:[...]}]}. Appliquer ensuite avec vmware_apply_drs_recommendation (cluster.ops).
+    Returns a JSON {cluster, count, recommendations:[{key, type, reason, target,
+    actions:[...]}]}. Apply afterwards with vmware_apply_drs_recommendation (cluster.ops).
     """
     try:
         c = find_cluster(cluster)
@@ -111,7 +111,7 @@ def vmware_drs_recommendations(
             for a in r.action or []:
                 if isinstance(a, vim.cluster.MigrationAction) and a.drsMigration:
                     actions.append(
-                        f"migrer {a.drsMigration.vm.name} -> {a.drsMigration.destination.name}"
+                        f"migrate {a.drsMigration.vm.name} -> {a.drsMigration.destination.name}"
                     )
                 else:
                     actions.append(type(a).__name__)
@@ -130,13 +130,13 @@ def vmware_drs_recommendations(
         return error_text(e)
 
 
-@tool("vmware_list_affinity_rules", "Regles d'affinite", group="read", read=True, idempotent=True)
+@tool("vmware_list_affinity_rules", "Affinity rules", group="read", read=True, idempotent=True)
 def vmware_list_affinity_rules(
-    cluster: Annotated[str, Field(description="Nom du cluster")],
+    cluster: Annotated[str, Field(description="Cluster name")],
 ) -> dict[str, Any] | str:
-    """Liste les regles d'affinite / anti-affinite / VM-hote d'un cluster.
+    """Lists the affinity / anti-affinity / VM-host rules of a cluster.
 
-    Retourne un JSON {cluster, count, rules:[{key, name, type, enabled, vms}]}.
+    Returns a JSON {cluster, count, rules:[{key, name, type, enabled, vms}]}.
     """
     try:
         c = find_cluster(cluster)
@@ -146,29 +146,29 @@ def vmware_list_affinity_rules(
         return error_text(e)
 
 
-@tool("vmware_set_drs", "Configurer DRS", group="cluster.ops")
+@tool("vmware_set_drs", "Configure DRS", group="cluster.ops")
 def vmware_set_drs(
-    cluster: Annotated[str, Field(description="Nom du cluster")],
-    enabled: Annotated[bool | None, Field(description="Activer/desactiver DRS")] = None,
+    cluster: Annotated[str, Field(description="Cluster name")],
+    enabled: Annotated[bool | None, Field(description="Enable/disable DRS")] = None,
     behavior: Annotated[
         str | None,
-        Field(description=f"Mode DRS: {', '.join(DRS_BEHAVIORS)}"),
+        Field(description=f"DRS mode: {', '.join(DRS_BEHAVIORS)}"),
     ] = None,
     vmotion_rate: Annotated[
         int | None,
-        Field(ge=1, le=5, description="Agressivite des migrations (1=conservateur, 5=agressif)"),
+        Field(ge=1, le=5, description="Migration aggressiveness (1=conservative, 5=aggressive)"),
     ] = None,
 ) -> dict[str, Any] | str:
-    """Modifie la configuration DRS d'un cluster (activation, mode, agressivite).
+    """Modifies the DRS configuration of a cluster (enablement, mode, aggressiveness).
 
-    Fournir au moins un parametre. Retourne un JSON {action, status, cluster, changes}.
+    Provide at least one parameter. Returns a JSON {action, status, cluster, changes}.
     """
     if msg := _gate("cluster.ops"):
         return msg
     if enabled is None and behavior is None and vmotion_rate is None:
-        return "Erreur: fournir au moins enabled, behavior ou vmotion_rate."
+        return "Error: provide at least one of enabled, behavior or vmotion_rate."
     if behavior is not None and behavior not in DRS_BEHAVIORS:
-        return f"Erreur: behavior '{behavior}' invalide. Choisir parmi: {', '.join(DRS_BEHAVIORS)}."
+        return f"Error: invalid behavior '{behavior}'. Choose from: {', '.join(DRS_BEHAVIORS)}."
     try:
         c = find_cluster(cluster)
         drs = vim.cluster.DrsConfigInfo()
@@ -189,17 +189,17 @@ def vmware_set_drs(
         return error_text(e)
 
 
-@tool("vmware_set_ha", "Configurer HA", group="cluster.ops")
+@tool("vmware_set_ha", "Configure HA", group="cluster.ops")
 def vmware_set_ha(
-    cluster: Annotated[str, Field(description="Nom du cluster")],
-    enabled: Annotated[bool, Field(description="Activer (true) ou desactiver (false) HA")],
+    cluster: Annotated[str, Field(description="Cluster name")],
+    enabled: Annotated[bool, Field(description="Enable (true) or disable (false) HA")],
     admission_control: Annotated[
-        bool | None, Field(description="Activer le controle d'admission (capacite de failover)")
+        bool | None, Field(description="Enable admission control (failover capacity)")
     ] = None,
 ) -> dict[str, Any] | str:
-    """Active ou desactive vSphere HA (DAS) sur un cluster.
+    """Enables or disables vSphere HA (DAS) on a cluster.
 
-    Retourne un JSON {action, status, cluster, changes}.
+    Returns a JSON {action, status, cluster, changes}.
     """
     if msg := _gate("cluster.ops"):
         return msg
@@ -217,16 +217,14 @@ def vmware_set_ha(
         return error_text(e)
 
 
-@tool("vmware_apply_drs_recommendation", "Appliquer une recommandation DRS", group="cluster.ops")
+@tool("vmware_apply_drs_recommendation", "Apply a DRS recommendation", group="cluster.ops")
 def vmware_apply_drs_recommendation(
-    cluster: Annotated[str, Field(description="Nom du cluster")],
-    key: Annotated[
-        str, Field(description="Cle de la recommandation (cf. vmware_drs_recommendations)")
-    ],
+    cluster: Annotated[str, Field(description="Cluster name")],
+    key: Annotated[str, Field(description="Recommendation key (see vmware_drs_recommendations)")],
 ) -> dict[str, Any] | str:
-    """Applique une recommandation DRS en attente (declenche les migrations proposees).
+    """Applies a pending DRS recommendation (triggers the proposed migrations).
 
-    Retourne un JSON {action, status, cluster, key}.
+    Returns a JSON {action, status, cluster, key}.
     """
     if msg := _gate("cluster.ops"):
         return msg
@@ -235,8 +233,8 @@ def vmware_apply_drs_recommendation(
         known = [r.key for r in c.recommendation or []]
         if key not in known:
             return (
-                f"Erreur: recommandation '{key}' inconnue sur '{c.name}'. "
-                f"Cles en attente: {', '.join(known) or 'aucune'}."
+                f"Error: recommendation '{key}' unknown on '{c.name}'. "
+                f"Pending keys: {', '.join(known) or 'none'}."
             )
         c.ApplyRecommendation(key)
         return {
@@ -249,46 +247,43 @@ def vmware_apply_drs_recommendation(
         return error_text(e)
 
 
-@tool("vmware_set_affinity_rule", "Creer/supprimer une regle d'affinite", group="cluster.ops")
+@tool("vmware_set_affinity_rule", "Create/delete an affinity rule", group="cluster.ops")
 def vmware_set_affinity_rule(
-    cluster: Annotated[str, Field(description="Nom du cluster")],
-    action: Annotated[str, Field(description="create ou delete")],
-    name: Annotated[str, Field(min_length=1, max_length=80, description="Nom de la regle")],
+    cluster: Annotated[str, Field(description="Cluster name")],
+    action: Annotated[str, Field(description="create or delete")],
+    name: Annotated[str, Field(min_length=1, max_length=80, description="Rule name")],
     rule_type: Annotated[
         str,
         Field(
-            description="affinity (VMs ensemble) ou anti_affinity (VMs separees). "
-            "Requis pour create."
+            description="affinity (VMs kept together) or anti_affinity (VMs kept apart). "
+            "Required for create."
         ),
     ] = "anti_affinity",
     vms: Annotated[
         list[str] | None,
-        Field(description="VMs concernees (noms ou MoIDs), minimum 2. Requis pour create."),
+        Field(description="Target VMs (names or MoIDs), minimum 2. Required for create."),
     ] = None,
 ) -> dict[str, Any] | str:
-    """Cree ou supprime une regle d'affinite/anti-affinite VM-VM sur un cluster.
+    """Creates or deletes a VM-VM affinity/anti-affinity rule on a cluster.
 
-    Retourne un JSON {action, status, cluster, rule}.
+    Returns a JSON {action, status, cluster, rule}.
     """
     if msg := _gate("cluster.ops"):
         return msg
     if action not in ("create", "delete"):
-        return "Erreur: action invalide, choisir create ou delete."
+        return "Error: invalid action, choose create or delete."
     if rule_type not in ("affinity", "anti_affinity"):
-        return "Erreur: rule_type invalide, choisir affinity ou anti_affinity."
+        return "Error: invalid rule_type, choose affinity or anti_affinity."
     try:
         c = find_cluster(cluster)
         if action == "delete":
             match = [r for r in (c.configurationEx.rule or []) if r.name == name]
             if not match:
-                return (
-                    f"Erreur: regle '{name}' introuvable sur '{c.name}' "
-                    "(vmware_list_affinity_rules)."
-                )
+                return f"Error: rule '{name}' not found on '{c.name}' (vmware_list_affinity_rules)."
             rule_spec = vim.cluster.RuleSpec(operation="remove", removeKey=match[0].key)
         else:
             if not vms or len(vms) < 2:
-                return "Erreur: create exige au moins 2 VMs."
+                return "Error: create requires at least 2 VMs."
             vm_objs = [find_vm(v) for v in vms]
             info_cls = (
                 vim.cluster.AffinityRuleSpec

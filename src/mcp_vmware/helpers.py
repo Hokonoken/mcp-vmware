@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: MIT
 # SPDX-FileCopyrightText: 2026 Hokonoken
 
-"""Utilitaires partages : resolution d'objets, vues d'inventaire, taches, serialisation."""
+"""Shared utilities: object resolution, inventory views, tasks, serialization."""
 
 import json
 from collections.abc import Callable, Iterator
@@ -16,7 +16,7 @@ from .connection import get_si
 
 
 class ResponseFormat(StrEnum):
-    """Format de sortie des outils de listing."""
+    """Output format of the listing tools."""
 
     MARKDOWN = "markdown"
     JSON = "json"
@@ -24,11 +24,11 @@ class ResponseFormat(StrEnum):
 
 @contextmanager
 def container_view(obj_type: type) -> Iterator[list[Any]]:
-    """Vue d'inventaire sur tout le vCenter pour un type de managed object."""
+    """Inventory view over the whole vCenter for one managed object type."""
     si = get_si()
     view_manager = si.content.viewManager
     if view_manager is None:
-        raise RuntimeError("viewManager indisponible sur ce vCenter.")
+        raise RuntimeError("viewManager unavailable on this vCenter.")
     view = view_manager.CreateContainerView(si.content.rootFolder, [obj_type], True)
     try:
         yield list(view.view)
@@ -37,38 +37,38 @@ def container_view(obj_type: type) -> Iterator[list[Any]]:
 
 
 def find_vm(name_or_moid: str) -> vim.VirtualMachine:
-    """Resout une VM par MoID (vm-123) ou par nom exact (insensible a la casse).
+    """Resolve a VM by MoID (vm-123) or by exact name (case-insensitive).
 
-    Leve ValueError avec suggestions si introuvable ou ambigu.
+    Raises ValueError with suggestions when not found or ambiguous.
     """
     with container_view(vim.VirtualMachine) as vms:
         if name_or_moid.startswith("vm-"):
             for vm in vms:
                 if vm._moId == name_or_moid:
                     return vm
-            raise ValueError(f"Aucune VM avec le MoID '{name_or_moid}'.")
+            raise ValueError(f"No VM with MoID '{name_or_moid}'.")
         exact = [vm for vm in vms if vm.name.lower() == name_or_moid.lower()]
         if len(exact) == 1:
             return exact[0]
         if len(exact) > 1:
             moids = ", ".join(f"{vm.name} ({vm._moId})" for vm in exact)
-            raise ValueError(f"Plusieurs VMs nommees '{name_or_moid}': {moids}. Utiliser le MoID.")
+            raise ValueError(f"Multiple VMs named '{name_or_moid}': {moids}. Use the MoID.")
         partial = [vm.name for vm in vms if name_or_moid.lower() in vm.name.lower()][:10]
-        hint = f" VMs proches: {', '.join(partial)}." if partial else ""
-        raise ValueError(f"VM '{name_or_moid}' introuvable.{hint}")
+        hint = f" Close matches: {', '.join(partial)}." if partial else ""
+        raise ValueError(f"VM '{name_or_moid}' not found.{hint}")
 
 
 def _find_entity(obj_type: type, kind: str, name: str) -> Any:
-    """Resout un objet d'inventaire par nom exact (insensible a la casse)."""
+    """Resolve an inventory object by exact name (case-insensitive)."""
     with container_view(obj_type) as objs:
         exact = [o for o in objs if o.name.lower() == name.lower()]
         if len(exact) == 1:
             return exact[0]
         if len(exact) > 1:
             moids = ", ".join(f"{o.name} ({o._moId})" for o in exact)
-            raise ValueError(f"Plusieurs {kind}s nommes '{name}': {moids}.")
+            raise ValueError(f"Multiple {kind}s named '{name}': {moids}.")
         known = ", ".join(sorted(o.name for o in objs)[:15])
-        raise ValueError(f"{kind} '{name}' introuvable. Disponibles: {known}")
+        raise ValueError(f"{kind} '{name}' not found. Available: {known}")
 
 
 def find_cluster(name: str) -> vim.ClusterComputeResource:
@@ -76,11 +76,11 @@ def find_cluster(name: str) -> vim.ClusterComputeResource:
 
 
 def find_host(name: str) -> vim.HostSystem:
-    return _find_entity(vim.HostSystem, "hote ESXi", name)
+    return _find_entity(vim.HostSystem, "ESXi host", name)
 
 
 def wait_for_task(task: vim.Task, timeout_s: int = 600) -> Any:
-    """Attend la fin d'une tache vCenter, retourne son resultat ou leve RuntimeError."""
+    """Wait for a vCenter task to finish, return its result or raise RuntimeError."""
     import time
 
     deadline = time.monotonic() + timeout_s
@@ -89,11 +89,11 @@ def wait_for_task(task: vim.Task, timeout_s: int = 600) -> Any:
         if state == vim.TaskInfo.State.success:
             return task.info.result
         if state == vim.TaskInfo.State.error:
-            msg = getattr(task.info.error, "msg", None) or "erreur inconnue"
-            raise RuntimeError(f"Tache vCenter en echec: {msg}")
+            msg = getattr(task.info.error, "msg", None) or "unknown error"
+            raise RuntimeError(f"vCenter task failed: {msg}")
         time.sleep(1)
     raise RuntimeError(
-        f"Tache vCenter non terminee apres {timeout_s}s (elle continue cote vCenter)."
+        f"vCenter task not finished after {timeout_s}s (it keeps running on the vCenter side)."
     )
 
 
@@ -103,10 +103,10 @@ async def wait_for_task_async(
     progress: Callable[..., Any] | None = None,
     label: str = "",
 ) -> Any:
-    """Version async de wait_for_task avec remontee de progression.
+    """Async version of wait_for_task with progress reporting.
 
-    `progress` est une coroutine (typiquement ctx.report_progress) appelee avec
-    (progression, total=100, message) a chaque changement de pourcentage.
+    `progress` is a coroutine (typically ctx.report_progress) called with
+    (progress, total=100, message) on every percentage change.
     """
     import time
 
@@ -118,22 +118,22 @@ async def wait_for_task_async(
         info = await anyio.to_thread.run_sync(lambda: task.info)
         if info.state == vim.TaskInfo.State.success:
             if progress is not None:
-                await progress(100.0, 100.0, f"{label} termine" if label else None)
+                await progress(100.0, 100.0, f"{label} finished" if label else None)
             return info.result
         if info.state == vim.TaskInfo.State.error:
-            msg = getattr(info.error, "msg", None) or "erreur inconnue"
-            raise RuntimeError(f"Tache vCenter en echec: {msg}")
+            msg = getattr(info.error, "msg", None) or "unknown error"
+            raise RuntimeError(f"vCenter task failed: {msg}")
         if progress is not None and info.progress is not None and info.progress != last:
             last = info.progress
             await progress(float(info.progress), 100.0, label or None)
         await anyio.sleep(1)
     raise RuntimeError(
-        f"Tache vCenter non terminee apres {timeout_s}s (elle continue cote vCenter)."
+        f"vCenter task not finished after {timeout_s}s (it keeps running on the vCenter side)."
     )
 
 
 def paginate(items: list[Any], limit: int, offset: int) -> tuple[list[Any], dict[str, Any]]:
-    """Decoupe une liste et retourne (page, metadonnees de pagination)."""
+    """Slice a list and return (page, pagination metadata)."""
     total = len(items)
     page = items[offset : offset + limit]
     end = offset + len(page)
@@ -155,9 +155,9 @@ def _md_cell(value: Any) -> str:
 
 
 def md_table(rows: list[dict[str, Any]], columns: list[str] | None = None) -> str:
-    """Rend une liste de dicts plats en tableau markdown."""
+    """Render a list of flat dicts as a markdown table."""
     if not rows:
-        return "(aucun element)"
+        return "(no items)"
     cols = columns or list(rows[0].keys())
     lines = [
         "| " + " | ".join(cols) + " |",
@@ -175,18 +175,18 @@ def render_listing(
     meta: dict[str, Any] | None = None,
     columns: list[str] | None = None,
 ) -> dict[str, Any] | str:
-    """Sortie uniforme des listings : dict (JSON structure) ou tableau markdown."""
+    """Uniform listing output: dict (structured JSON) or markdown table."""
     meta = meta if meta is not None else {"count": len(rows)}
     if fmt == ResponseFormat.JSON:
         return {**meta, key: rows}
     parts = [f"# {title}", ""]
     if "total" in meta:
-        shown = f"{meta['count']} affiche(s) sur {meta['total']}"
+        shown = f"{meta['count']} shown out of {meta['total']}"
         if meta.get("has_more"):
-            shown += f" — suite avec offset={meta['next_offset']}"
+            shown += f" — continue with offset={meta['next_offset']}"
         parts.append(shown)
     else:
-        parts.append(f"{meta.get('count', len(rows))} element(s)")
+        parts.append(f"{meta.get('count', len(rows))} item(s)")
     parts.extend(["", md_table(rows, columns)])
     return "\n".join(parts)
 
@@ -214,18 +214,15 @@ def fmt_bytes(n: int | None) -> str | None:
 
 def error_text(e: Exception) -> str:
     if isinstance(e, ValueError | RuntimeError):
-        return f"Erreur: {e}"
+        return f"Error: {e}"
     if isinstance(e, vim.fault.NoPermission):
-        return "Erreur: permission vCenter insuffisante pour cette operation."
+        return "Error: insufficient vCenter permission for this operation."
     if isinstance(e, vim.fault.InvalidPowerState):
-        return (
-            "Erreur: etat d'alimentation incompatible avec cette operation "
-            "(verifier avec vmware_get_vm)."
-        )
-    return f"Erreur inattendue ({type(e).__name__}): {e}"
+        return "Error: power state incompatible with this operation (check with vmware_get_vm)."
+    return f"Unexpected error ({type(e).__name__}): {e}"
 
 
-# ------------------------------------------------------------------ serialisation
+# ------------------------------------------------------------------ serialization
 
 
 def vm_summary(vm: vim.VirtualMachine) -> dict[str, Any]:
