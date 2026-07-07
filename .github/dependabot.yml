@@ -9,6 +9,15 @@ updates:
     labels:
       - dependencies
 
+  # Container base image (keeps the FROM digest pin current)
+  - package-ecosystem: docker
+    directory: "/"
+    schedule:
+      interval: weekly
+    labels:
+      - dependencies
+      - ci
+
   # GitHub Actions (keeps the SHA pins current)
   - package-ecosystem: github-actions
     directory: "/"
