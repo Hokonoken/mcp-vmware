@@ -158,9 +158,22 @@ update `api-map/coverage.yaml` in the same commit, deploy, smoke test.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md).
 
-## Warning
+## Disclaimer
 
-This server gives an LLM the ability to act on virtualization infrastructure.
-Start with the `viewer` role, use a vCenter service account with privileges
-aligned to the chosen role (`docs/roles.md`), and only raise privileges after
-validating the write tools on a test scope.
+This is a **personal, independent project** — my own take on an MCP server for
+vCenter. It is **not** an official product and is **not affiliated with,
+endorsed by, or supported by** VMware, Broadcom, Anthropic, or any employer.
+
+- **Provided "as is", without warranty of any kind** (see [LICENSE](LICENSE)).
+  Use at your own risk.
+- **No support and no SLA.** Issues and pull requests are welcome and handled on
+  a best-effort basis, on my own time — there is no guarantee of a response or a
+  fix.
+- **Not production-hardened.** This server gives an LLM the ability to act on
+  virtualization infrastructure. Review the code before running it, start with
+  the `viewer` role, use a vCenter service account whose privileges match the
+  chosen role (`docs/roles.md`), and only raise privileges after validating the
+  write tools on a disposable test scope. You are responsible for any action it
+  performs on your environment.
+- **Trademarks** (VMware, vSphere, vCenter, ESXi) belong to their respective
+  owners and are used here for identification only.

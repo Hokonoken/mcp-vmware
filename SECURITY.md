@@ -1,5 +1,9 @@
 # Security Policy
 
+This is a personal, best-effort open-source project with no support commitment
+or SLA (see the Disclaimer in the README). Security reports are still taken
+seriously and handled as fast as I reasonably can.
+
 ## Supported versions
 
 | Version | Supported |
