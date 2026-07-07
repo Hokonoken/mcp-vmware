@@ -1,0 +1,240 @@
+# Matrice de couverture API -> outils MCP
+#
+# C'est le fichier de pilotage de l'evolution du serveur : chaque zone de l'API
+# cartographiee (api-map/<version>-<build>/) y est rattachee a un outil MCP avec
+# un statut. On le met a jour a chaque ajout d'outil et a chaque nouveau
+# snapshot de la carte (upgrade vCenter).
+#
+# Statuts : todo | in_progress | done | wontdo
+# Kind    : read | write
+# Source  : vim25 (SOAP/pyvmomi) | rest (vAPI)
+
+map_version: 8.0.3-25092719
+
+tools:
+  # ---------------------------------------------------------------- Phase 2 : READ
+  - tool: vmware_list_vms
+    kind: read
+    status: done
+    source: vim25
+    covers: [vim.view.ContainerView, vim.VirtualMachine.summary]
+  - tool: vmware_get_vm
+    kind: read
+    status: done
+    source: vim25
+    covers: [vim.VirtualMachine.config, vim.VirtualMachine.guest, vim.VirtualMachine.snapshot]
+  - tool: vmware_list_hosts
+    kind: read
+    status: done
+    source: vim25
+    covers: [vim.HostSystem.summary]
+  - tool: vmware_list_clusters
+    kind: read
+    status: done
+    source: vim25
+    covers: [vim.ClusterComputeResource.summary]
+  - tool: vmware_list_datastores
+    kind: read
+    status: done
+    source: vim25
+    covers: [vim.Datastore.summary]
+  - tool: vmware_list_networks
+    kind: read
+    status: done
+    source: vim25
+    covers: [vim.Network, vim.dvs.DistributedVirtualPortgroup]
+  - tool: vmware_list_snapshots
+    kind: read
+    status: done
+    source: vim25
+    covers: [vim.VirtualMachine.snapshot]
+  - tool: vmware_recent_tasks
+    kind: read
+    status: done
+    source: vim25
+    covers: [vim.TaskManager.recentTask]
+  - tool: vmware_list_events
+    kind: read
+    status: done
+    source: vim25
+    covers: [vim.event.EventManager.QueryEvents]
+
+  # --------------------------------------------------------------- Phase 3 : WRITE
+  - tool: vmware_power_vm
+    kind: write
+    status: in_progress  # implemente, en attente d'une VM de test
+    source: vim25
+    covers:
+      - vim.VirtualMachine.PowerOnVM_Task
+      - vim.VirtualMachine.PowerOffVM_Task
+      - vim.VirtualMachine.ResetVM_Task
+      - vim.VirtualMachine.SuspendVM_Task
+      - vim.VirtualMachine.ShutdownGuest
+      - vim.VirtualMachine.RebootGuest
+  - tool: vmware_snapshot_create
+    kind: write
+    status: in_progress  # implemente, en attente d'une VM de test
+    source: vim25
+    covers: [vim.VirtualMachine.CreateSnapshot_Task]
+  - tool: vmware_snapshot_revert
+    kind: write
+    status: in_progress  # implemente, en attente d'une VM de test
+    source: vim25
+    covers: [vim.vm.Snapshot.RevertToSnapshot_Task]
+  - tool: vmware_snapshot_delete
+    kind: write
+    status: in_progress  # implemente, en attente d'une VM de test
+    source: vim25
+    covers: [vim.vm.Snapshot.RemoveSnapshot_Task]
+  - tool: vmware_reconfigure_vm
+    kind: write
+    status: in_progress  # implemente, en attente d'une VM de test
+    source: vim25
+    covers: [vim.VirtualMachine.ReconfigVM_Task]
+  - tool: vmware_clone_vm
+    kind: write
+    status: in_progress  # implemente, en attente d'une VM de test
+    source: vim25
+    covers: [vim.VirtualMachine.CloneVM_Task]
+  - tool: vmware_delete_vm
+    kind: write
+    status: in_progress  # implemente, en attente d'une VM de test
+    source: vim25
+    covers: [vim.VirtualMachine.Destroy_Task]
+  - tool: vmware_migrate_vm
+    kind: write
+    status: in_progress  # implemente, en attente d'une VM de test
+    source: vim25
+    covers: [vim.VirtualMachine.MigrateVM_Task, vim.VirtualMachine.RelocateVM_Task]
+
+  # ------------------------------------------- Lot cluster/HA/DRS/ESXi (roles)
+  - tool: vmware_get_cluster_config
+    kind: read
+    status: done
+    source: vim25
+    covers: [vim.cluster.DasConfigInfo, vim.cluster.DrsConfigInfo,
+             vim.ClusterComputeResource.retrieveDasAdvancedRuntimeInfo]
+  - tool: vmware_drs_recommendations
+    kind: read
+    status: done
+    source: vim25
+    covers: [vim.ClusterComputeResource.recommendation,
+             vim.ClusterComputeResource.refreshRecommendation]
+  - tool: vmware_list_affinity_rules
+    kind: read
+    status: done
+    source: vim25
+    covers: [vim.cluster.AffinityRuleSpec, vim.cluster.AntiAffinityRuleSpec]
+  - tool: vmware_get_host
+    kind: read
+    status: done
+    source: vim25
+    covers: [vim.HostSystem.summary, vim.HostSystem.runtime]
+  - tool: vmware_set_drs
+    kind: write
+    status: in_progress  # implemente, en attente de validation sur cluster de test
+    source: vim25
+    covers: [vim.ClusterComputeResource.reconfigure]
+  - tool: vmware_set_ha
+    kind: write
+    status: in_progress  # implemente, en attente de validation sur cluster de test
+    source: vim25
+    covers: [vim.ClusterComputeResource.reconfigure]
+  - tool: vmware_apply_drs_recommendation
+    kind: write
+    status: in_progress  # implemente, en attente d'une recommandation reelle
+    source: vim25
+    covers: [vim.ClusterComputeResource.applyRecommendation]
+  - tool: vmware_set_affinity_rule
+    kind: write
+    status: in_progress  # implemente, en attente de validation
+    source: vim25
+    covers: [vim.ClusterComputeResource.reconfigure]
+  - tool: vmware_host_maintenance
+    kind: write
+    status: in_progress  # implemente, tres sensible (evacuation DRS), confirm requis
+    source: vim25
+    covers: [vim.HostSystem.enterMaintenanceMode, vim.HostSystem.exitMaintenanceMode]
+  - tool: vmware_host_power
+    kind: write
+    status: in_progress  # implemente, le plus destructif, confirm + maintenance requis
+    source: vim25
+    covers: [vim.HostSystem.reboot, vim.HostSystem.shutdown]
+  - tool: vmware_host_connection
+    kind: write
+    status: in_progress  # implemente
+    source: vim25
+    covers: [vim.HostSystem.reconnect, vim.HostSystem.disconnect]
+
+  # ------------------------------------- Lot equivalent esxcli (host.config)
+  - tool: vmware_host_services
+    kind: read
+    status: done
+    source: vim25
+    covers: [vim.host.ServiceSystem.serviceInfo]
+  - tool: vmware_host_network_config
+    kind: read
+    status: done
+    source: vim25
+    covers: [vim.host.NetworkSystem.networkInfo]
+  - tool: vmware_host_storage
+    kind: read
+    status: done
+    source: vim25
+    covers: [vim.host.StorageSystem.storageDeviceInfo]
+  - tool: vmware_host_firewall
+    kind: read
+    status: done
+    source: vim25
+    covers: [vim.host.FirewallSystem.firewallInfo]
+  - tool: vmware_host_advanced_settings
+    kind: read
+    status: done
+    source: vim25
+    covers: [vim.option.OptionManager.queryView]
+  - tool: vmware_host_vibs
+    kind: read
+    status: done
+    source: vim25
+    covers: [vim.host.ImageConfigManager.fetchSoftwarePackages]
+  - tool: vmware_host_health
+    kind: read
+    status: done
+    source: vim25
+    covers: [vim.host.HealthStatusSystem.runtime]
+  - tool: vmware_host_service_action
+    kind: write
+    status: in_progress  # implemente, a valider sur un service anodin (ntpd restart)
+    source: vim25
+    covers: [vim.host.ServiceSystem.start, vim.host.ServiceSystem.stop,
+             vim.host.ServiceSystem.restart, vim.host.ServiceSystem.updatePolicy]
+  - tool: vmware_host_firewall_ruleset
+    kind: write
+    status: in_progress  # implemente
+    source: vim25
+    covers: [vim.host.FirewallSystem.enableRuleset, vim.host.FirewallSystem.disableRuleset]
+  - tool: vmware_host_set_advanced_setting
+    kind: write
+    status: in_progress  # implemente
+    source: vim25
+    covers: [vim.option.OptionManager.updateValues]
+  - tool: vmware_host_rescan_storage
+    kind: write
+    status: in_progress  # implemente, operation sans risque
+    source: vim25
+    covers: [vim.host.StorageSystem.rescanAllHba, vim.host.StorageSystem.rescanVmfs]
+
+# Systeme de roles (2026-07-07) : 4 profils (viewer/operator/vm_admin/infra_admin)
+# -> groupes read, vm.power, vm.snapshot, vm.config, vm.lifecycle, cluster.ops,
+#    host.ops. Templates de privileges vCenter correspondants : docs/roles.md.
+
+# Zones connues non couvertes en v1 (backlog v2+) :
+backlog:
+  - {area: creation de VM from scratch, api: vim.Folder.CreateVM_Task}
+  - {area: tags, api: com.vmware.cis.tagging (rest)}
+  - {area: content library, api: com.vmware.content (rest)}
+  - {area: performances temps reel, api: vim.PerformanceManager}
+  - {area: reseaux en ecriture, api: vim.dvs.*}
+  - {area: datastores / storage vMotion avance, api: vim.StorageResourceManager}
+  - {area: permissions / roles, api: vim.AuthorizationManager}
+  - {area: lifecycle vCenter (updates), api: com.vmware.vcenter.lcm (rest)}

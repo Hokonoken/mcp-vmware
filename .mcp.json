@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "vmware": {
+      "command": "ssh",
+      "args": ["jumphost", "VMware/mcp-vmware/run.sh"]
+    }
+  }
+}

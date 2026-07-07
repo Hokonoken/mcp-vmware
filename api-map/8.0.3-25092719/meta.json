@@ -1,0 +1,22 @@
+{
+  "vcenter": {
+    "fullName": "VMware vCenter Server 8.0.3 build-25092719",
+    "version": "8.0.3",
+    "build": "25092719",
+    "apiVersion": "8.0.3.0",
+    "instanceUuid": "00000000-0000-0000-0000-000000000000"
+  },
+  "snapshotDate": "2026-07-07T07:14:57.668877+00:00",
+  "pyvmomiVersion": "?",
+  "python": "3.12.13",
+  "note": "kind (read/write) est une heuristique sur le nom de la methode/operation",
+  "stats": {
+    "vim25_managed_objects": 198,
+    "vim25_methods": 1409,
+    "vim25_methods_read": 487,
+    "vim25_methods_write": 922,
+    "rest_components": 32,
+    "rest_services": 404,
+    "rest_operations": 1064
+  }
+}

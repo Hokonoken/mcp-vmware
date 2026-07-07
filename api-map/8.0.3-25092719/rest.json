@@ -1,0 +1,8608 @@
+{
+  "com.vmware.appliance": {
+    "services": {
+      "com.vmware.appliance.access.consolecli": [
+        {
+          "name": "set",
+          "kind": "write",
+          "params": [
+            "enabled"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.appliance.access.shell": [
+        {
+          "name": "set",
+          "kind": "write",
+          "params": [
+            "config"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.appliance.access.dcui": [
+        {
+          "name": "set",
+          "kind": "write",
+          "params": [
+            "enabled"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.appliance.access.ssh": [
+        {
+          "name": "set",
+          "kind": "write",
+          "params": [
+            "enabled"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.appliance.networking.interfaces.ipv4": [
+        {
+          "name": "set",
+          "kind": "write",
+          "params": [
+            "interface_name",
+            "config"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "interface_name"
+          ]
+        }
+      ],
+      "com.vmware.appliance.networking.interfaces.ipv6": [
+        {
+          "name": "set",
+          "kind": "write",
+          "params": [
+            "interface_name",
+            "config"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "interface_name"
+          ]
+        }
+      ],
+      "com.vmware.appliance.tls.profiles": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "profile"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.appliance.logging.forwarding": [
+        {
+          "name": "set",
+          "kind": "write",
+          "params": [
+            "cfg_list"
+          ]
+        },
+        {
+          "name": "test",
+          "kind": "write",
+          "params": [
+            "send_test_message"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.appliance.local_accounts.policy": [
+        {
+          "name": "set",
+          "kind": "write",
+          "params": [
+            "policy"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.appliance.system.time.timezone": [
+        {
+          "name": "set",
+          "kind": "write",
+          "params": [
+            "name"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.appliance.networking.no_proxy": [
+        {
+          "name": "set",
+          "kind": "write",
+          "params": [
+            "servers"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.appliance.networking.interfaces": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "interface_name"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.appliance.networking.proxy": [
+        {
+          "name": "set",
+          "kind": "write",
+          "params": [
+            "protocol",
+            "config"
+          ]
+        },
+        {
+          "name": "test",
+          "kind": "write",
+          "params": [
+            "host",
+            "protocol",
+            "config"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "protocol"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "protocol"
+          ]
+        }
+      ],
+      "com.vmware.appliance.networking.dns.hostname": [
+        {
+          "name": "set",
+          "kind": "write",
+          "params": [
+            "name"
+          ]
+        },
+        {
+          "name": "test",
+          "kind": "write",
+          "params": [
+            "name"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.appliance.networking.dns.domains": [
+        {
+          "name": "add",
+          "kind": "write",
+          "params": [
+            "domain"
+          ]
+        },
+        {
+          "name": "set",
+          "kind": "write",
+          "params": [
+            "domains"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.appliance.networking.dns.servers": [
+        {
+          "name": "add",
+          "kind": "write",
+          "params": [
+            "server"
+          ]
+        },
+        {
+          "name": "set",
+          "kind": "write",
+          "params": [
+            "config"
+          ]
+        },
+        {
+          "name": "test",
+          "kind": "write",
+          "params": [
+            "servers"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.appliance.system.storage": [
+        {
+          "name": "resize",
+          "kind": "write",
+          "params": []
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        },
+        {
+          "name": "resize_ex",
+          "kind": "write",
+          "params": []
+        }
+      ],
+      "com.vmware.appliance.system.version": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.appliance.system.uptime": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.appliance.system.time": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.appliance.update.pending": [
+        {
+          "name": "rollback",
+          "kind": "write",
+          "params": []
+        },
+        {
+          "name": "precheck",
+          "kind": "write",
+          "params": [
+            "version",
+            "component"
+          ]
+        },
+        {
+          "name": "list_upgradeable_components",
+          "kind": "read",
+          "params": [
+            "version"
+          ]
+        },
+        {
+          "name": "stage",
+          "kind": "write",
+          "params": [
+            "version",
+            "component"
+          ]
+        },
+        {
+          "name": "install",
+          "kind": "write",
+          "params": [
+            "version",
+            "user_data",
+            "component"
+          ]
+        },
+        {
+          "name": "stage_and_install",
+          "kind": "write",
+          "params": [
+            "version",
+            "user_data",
+            "component"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "version",
+            "component"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "source_type",
+            "url",
+            "enable_list_major_upgrade_versions"
+          ]
+        },
+        {
+          "name": "validate",
+          "kind": "read",
+          "params": [
+            "version",
+            "user_data",
+            "component"
+          ]
+        }
+      ],
+      "com.vmware.appliance.update.staged": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": []
+        }
+      ],
+      "com.vmware.appliance.update.policy": [
+        {
+          "name": "set",
+          "kind": "write",
+          "params": [
+            "policy"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.appliance.tls.profiles.global": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        },
+        {
+          "name": "set$task",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        }
+      ],
+      "com.vmware.appliance.system.security.global_fips": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        },
+        {
+          "name": "update",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        }
+      ],
+      "com.vmware.appliance.health.load": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.appliance.health.system": [
+        {
+          "name": "lastcheck",
+          "kind": "write",
+          "params": []
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.appliance.health.databasestorage": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.appliance.health.swap": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.appliance.health.applmgmt": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.appliance.health.softwarepackages": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.appliance.health.database": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.appliance.health.storage": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.appliance.health.mem": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.appliance.tls.manual_parameters.global": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.appliance.networking.firewall.inbound": [
+        {
+          "name": "set",
+          "kind": "write",
+          "params": [
+            "rules"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.appliance.services": [
+        {
+          "name": "stop",
+          "kind": "write",
+          "params": [
+            "service"
+          ]
+        },
+        {
+          "name": "restart",
+          "kind": "write",
+          "params": [
+            "service"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "service"
+          ]
+        },
+        {
+          "name": "start",
+          "kind": "write",
+          "params": [
+            "service"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.appliance.health_check_settings": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        },
+        {
+          "name": "update",
+          "kind": "write",
+          "params": [
+            "health_settings"
+          ]
+        }
+      ],
+      "com.vmware.appliance.timesync": [
+        {
+          "name": "set",
+          "kind": "write",
+          "params": [
+            "mode"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.appliance.health": [
+        {
+          "name": "messages",
+          "kind": "write",
+          "params": [
+            "item"
+          ]
+        }
+      ],
+      "com.vmware.appliance.local_accounts": [
+        {
+          "name": "set",
+          "kind": "write",
+          "params": [
+            "username",
+            "config"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "username"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "username",
+            "config"
+          ]
+        },
+        {
+          "name": "update",
+          "kind": "write",
+          "params": [
+            "username",
+            "config"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "username"
+          ]
+        }
+      ],
+      "com.vmware.appliance.monitoring": [
+        {
+          "name": "query",
+          "kind": "read",
+          "params": [
+            "item"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "stat_id"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.appliance.networking": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        },
+        {
+          "name": "update",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "reset",
+          "kind": "write",
+          "params": []
+        },
+        {
+          "name": "change$task",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        }
+      ],
+      "com.vmware.appliance.ntp": [
+        {
+          "name": "set",
+          "kind": "write",
+          "params": [
+            "servers"
+          ]
+        },
+        {
+          "name": "test",
+          "kind": "write",
+          "params": [
+            "servers"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.appliance.recovery": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.appliance.shutdown": [
+        {
+          "name": "cancel",
+          "kind": "write",
+          "params": []
+        },
+        {
+          "name": "reboot",
+          "kind": "write",
+          "params": [
+            "delay",
+            "reason"
+          ]
+        },
+        {
+          "name": "poweroff",
+          "kind": "write",
+          "params": [
+            "delay",
+            "reason"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.appliance.update": [
+        {
+          "name": "cancel",
+          "kind": "write",
+          "params": []
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.appliance.support_bundle": [
+        {
+          "name": "create$task",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "iteration",
+            "filter"
+          ]
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "id"
+          ]
+        }
+      ],
+      "com.vmware.appliance.cores": [
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.appliance.support_bundle.components": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        }
+      ]
+    }
+  },
+  "com.vmware.appliance.infraprofile": {
+    "services": {
+      "com.vmware.appliance.infraprofile.configs": [
+        {
+          "name": "validate$task",
+          "kind": "read",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        },
+        {
+          "name": "export",
+          "kind": "read",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "import_profile$task",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        }
+      ]
+    }
+  },
+  "com.vmware.appliance.recovery": {
+    "services": {
+      "com.vmware.appliance.recovery.reconciliation.job": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        }
+      ],
+      "com.vmware.appliance.recovery.restore": [
+        {
+          "name": "validate",
+          "kind": "read",
+          "params": [
+            "piece"
+          ]
+        }
+      ],
+      "com.vmware.appliance.recovery.backup": [
+        {
+          "name": "validate",
+          "kind": "read",
+          "params": [
+            "piece"
+          ]
+        }
+      ],
+      "com.vmware.appliance.recovery.restore.job": [
+        {
+          "name": "cancel",
+          "kind": "write",
+          "params": []
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "piece"
+          ]
+        }
+      ],
+      "com.vmware.appliance.recovery.backup.job.details": [
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "filter"
+          ]
+        }
+      ],
+      "com.vmware.appliance.recovery.backup.system_name.archive": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "spec",
+            "system_name",
+            "archive"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "loc_spec",
+            "system_name",
+            "filter_spec"
+          ]
+        }
+      ],
+      "com.vmware.appliance.recovery.backup.parts": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.appliance.recovery.backup.job": [
+        {
+          "name": "cancel",
+          "kind": "write",
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "piece"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.appliance.recovery.backup.schedules": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "schedule"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "schedule",
+            "spec"
+          ]
+        },
+        {
+          "name": "update",
+          "kind": "write",
+          "params": [
+            "schedule",
+            "spec"
+          ]
+        },
+        {
+          "name": "run",
+          "kind": "write",
+          "params": [
+            "schedule",
+            "comment"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "schedule"
+          ]
+        }
+      ],
+      "com.vmware.appliance.recovery.backup.system_name": [
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "loc_spec"
+          ]
+        }
+      ]
+    }
+  },
+  "com.vmware.appliance.vcenter.settings.v1": {
+    "services": {
+      "com.vmware.appliance.vcenter.settings.v1.config_current": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "invoker_type",
+            "components"
+          ]
+        }
+      ],
+      "com.vmware.appliance.vcenter.settings.v1.config": [
+        {
+          "name": "check_desired_state$task",
+          "kind": "read",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "apply_desired_state$task",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "scan$task",
+          "kind": "read",
+          "params": [
+            "version"
+          ]
+        },
+        {
+          "name": "scan_desired_state$task",
+          "kind": "read",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": []
+        }
+      ]
+    }
+  },
+  "com.vmware.appliance.vmon": {
+    "services": {
+      "com.vmware.appliance.vmon.service": [
+        {
+          "name": "stop",
+          "kind": "write",
+          "params": [
+            "service"
+          ]
+        },
+        {
+          "name": "restart",
+          "kind": "write",
+          "params": [
+            "service"
+          ]
+        },
+        {
+          "name": "list_details",
+          "kind": "read",
+          "params": []
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "service"
+          ]
+        },
+        {
+          "name": "start",
+          "kind": "write",
+          "params": [
+            "service"
+          ]
+        },
+        {
+          "name": "update",
+          "kind": "write",
+          "params": [
+            "service",
+            "spec"
+          ]
+        }
+      ]
+    }
+  },
+  "com.vmware.cis": {
+    "services": {
+      "com.vmware.cis.session": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": []
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": []
+        }
+      ],
+      "com.vmware.cis.tasks": [
+        {
+          "name": "cancel",
+          "kind": "write",
+          "params": [
+            "task"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "task",
+            "spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "filter_spec",
+            "result_spec"
+          ]
+        }
+      ]
+    }
+  },
+  "com.vmware.cis.tagging": {
+    "services": {
+      "com.vmware.cis.tagging.tag_association": [
+        {
+          "name": "list_attached_tags_on_objects",
+          "kind": "read",
+          "params": [
+            "object_ids"
+          ]
+        },
+        {
+          "name": "list_attachable_tags",
+          "kind": "read",
+          "params": [
+            "object_id"
+          ]
+        },
+        {
+          "name": "detach",
+          "kind": "write",
+          "params": [
+            "tag_id",
+            "object_id"
+          ]
+        },
+        {
+          "name": "list_attached_objects",
+          "kind": "read",
+          "params": [
+            "tag_id"
+          ]
+        },
+        {
+          "name": "attach",
+          "kind": "write",
+          "params": [
+            "tag_id",
+            "object_id"
+          ]
+        },
+        {
+          "name": "list_attached_objects_on_tags",
+          "kind": "read",
+          "params": [
+            "tag_ids"
+          ]
+        },
+        {
+          "name": "attach_multiple_tags_to_object",
+          "kind": "write",
+          "params": [
+            "object_id",
+            "tag_ids"
+          ]
+        },
+        {
+          "name": "attach_tag_to_multiple_objects",
+          "kind": "write",
+          "params": [
+            "tag_id",
+            "object_ids"
+          ]
+        },
+        {
+          "name": "detach_tag_from_multiple_objects",
+          "kind": "write",
+          "params": [
+            "tag_id",
+            "object_ids"
+          ]
+        },
+        {
+          "name": "list_attached_tags",
+          "kind": "read",
+          "params": [
+            "object_id"
+          ]
+        },
+        {
+          "name": "detach_multiple_tags_from_object",
+          "kind": "write",
+          "params": [
+            "object_id",
+            "tag_ids"
+          ]
+        }
+      ],
+      "com.vmware.cis.tagging.category": [
+        {
+          "name": "add_to_used_by",
+          "kind": "write",
+          "params": [
+            "category_id",
+            "used_by_entity"
+          ]
+        },
+        {
+          "name": "list_used_categories",
+          "kind": "read",
+          "params": [
+            "used_by_entity"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "category_id"
+          ]
+        },
+        {
+          "name": "revoke_propagating_permissions",
+          "kind": "write",
+          "params": [
+            "category_id"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "create_spec"
+          ]
+        },
+        {
+          "name": "update",
+          "kind": "write",
+          "params": [
+            "category_id",
+            "update_spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "category_id"
+          ]
+        },
+        {
+          "name": "remove_from_used_by",
+          "kind": "write",
+          "params": [
+            "category_id",
+            "used_by_entity"
+          ]
+        }
+      ],
+      "com.vmware.cis.tagging.tag": [
+        {
+          "name": "add_to_used_by",
+          "kind": "write",
+          "params": [
+            "tag_id",
+            "used_by_entity"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "tag_id"
+          ]
+        },
+        {
+          "name": "revoke_propagating_permissions",
+          "kind": "write",
+          "params": [
+            "tag_id"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "create_spec"
+          ]
+        },
+        {
+          "name": "update",
+          "kind": "write",
+          "params": [
+            "tag_id",
+            "update_spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        },
+        {
+          "name": "list_used_tags",
+          "kind": "read",
+          "params": [
+            "used_by_entity"
+          ]
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "tag_id"
+          ]
+        },
+        {
+          "name": "remove_from_used_by",
+          "kind": "write",
+          "params": [
+            "tag_id",
+            "used_by_entity"
+          ]
+        },
+        {
+          "name": "list_tags_for_category",
+          "kind": "read",
+          "params": [
+            "category_id"
+          ]
+        }
+      ]
+    }
+  },
+  "com.vmware.content": {
+    "services": {
+      "com.vmware.content.library": [
+        {
+          "name": "find",
+          "kind": "read",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "library_id"
+          ]
+        },
+        {
+          "name": "update",
+          "kind": "write",
+          "params": [
+            "library_id",
+            "update_spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.content.local_library": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "library_id"
+          ]
+        },
+        {
+          "name": "publish",
+          "kind": "write",
+          "params": [
+            "library_id",
+            "subscriptions"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "client_token",
+            "create_spec"
+          ]
+        },
+        {
+          "name": "update",
+          "kind": "write",
+          "params": [
+            "library_id",
+            "update_spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "library_id"
+          ]
+        }
+      ],
+      "com.vmware.content.configuration": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        },
+        {
+          "name": "update",
+          "kind": "write",
+          "params": [
+            "model"
+          ]
+        }
+      ],
+      "com.vmware.content.security_policies": [
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.content.subscribed_library": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "library_id"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "client_token",
+            "create_spec"
+          ]
+        },
+        {
+          "name": "update",
+          "kind": "write",
+          "params": [
+            "library_id",
+            "update_spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "library_id"
+          ]
+        },
+        {
+          "name": "sync",
+          "kind": "write",
+          "params": [
+            "library_id"
+          ]
+        },
+        {
+          "name": "evict",
+          "kind": "write",
+          "params": [
+            "library_id"
+          ]
+        },
+        {
+          "name": "probe",
+          "kind": "write",
+          "params": [
+            "subscription_info"
+          ]
+        }
+      ],
+      "com.vmware.content.type": [
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.content.trusted_certificates": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "certificate"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "certificate"
+          ]
+        }
+      ],
+      "com.vmware.content.library.subscribed_item": [
+        {
+          "name": "sync",
+          "kind": "write",
+          "params": [
+            "library_item_id",
+            "force_sync_content",
+            "sync_optional_files"
+          ]
+        },
+        {
+          "name": "evict",
+          "kind": "write",
+          "params": [
+            "library_item_id"
+          ]
+        }
+      ],
+      "com.vmware.content.library.item": [
+        {
+          "name": "find",
+          "kind": "read",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "library_item_id"
+          ]
+        },
+        {
+          "name": "publish",
+          "kind": "write",
+          "params": [
+            "library_item_id",
+            "force_sync_content",
+            "subscriptions"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "client_token",
+            "create_spec"
+          ]
+        },
+        {
+          "name": "update",
+          "kind": "write",
+          "params": [
+            "library_item_id",
+            "update_spec"
+          ]
+        },
+        {
+          "name": "copy",
+          "kind": "write",
+          "params": [
+            "client_token",
+            "source_library_item_id",
+            "destination_create_spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "library_id"
+          ]
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "library_item_id"
+          ]
+        }
+      ],
+      "com.vmware.content.library.subscriptions": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "library",
+            "subscription"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "client_token",
+            "library",
+            "spec"
+          ]
+        },
+        {
+          "name": "update",
+          "kind": "write",
+          "params": [
+            "library",
+            "subscription",
+            "spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "library"
+          ]
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "library",
+            "subscription"
+          ]
+        }
+      ],
+      "com.vmware.content.library.item.update_session": [
+        {
+          "name": "cancel",
+          "kind": "write",
+          "params": [
+            "update_session_id"
+          ]
+        },
+        {
+          "name": "fail",
+          "kind": "write",
+          "params": [
+            "update_session_id",
+            "client_error_message"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "update_session_id"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "client_token",
+            "create_spec"
+          ]
+        },
+        {
+          "name": "update",
+          "kind": "write",
+          "params": [
+            "update_session_id",
+            "update_spec"
+          ]
+        },
+        {
+          "name": "keep_alive",
+          "kind": "write",
+          "params": [
+            "update_session_id",
+            "client_progress"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "library_item_id"
+          ]
+        },
+        {
+          "name": "complete",
+          "kind": "write",
+          "params": [
+            "update_session_id"
+          ]
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "update_session_id"
+          ]
+        }
+      ],
+      "com.vmware.content.library.item.download_session": [
+        {
+          "name": "cancel",
+          "kind": "write",
+          "params": [
+            "download_session_id"
+          ]
+        },
+        {
+          "name": "fail",
+          "kind": "write",
+          "params": [
+            "download_session_id",
+            "client_error_message"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "download_session_id"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "client_token",
+            "create_spec"
+          ]
+        },
+        {
+          "name": "keep_alive",
+          "kind": "write",
+          "params": [
+            "download_session_id",
+            "progress"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "library_item_id"
+          ]
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "download_session_id"
+          ]
+        }
+      ],
+      "com.vmware.content.library.item.changes": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "library_item",
+            "version"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "library_item"
+          ]
+        }
+      ],
+      "com.vmware.content.library.item.file": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "library_item_id",
+            "name"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "library_item_id"
+          ]
+        }
+      ],
+      "com.vmware.content.library.item.storage": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "library_item_id",
+            "file_name"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "library_item_id"
+          ]
+        }
+      ],
+      "com.vmware.content.library.item.downloadsession.file": [
+        {
+          "name": "prepare",
+          "kind": "write",
+          "params": [
+            "download_session_id",
+            "file_name",
+            "endpoint_type"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "download_session_id",
+            "file_name"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "download_session_id"
+          ]
+        }
+      ],
+      "com.vmware.content.library.item.updatesession.file": [
+        {
+          "name": "add",
+          "kind": "write",
+          "params": [
+            "update_session_id",
+            "file_spec"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "update_session_id",
+            "file_name"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "update_session_id"
+          ]
+        },
+        {
+          "name": "remove",
+          "kind": "write",
+          "params": [
+            "update_session_id",
+            "file_name"
+          ]
+        },
+        {
+          "name": "validate",
+          "kind": "read",
+          "params": [
+            "update_session_id"
+          ]
+        }
+      ]
+    }
+  },
+  "com.vmware.esx.hcl": {
+    "services": {
+      "com.vmware.esx.hcl.hosts.compatibility_report": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "host"
+          ]
+        },
+        {
+          "name": "create$task",
+          "kind": "write",
+          "params": [
+            "host",
+            "spec"
+          ]
+        }
+      ],
+      "com.vmware.esx.hcl.hosts.compatibility_releases": [
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "host"
+          ]
+        }
+      ],
+      "com.vmware.esx.hcl.reports": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "report"
+          ]
+        }
+      ],
+      "com.vmware.esx.hcl.compatibility_data": [
+        {
+          "name": "update$task",
+          "kind": "write",
+          "params": []
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        }
+      ]
+    }
+  },
+  "com.vmware.esx.hosts": {
+    "services": {
+      "com.vmware.esx.hosts.software": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "spec"
+          ]
+        }
+      ],
+      "com.vmware.esx.hosts.software.installed_components": [
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "host"
+          ]
+        }
+      ]
+    }
+  },
+  "com.vmware.esx.settings": {
+    "services": {
+      "com.vmware.esx.settings.clusters.software.reports.hardware_compatibility.details": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.hosts.software.drafts": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "host",
+            "draft"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "host"
+          ]
+        },
+        {
+          "name": "import_software_spec",
+          "kind": "write",
+          "params": [
+            "host",
+            "spec"
+          ]
+        },
+        {
+          "name": "validate$task",
+          "kind": "read",
+          "params": [
+            "host",
+            "draft"
+          ]
+        },
+        {
+          "name": "scan$task",
+          "kind": "read",
+          "params": [
+            "host",
+            "draft"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "host",
+            "filter"
+          ]
+        },
+        {
+          "name": "commit$task",
+          "kind": "write",
+          "params": [
+            "host",
+            "draft",
+            "spec"
+          ]
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "host",
+            "draft"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.hosts.software.commits": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "host",
+            "commit"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.hosts.software.effective_components": [
+        {
+          "name": "list_with_removed_components",
+          "kind": "read",
+          "params": [
+            "host"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "host"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.hosts.software.components": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "host",
+            "component"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "host"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.hosts.software.base_image": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "host"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.hosts.software.solutions": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "host",
+            "solution"
+          ]
+        },
+        {
+          "name": "set$task",
+          "kind": "write",
+          "params": [
+            "host",
+            "solution",
+            "spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "host"
+          ]
+        },
+        {
+          "name": "delete$task",
+          "kind": "write",
+          "params": [
+            "host",
+            "solution"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.hosts.software.add_on": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "host"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.hosts.software.compliance": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "host"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.hosts.software.removed_components": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "host",
+            "component"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "host"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.hosts.software.recommendations": [
+        {
+          "name": "generate$task",
+          "kind": "write",
+          "params": [
+            "host"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "host"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.depots": [
+        {
+          "name": "sync$task",
+          "kind": "write",
+          "params": []
+        }
+      ],
+      "com.vmware.esx.settings.clusters.enablement.configuration.transition": [
+        {
+          "name": "cancel",
+          "kind": "write",
+          "params": [
+            "cluster"
+          ]
+        },
+        {
+          "name": "precheck$task",
+          "kind": "write",
+          "params": [
+            "cluster"
+          ]
+        },
+        {
+          "name": "enable$task",
+          "kind": "write",
+          "params": [
+            "cluster"
+          ]
+        },
+        {
+          "name": "export_config",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        },
+        {
+          "name": "validate_config$task",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        },
+        {
+          "name": "import_from_file",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "spec"
+          ]
+        },
+        {
+          "name": "check_eligibility$task",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        },
+        {
+          "name": "export_schema",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        },
+        {
+          "name": "import_from_host$task",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "host"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.clusters.software.reports.hardware_compatibility.storage_device_overrides.compliance_status": [
+        {
+          "name": "update$task",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "update_spec"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.clusters.software.reports.hardware_compatibility.storage_device_overrides.vcg_entries": [
+        {
+          "name": "update$task",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "update_spec"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.clusters.software.components": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "cluster",
+            "component"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.clusters.software.compliance": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.clusters.software.base_image": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.clusters.software.removed_components": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "cluster",
+            "component"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.clusters.software.hardware_support": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.clusters.software.drafts": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "cluster",
+            "draft"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "cluster"
+          ]
+        },
+        {
+          "name": "import_software_spec",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "spec"
+          ]
+        },
+        {
+          "name": "validate$task",
+          "kind": "read",
+          "params": [
+            "cluster",
+            "draft"
+          ]
+        },
+        {
+          "name": "scan$task",
+          "kind": "read",
+          "params": [
+            "cluster",
+            "draft"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "cluster",
+            "filter"
+          ]
+        },
+        {
+          "name": "commit$task",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "draft",
+            "spec"
+          ]
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "draft"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.clusters.software.solutions": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "cluster",
+            "solution"
+          ]
+        },
+        {
+          "name": "set$task",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "solution",
+            "spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        },
+        {
+          "name": "delete$task",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "solution"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.clusters.software.effective_components": [
+        {
+          "name": "list_with_removed_components",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.clusters.software.recommendations": [
+        {
+          "name": "generate$task",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "filter"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.clusters.software.commits": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "cluster",
+            "commit"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.clusters.software.add_on": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.hardware_support.managers.packages": [
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "manager",
+            "filter"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.hosts.software.reports.apply_impact": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "host"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.hosts.software.reports.last_check_result": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "host"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.hosts.software.reports.last_apply_result": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "host"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.hosts.configuration": [
+        {
+          "name": "extract",
+          "kind": "write",
+          "params": [
+            "host"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.hosts.software": [
+        {
+          "name": "stage$task",
+          "kind": "write",
+          "params": [
+            "host",
+            "spec"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "host"
+          ]
+        },
+        {
+          "name": "scan$task",
+          "kind": "read",
+          "params": [
+            "host"
+          ]
+        },
+        {
+          "name": "check$task",
+          "kind": "read",
+          "params": [
+            "host",
+            "spec"
+          ]
+        },
+        {
+          "name": "export",
+          "kind": "read",
+          "params": [
+            "host",
+            "spec"
+          ]
+        },
+        {
+          "name": "apply$task",
+          "kind": "write",
+          "params": [
+            "host",
+            "spec"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.hosts.depot_overrides": [
+        {
+          "name": "add",
+          "kind": "write",
+          "params": [
+            "host",
+            "depot"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "host"
+          ]
+        },
+        {
+          "name": "remove",
+          "kind": "write",
+          "params": [
+            "host",
+            "depot"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.clusters.configuration.reports.last_compliance_result": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.clusters.configuration.reports.last_precheck_result": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.clusters.configuration.reports.last_apply_result": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.clusters.configuration.reports.recent_tasks": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.defaults.clusters.policies.apply.effective": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.esx.settings.clusters.software.reports.apply_impact": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "cluster",
+            "spec"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.clusters.software.reports.last_apply_result": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.clusters.software.reports.hardware_compatibility": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        },
+        {
+          "name": "check$task",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.clusters.software.reports.last_check_result": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.clusters.software.drafts.software.base_image": [
+        {
+          "name": "set",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "draft",
+            "spec"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "cluster",
+            "draft"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.clusters.software.drafts.software.components": [
+        {
+          "name": "set",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "draft",
+            "component",
+            "version"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "cluster",
+            "draft",
+            "component"
+          ]
+        },
+        {
+          "name": "update",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "draft",
+            "spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "cluster",
+            "draft"
+          ]
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "draft",
+            "component"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.clusters.software.drafts.software.hardware_support": [
+        {
+          "name": "set",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "draft",
+            "spec"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "cluster",
+            "draft"
+          ]
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "draft"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.clusters.software.drafts.software.add_on": [
+        {
+          "name": "set",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "draft",
+            "spec"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "cluster",
+            "draft"
+          ]
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "draft"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.clusters.software.drafts.software.removed_components": [
+        {
+          "name": "set",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "draft",
+            "component"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "cluster",
+            "draft",
+            "component"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "cluster",
+            "draft"
+          ]
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "draft",
+            "component"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.clusters.software.drafts.software.effective_components": [
+        {
+          "name": "list_with_removed_components",
+          "kind": "read",
+          "params": [
+            "cluster",
+            "draft"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "cluster",
+            "draft"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.depots.umds.content": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.esx.settings.clusters.configuration.audit_records": [
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "cluster",
+            "filters"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.clusters.configuration.drafts": [
+        {
+          "name": "precheck$task",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "draft"
+          ]
+        },
+        {
+          "name": "export_config",
+          "kind": "read",
+          "params": [
+            "cluster",
+            "draft"
+          ]
+        },
+        {
+          "name": "apply",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "draft",
+            "spec"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "cluster",
+            "draft"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "spec"
+          ]
+        },
+        {
+          "name": "update",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "draft",
+            "spec"
+          ]
+        },
+        {
+          "name": "show_changes",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "draft"
+          ]
+        },
+        {
+          "name": "check_compliance$task",
+          "kind": "read",
+          "params": [
+            "cluster",
+            "draft"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "draft"
+          ]
+        },
+        {
+          "name": "get_schema",
+          "kind": "read",
+          "params": [
+            "cluster",
+            "draft"
+          ]
+        },
+        {
+          "name": "import_from_host$task",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "draft",
+            "host"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.clusters.configuration.schema": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.hardware_support.managers": [
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.esx.settings.hosts.policies.apply.effective": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "host"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.hosts.software.drafts.software.effective_components": [
+        {
+          "name": "list_with_removed_components",
+          "kind": "read",
+          "params": [
+            "host",
+            "draft"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "host",
+            "draft"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.hosts.software.drafts.software.removed_components": [
+        {
+          "name": "set",
+          "kind": "write",
+          "params": [
+            "host",
+            "draft",
+            "component"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "host",
+            "draft",
+            "component"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "host",
+            "draft"
+          ]
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "host",
+            "draft",
+            "component"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.hosts.software.drafts.software.add_on": [
+        {
+          "name": "set",
+          "kind": "write",
+          "params": [
+            "host",
+            "draft",
+            "spec"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "host",
+            "draft"
+          ]
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "host",
+            "draft"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.hosts.software.drafts.software.base_image": [
+        {
+          "name": "set",
+          "kind": "write",
+          "params": [
+            "host",
+            "draft",
+            "spec"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "host",
+            "draft"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.hosts.software.drafts.software.components": [
+        {
+          "name": "set",
+          "kind": "write",
+          "params": [
+            "host",
+            "draft",
+            "component",
+            "version"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "host",
+            "draft",
+            "component"
+          ]
+        },
+        {
+          "name": "update",
+          "kind": "write",
+          "params": [
+            "host",
+            "draft",
+            "spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "host",
+            "draft"
+          ]
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "host",
+            "draft",
+            "component"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.depots.umds": [
+        {
+          "name": "set",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        },
+        {
+          "name": "update",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "delete$task",
+          "kind": "write",
+          "params": []
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": []
+        }
+      ],
+      "com.vmware.esx.settings.depots.sync_schedule": [
+        {
+          "name": "set",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.esx.settings.depots.online": [
+        {
+          "name": "flush$task",
+          "kind": "write",
+          "params": [
+            "depot"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "depot"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "update",
+          "kind": "write",
+          "params": [
+            "depot",
+            "spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        },
+        {
+          "name": "delete$task",
+          "kind": "write",
+          "params": [
+            "depot"
+          ]
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "depot"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.depots.offline": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "depot"
+          ]
+        },
+        {
+          "name": "create_from_host$task",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "create$task",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        },
+        {
+          "name": "delete$task",
+          "kind": "write",
+          "params": [
+            "depot"
+          ]
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "depot"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.defaults.hosts.policies.apply": [
+        {
+          "name": "set",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.esx.settings.defaults.hosts.policies.apply.effective": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.esx.settings.hosts.policies.apply": [
+        {
+          "name": "set",
+          "kind": "write",
+          "params": [
+            "host",
+            "spec"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "host"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.clusters.policies.apply": [
+        {
+          "name": "set",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "spec"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.clusters.policies.apply.effective": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.hardware_support.managers.packages.versions": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "manager",
+            "pkg",
+            "version",
+            "filter"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.clusters.enablement.software": [
+        {
+          "name": "enable$task",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "spec"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        },
+        {
+          "name": "check$task",
+          "kind": "read",
+          "params": [
+            "cluster",
+            "spec"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.clusters.enablement.configuration": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.depot_content.base_images.versions": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "version"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.depot_content.add_ons": [
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "filter"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.depot_content.components": [
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "filter"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.depot_content.base_images": [
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "filter"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.depots.online.content": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "depot"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.depots.offline.content": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "depot"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.depot_content.add_ons.versions": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "name",
+            "version"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.clusters.configuration": [
+        {
+          "name": "precheck$task",
+          "kind": "write",
+          "params": [
+            "cluster"
+          ]
+        },
+        {
+          "name": "export_config",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        },
+        {
+          "name": "import_config$task",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "spec"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "cluster",
+            "commit",
+            "doc_structure"
+          ]
+        },
+        {
+          "name": "check_compliance$task",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        },
+        {
+          "name": "validate$task",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        },
+        {
+          "name": "apply$task",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "spec"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.clusters.depot_overrides": [
+        {
+          "name": "add",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "depot"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        },
+        {
+          "name": "remove",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "depot"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.clusters.software": [
+        {
+          "name": "stage$task",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "spec"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        },
+        {
+          "name": "scan$task",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        },
+        {
+          "name": "check$task",
+          "kind": "read",
+          "params": [
+            "cluster",
+            "spec"
+          ]
+        },
+        {
+          "name": "export",
+          "kind": "read",
+          "params": [
+            "cluster",
+            "spec"
+          ]
+        },
+        {
+          "name": "apply$task",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "spec"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.clusters.installed_images": [
+        {
+          "name": "extract$task",
+          "kind": "write",
+          "params": [
+            "cluster"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.hosts.enablement.software": [
+        {
+          "name": "enable$task",
+          "kind": "write",
+          "params": [
+            "host",
+            "spec"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "host"
+          ]
+        },
+        {
+          "name": "check$task",
+          "kind": "read",
+          "params": [
+            "host",
+            "spec"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.depot_content.components.versions": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "name",
+            "version"
+          ]
+        }
+      ],
+      "com.vmware.esx.settings.defaults.clusters.policies.apply": [
+        {
+          "name": "set",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        }
+      ]
+    }
+  },
+  "com.vmware.hlm": {
+    "services": {}
+  },
+  "com.vmware.oauth2": {
+    "services": {}
+  },
+  "com.vmware.vapi": {
+    "services": {
+      "com.vmware.vapi.metadata.metamodel.service.operation": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "service_id",
+            "operation_id"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "service_id"
+          ]
+        }
+      ],
+      "com.vmware.vapi.metadata.cli.command": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "identity"
+          ]
+        },
+        {
+          "name": "fingerprint",
+          "kind": "write",
+          "params": []
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "path"
+          ]
+        }
+      ],
+      "com.vmware.vapi.metadata.cli.namespace": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "identity"
+          ]
+        },
+        {
+          "name": "fingerprint",
+          "kind": "write",
+          "params": []
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.vapi.metadata.metamodel.package": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "package_id"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.vapi.metadata.metamodel.service": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "service_id"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.vapi.metadata.metamodel.structure": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "structure_id"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.vapi.metadata.metamodel.enumeration": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "enumeration_id"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.vapi.metadata.metamodel.component": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "component_id"
+          ]
+        },
+        {
+          "name": "fingerprint",
+          "kind": "write",
+          "params": [
+            "component_id"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.vapi.metadata.metamodel.resource": [
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.vapi.metadata.metamodel.resource.model": [
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "resource_id"
+          ]
+        }
+      ],
+      "com.vmware.vapi.metadata.authentication.service.operation": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "service_id",
+            "operation_id"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "service_id"
+          ]
+        }
+      ],
+      "com.vmware.vapi.metadata.authentication.service": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "service_id"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.vapi.metadata.authentication.component": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "component_id"
+          ]
+        },
+        {
+          "name": "fingerprint",
+          "kind": "write",
+          "params": [
+            "component_id"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.vapi.metadata.authentication.package": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "package_id"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.vapi.metadata.privilege.component": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "component_id"
+          ]
+        },
+        {
+          "name": "fingerprint",
+          "kind": "write",
+          "params": [
+            "component_id"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.vapi.metadata.privilege.package": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "package_id"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.vapi.metadata.privilege.service": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "service_id"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.vapi.metadata.privilege.service.operation": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "service_id",
+            "operation_id"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "service_id"
+          ]
+        }
+      ]
+    }
+  },
+  "com.vmware.vapi.rest.navigation": {
+    "services": {
+      "com.vmware.vapi.rest.navigation.root": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "base_url"
+          ]
+        }
+      ],
+      "com.vmware.vapi.rest.navigation.options": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "url",
+            "base_url"
+          ]
+        }
+      ],
+      "com.vmware.vapi.rest.navigation.component": [
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "base_url"
+          ]
+        }
+      ],
+      "com.vmware.vapi.rest.navigation.resource": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "type_id",
+            "instance_id",
+            "base_url"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "base_url"
+          ]
+        }
+      ],
+      "com.vmware.vapi.rest.navigation.service": [
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "component_id",
+            "base_url"
+          ]
+        }
+      ]
+    }
+  },
+  "com.vmware.vapi.vcenter": {
+    "services": {
+      "com.vmware.vapi.vcenter.activation": [
+        {
+          "name": "cancel",
+          "kind": "write",
+          "params": [
+            "activation_id"
+          ]
+        }
+      ]
+    }
+  },
+  "com.vmware.vcenter": {
+    "services": {
+      "com.vmware.vcenter.vcha.cluster.deployment_type": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.vcenter.vcha.cluster.passive": [
+        {
+          "name": "redeploy$task",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "check",
+          "kind": "read",
+          "params": [
+            "spec"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.vcha.cluster.mode": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        },
+        {
+          "name": "set$task",
+          "kind": "write",
+          "params": [
+            "mode"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.vcha.cluster.active": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "vc_spec",
+            "partial"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.vcha.cluster.witness": [
+        {
+          "name": "redeploy$task",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "check",
+          "kind": "read",
+          "params": [
+            "spec"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.consumption_domains.zones": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "zone"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "zone"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.trusted_infrastructure.trust_authority_clusters.attestation.tpm2.endorsement_keys": [
+        {
+          "name": "list$task",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        },
+        {
+          "name": "get$task",
+          "kind": "read",
+          "params": [
+            "cluster",
+            "name"
+          ]
+        },
+        {
+          "name": "create$task",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "spec"
+          ]
+        },
+        {
+          "name": "delete$task",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "name"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.trusted_infrastructure.trust_authority_clusters.attestation.tpm2.settings": [
+        {
+          "name": "get$task",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        },
+        {
+          "name": "update$task",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "spec"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.trusted_infrastructure.trust_authority_clusters.attestation.tpm2.ca_certificates": [
+        {
+          "name": "list$task",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        },
+        {
+          "name": "get$task",
+          "kind": "read",
+          "params": [
+            "cluster",
+            "name"
+          ]
+        },
+        {
+          "name": "create$task",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "spec"
+          ]
+        },
+        {
+          "name": "delete$task",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "name"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.trusted_infrastructure.trust_authority_clusters.attestation.service_status": [
+        {
+          "name": "get$task",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.trusted_infrastructure.trusted_clusters.services_applied_config": [
+        {
+          "name": "get$task",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        },
+        {
+          "name": "update$task",
+          "kind": "write",
+          "params": [
+            "cluster"
+          ]
+        },
+        {
+          "name": "delete$task",
+          "kind": "write",
+          "params": [
+            "cluster"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.deployment.migrate.active_directory": [
+        {
+          "name": "check",
+          "kind": "read",
+          "params": [
+            "spec"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.trusted_infrastructure.trust_authority_clusters.consumer_principals": [
+        {
+          "name": "get$task",
+          "kind": "read",
+          "params": [
+            "cluster",
+            "profile"
+          ]
+        },
+        {
+          "name": "list$task",
+          "kind": "read",
+          "params": [
+            "cluster",
+            "spec"
+          ]
+        },
+        {
+          "name": "create$task",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "spec"
+          ]
+        },
+        {
+          "name": "delete$task",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "profile"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.consumption_domains.zone_associations.cluster": [
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "filter"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.services.service": [
+        {
+          "name": "stop",
+          "kind": "write",
+          "params": [
+            "service"
+          ]
+        },
+        {
+          "name": "restart",
+          "kind": "write",
+          "params": [
+            "service"
+          ]
+        },
+        {
+          "name": "list_details",
+          "kind": "read",
+          "params": []
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "service"
+          ]
+        },
+        {
+          "name": "start",
+          "kind": "write",
+          "params": [
+            "service"
+          ]
+        },
+        {
+          "name": "update",
+          "kind": "write",
+          "params": [
+            "service",
+            "spec"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.vm.hardware.adapter.scsi": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "vm",
+            "adapter"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "vm",
+            "spec"
+          ]
+        },
+        {
+          "name": "update",
+          "kind": "write",
+          "params": [
+            "vm",
+            "adapter",
+            "spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "vm"
+          ]
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "vm",
+            "adapter"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.vm.hardware.adapter.sata": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "vm",
+            "adapter"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "vm",
+            "spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "vm"
+          ]
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "vm",
+            "adapter"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.vm.hardware.adapter.nvme": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "vm",
+            "adapter"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "vm",
+            "spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "vm"
+          ]
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "vm",
+            "adapter"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.host.entropy.external_pool": [
+        {
+          "name": "add",
+          "kind": "write",
+          "params": [
+            "host",
+            "spec"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "host"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.vm.data_sets": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "vm",
+            "data_set"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "vm",
+            "spec"
+          ]
+        },
+        {
+          "name": "update",
+          "kind": "write",
+          "params": [
+            "vm",
+            "data_set",
+            "spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "vm"
+          ]
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "vm",
+            "data_set",
+            "force"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.vm.power": [
+        {
+          "name": "suspend",
+          "kind": "write",
+          "params": [
+            "vm"
+          ]
+        },
+        {
+          "name": "stop",
+          "kind": "write",
+          "params": [
+            "vm"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "vm"
+          ]
+        },
+        {
+          "name": "start",
+          "kind": "write",
+          "params": [
+            "vm"
+          ]
+        },
+        {
+          "name": "reset",
+          "kind": "write",
+          "params": [
+            "vm"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.vm.tools": [
+        {
+          "name": "upgrade",
+          "kind": "write",
+          "params": [
+            "vm",
+            "command_line_options"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "vm"
+          ]
+        },
+        {
+          "name": "update",
+          "kind": "write",
+          "params": [
+            "vm",
+            "spec"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.vm.library_item": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "vm"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.vm.hardware": [
+        {
+          "name": "upgrade",
+          "kind": "write",
+          "params": [
+            "vm",
+            "version"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "vm"
+          ]
+        },
+        {
+          "name": "update",
+          "kind": "write",
+          "params": [
+            "vm",
+            "spec"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.crypto_manager.hosts.kms.providers": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "host",
+            "provider"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "host",
+            "filter_spec"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.vm.console.tickets": [
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "vm",
+            "spec"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.environment_browser.config_targets": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "params"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.environment_browser.config_option_descriptors": [
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "params"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.environment_browser.config_options": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "params"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.authorization.privilege_checks.latest": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.vcenter.vm.hardware.cdrom": [
+        {
+          "name": "disconnect",
+          "kind": "write",
+          "params": [
+            "vm",
+            "cdrom"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "vm",
+            "cdrom"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "vm",
+            "spec"
+          ]
+        },
+        {
+          "name": "update",
+          "kind": "write",
+          "params": [
+            "vm",
+            "cdrom",
+            "spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "vm"
+          ]
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "vm",
+            "cdrom"
+          ]
+        },
+        {
+          "name": "connect",
+          "kind": "write",
+          "params": [
+            "vm",
+            "cdrom"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.vm.hardware.boot": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "vm"
+          ]
+        },
+        {
+          "name": "update",
+          "kind": "write",
+          "params": [
+            "vm",
+            "spec"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.vm.hardware.serial": [
+        {
+          "name": "disconnect",
+          "kind": "write",
+          "params": [
+            "vm",
+            "port"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "vm",
+            "port"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "vm",
+            "spec"
+          ]
+        },
+        {
+          "name": "update",
+          "kind": "write",
+          "params": [
+            "vm",
+            "port",
+            "spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "vm"
+          ]
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "vm",
+            "port"
+          ]
+        },
+        {
+          "name": "connect",
+          "kind": "write",
+          "params": [
+            "vm",
+            "port"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.vm.hardware.floppy": [
+        {
+          "name": "disconnect",
+          "kind": "write",
+          "params": [
+            "vm",
+            "floppy"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "vm",
+            "floppy"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "vm",
+            "spec"
+          ]
+        },
+        {
+          "name": "update",
+          "kind": "write",
+          "params": [
+            "vm",
+            "floppy",
+            "spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "vm"
+          ]
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "vm",
+            "floppy"
+          ]
+        },
+        {
+          "name": "connect",
+          "kind": "write",
+          "params": [
+            "vm",
+            "floppy"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.vm.hardware.memory": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "vm"
+          ]
+        },
+        {
+          "name": "update",
+          "kind": "write",
+          "params": [
+            "vm",
+            "spec"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.vm.hardware.disk": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "vm",
+            "disk"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "vm",
+            "spec"
+          ]
+        },
+        {
+          "name": "update",
+          "kind": "write",
+          "params": [
+            "vm",
+            "disk",
+            "spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "vm"
+          ]
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "vm",
+            "disk"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.vm.hardware.ethernet": [
+        {
+          "name": "disconnect",
+          "kind": "write",
+          "params": [
+            "vm",
+            "nic"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "vm",
+            "nic"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "vm",
+            "spec"
+          ]
+        },
+        {
+          "name": "update",
+          "kind": "write",
+          "params": [
+            "vm",
+            "nic",
+            "spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "vm"
+          ]
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "vm",
+            "nic"
+          ]
+        },
+        {
+          "name": "connect",
+          "kind": "write",
+          "params": [
+            "vm",
+            "nic"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.vm.hardware.parallel": [
+        {
+          "name": "disconnect",
+          "kind": "write",
+          "params": [
+            "vm",
+            "port"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "vm",
+            "port"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "vm",
+            "spec"
+          ]
+        },
+        {
+          "name": "update",
+          "kind": "write",
+          "params": [
+            "vm",
+            "port",
+            "spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "vm"
+          ]
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "vm",
+            "port"
+          ]
+        },
+        {
+          "name": "connect",
+          "kind": "write",
+          "params": [
+            "vm",
+            "port"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.vm.hardware.cpu": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "vm"
+          ]
+        },
+        {
+          "name": "update",
+          "kind": "write",
+          "params": [
+            "vm",
+            "spec"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.trusted_infrastructure.kms.services": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "service"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "service"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.trusted_infrastructure.trust_authority_clusters.kms.providers.trusted_peer_certificates": [
+        {
+          "name": "get$task",
+          "kind": "read",
+          "params": [
+            "cluster",
+            "provider"
+          ]
+        },
+        {
+          "name": "update$task",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "provider",
+            "spec"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.trusted_infrastructure.trust_authority_clusters.kms.providers.client_certificate": [
+        {
+          "name": "get$task",
+          "kind": "read",
+          "params": [
+            "cluster",
+            "provider"
+          ]
+        },
+        {
+          "name": "update$task",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "provider",
+            "spec"
+          ]
+        },
+        {
+          "name": "create$task",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "provider"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.trusted_infrastructure.trust_authority_clusters.kms.providers.credential": [
+        {
+          "name": "set$task",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "provider",
+            "credential"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.trusted_infrastructure.trust_authority_clusters.kms.providers.current_peer_certificates": [
+        {
+          "name": "list$task",
+          "kind": "read",
+          "params": [
+            "cluster",
+            "provider",
+            "spec"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.storage.policies.compliance.VM": [
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "filter"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.deployment.import_history": [
+        {
+          "name": "resume",
+          "kind": "write",
+          "params": []
+        },
+        {
+          "name": "cancel",
+          "kind": "write",
+          "params": []
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        },
+        {
+          "name": "start",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "pause",
+          "kind": "write",
+          "params": []
+        }
+      ],
+      "com.vmware.vcenter.deployment.migrate": [
+        {
+          "name": "cancel",
+          "kind": "write",
+          "params": []
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        },
+        {
+          "name": "start",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "check",
+          "kind": "read",
+          "params": [
+            "spec"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.deployment.question": [
+        {
+          "name": "answer",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.vcenter.deployment.upgrade": [
+        {
+          "name": "cancel",
+          "kind": "write",
+          "params": []
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        },
+        {
+          "name": "start",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "check",
+          "kind": "read",
+          "params": [
+            "spec"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.deployment.install": [
+        {
+          "name": "cancel",
+          "kind": "write",
+          "params": []
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        },
+        {
+          "name": "start",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "check",
+          "kind": "read",
+          "params": [
+            "spec"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.vm.guest.networking.routes": [
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "vm"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.vm.guest.networking.interfaces": [
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "vm"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.certificate_management.vcenter.signing_certificate": [
+        {
+          "name": "set",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        },
+        {
+          "name": "refresh",
+          "kind": "write",
+          "params": [
+            "force"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.certificate_management.vcenter.vmca_root": [
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.certificate_management.vcenter.tls_csr": [
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.certificate_management.vcenter.trusted_root_chains": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "chain"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "chain"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.certificate_management.vcenter.tls": [
+        {
+          "name": "set",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        },
+        {
+          "name": "replace_vmca_signed",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "renew",
+          "kind": "write",
+          "params": [
+            "duration"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.datastore.default_policy": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "datastore"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.crypto_manager.kms.providers": [
+        {
+          "name": "import_provider",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "provider"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "update",
+          "kind": "write",
+          "params": [
+            "provider",
+            "spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "filter_spec"
+          ]
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "provider"
+          ]
+        },
+        {
+          "name": "export",
+          "kind": "read",
+          "params": [
+            "spec"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.consumption_domains.zones.cluster.associations": [
+        {
+          "name": "add",
+          "kind": "write",
+          "params": [
+            "zone",
+            "clusters"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "zone"
+          ]
+        },
+        {
+          "name": "remove",
+          "kind": "write",
+          "params": [
+            "zone",
+            "clusters"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.identity.providers": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "provider"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "update",
+          "kind": "write",
+          "params": [
+            "provider",
+            "spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "provider"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.vm.guest.filesystem.directories": [
+        {
+          "name": "create_temporary",
+          "kind": "write",
+          "params": [
+            "vm",
+            "credentials",
+            "prefix",
+            "suffix",
+            "parent_path"
+          ]
+        },
+        {
+          "name": "move",
+          "kind": "write",
+          "params": [
+            "vm",
+            "credentials",
+            "path",
+            "new_path"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "vm",
+            "credentials",
+            "path",
+            "create_parents"
+          ]
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "vm",
+            "credentials",
+            "path",
+            "recursive"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.vm.guest.filesystem.transfers": [
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "vm",
+            "credentials",
+            "spec"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.vm.guest.filesystem.files": [
+        {
+          "name": "create_temporary",
+          "kind": "write",
+          "params": [
+            "vm",
+            "credentials",
+            "prefix",
+            "suffix",
+            "parent_path"
+          ]
+        },
+        {
+          "name": "move",
+          "kind": "write",
+          "params": [
+            "vm",
+            "credentials",
+            "path",
+            "new_path",
+            "overwrite"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "vm",
+            "credentials",
+            "path"
+          ]
+        },
+        {
+          "name": "update",
+          "kind": "write",
+          "params": [
+            "vm",
+            "credentials",
+            "path",
+            "file_attributes"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "vm",
+            "credentials",
+            "path",
+            "iteration",
+            "filter"
+          ]
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "vm",
+            "credentials",
+            "path"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.vm.hardware.boot.device": [
+        {
+          "name": "set",
+          "kind": "write",
+          "params": [
+            "vm",
+            "devices"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "vm"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.authorization.vt_containers.mappings": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "mapping"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "filter",
+            "iterate"
+          ]
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "mapping"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.vm.data_sets.entries": [
+        {
+          "name": "set",
+          "kind": "write",
+          "params": [
+            "vm",
+            "data_set",
+            "key",
+            "value"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "vm",
+            "data_set",
+            "key"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "vm",
+            "data_set"
+          ]
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "vm",
+            "data_set",
+            "key"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.trusted_infrastructure.trust_authority_clusters": [
+        {
+          "name": "update$task",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "spec"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "spec"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.trusted_infrastructure.principal": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.vcenter.tagging.associations": [
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "iterate"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.vm.tools.installer": [
+        {
+          "name": "disconnect",
+          "kind": "write",
+          "params": [
+            "vm"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "vm"
+          ]
+        },
+        {
+          "name": "connect",
+          "kind": "write",
+          "params": [
+            "vm"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.vm.storage.policy": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "vm"
+          ]
+        },
+        {
+          "name": "update",
+          "kind": "write",
+          "params": [
+            "vm",
+            "spec"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.deployment.install.remote_psc": [
+        {
+          "name": "check",
+          "kind": "read",
+          "params": [
+            "spec"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.topology.nodes": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "node"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "filter"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.topology.replication_status": [
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "filter"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.trusted_infrastructure.trust_authority_clusters.kms.providers.client_certificate.csr": [
+        {
+          "name": "get$task",
+          "kind": "read",
+          "params": [
+            "cluster",
+            "provider"
+          ]
+        },
+        {
+          "name": "create$task",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "provider"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.authorization.privilege_checks": [
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "iteration",
+            "filter"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.deployment": [
+        {
+          "name": "rollback",
+          "kind": "write",
+          "params": []
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.vcenter.cluster": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "filter"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.datastore": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "datastore"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "filter"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.host": [
+        {
+          "name": "disconnect",
+          "kind": "write",
+          "params": [
+            "host"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "filter"
+          ]
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "host"
+          ]
+        },
+        {
+          "name": "connect",
+          "kind": "write",
+          "params": [
+            "host"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.VM": [
+        {
+          "name": "relocate",
+          "kind": "write",
+          "params": [
+            "vm",
+            "spec"
+          ]
+        },
+        {
+          "name": "instant_clone",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "vm"
+          ]
+        },
+        {
+          "name": "clone",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "unregister",
+          "kind": "write",
+          "params": [
+            "vm"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "filter"
+          ]
+        },
+        {
+          "name": "clone$task",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "vm"
+          ]
+        },
+        {
+          "name": "relocate$task",
+          "kind": "write",
+          "params": [
+            "vm",
+            "spec"
+          ]
+        },
+        {
+          "name": "register",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.folder": [
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "filter"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.system": [
+        {
+          "name": "hello",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.network": [
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "filter"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.resource_pool": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "resource_pool"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "update",
+          "kind": "write",
+          "params": [
+            "resource_pool",
+            "spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "filter"
+          ]
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "resource_pool"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.datacenter": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "datacenter"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "filter"
+          ]
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "datacenter",
+            "force"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.guest.customization_specs": [
+        {
+          "name": "set",
+          "kind": "write",
+          "params": [
+            "name",
+            "spec"
+          ]
+        },
+        {
+          "name": "import_specification",
+          "kind": "write",
+          "params": [
+            "customization_spec"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "name"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "filter"
+          ]
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "name"
+          ]
+        },
+        {
+          "name": "export",
+          "kind": "read",
+          "params": [
+            "name",
+            "format"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.storage.policies": [
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "filter"
+          ]
+        },
+        {
+          "name": "check_compatibility",
+          "kind": "read",
+          "params": [
+            "policy",
+            "datastores"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.storage.policies.VM": [
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "policy"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.storage.policies.compliance": [
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "filter"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.trusted_infrastructure.hosts.hardware.tpm": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "host",
+            "tpm"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "host",
+            "filter"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.vm.guest.power": [
+        {
+          "name": "reboot",
+          "kind": "write",
+          "params": [
+            "vm"
+          ]
+        },
+        {
+          "name": "standby",
+          "kind": "write",
+          "params": [
+            "vm"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "vm"
+          ]
+        },
+        {
+          "name": "shutdown",
+          "kind": "write",
+          "params": [
+            "vm"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.vm.guest.customization": [
+        {
+          "name": "set",
+          "kind": "write",
+          "params": [
+            "vm",
+            "spec"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "vm"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.vm.guest.identity": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "vm"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.vm.guest.networking": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "vm"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.vm.guest.environment": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "vm",
+            "credentials",
+            "name"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "vm",
+            "credentials",
+            "names"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.vm.guest.local_filesystem": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "vm"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.vm.guest.operations": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "vm"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.vm.guest.processes": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "vm",
+            "credentials",
+            "pid"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "vm",
+            "credentials",
+            "spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "vm",
+            "credentials"
+          ]
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "vm",
+            "credentials",
+            "pid"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.trusted_infrastructure.trust_authority_hosts.kms": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "host"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "spec",
+            "projection"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.trusted_infrastructure.trust_authority_hosts.attestation": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "host"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "spec",
+            "projection"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.trusted_infrastructure.hosts.hardware.tpm.event_log": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "host",
+            "tpm"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.trusted_infrastructure.hosts.hardware.tpm.endorsement_keys": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "host",
+            "tpm",
+            "key"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "host",
+            "tpm",
+            "filter"
+          ]
+        },
+        {
+          "name": "unseal",
+          "kind": "write",
+          "params": [
+            "host",
+            "tpm",
+            "key",
+            "spec"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.vm.storage.policy.compliance": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "vm"
+          ]
+        },
+        {
+          "name": "check",
+          "kind": "read",
+          "params": [
+            "vm",
+            "check_spec"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.confidential_computing.sgx.hosts": [
+        {
+          "name": "register$task",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.trusted_infrastructure.trusted_clusters.attestation.services": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "cluster",
+            "service"
+          ]
+        },
+        {
+          "name": "create$task",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "cluster",
+            "spec"
+          ]
+        },
+        {
+          "name": "delete$task",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "service"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.trusted_infrastructure.trusted_clusters.attestation.services_applied_config": [
+        {
+          "name": "list$task",
+          "kind": "read",
+          "params": [
+            "cluster",
+            "spec"
+          ]
+        },
+        {
+          "name": "get$task",
+          "kind": "read",
+          "params": [
+            "cluster",
+            "address"
+          ]
+        },
+        {
+          "name": "update$task",
+          "kind": "write",
+          "params": [
+            "cluster"
+          ]
+        },
+        {
+          "name": "delete$task",
+          "kind": "write",
+          "params": [
+            "cluster"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.identity.broker.tenants.admin_client": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "tenant"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.identity.broker.tenants.operator_client": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.vcenter.trusted_infrastructure.trust_authority_clusters.kms.providers": [
+        {
+          "name": "list$task",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        },
+        {
+          "name": "get$task",
+          "kind": "read",
+          "params": [
+            "cluster",
+            "provider"
+          ]
+        },
+        {
+          "name": "update$task",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "provider",
+            "spec"
+          ]
+        },
+        {
+          "name": "create$task",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "spec"
+          ]
+        },
+        {
+          "name": "delete$task",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "provider"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.trusted_infrastructure.trust_authority_clusters.kms.service_status": [
+        {
+          "name": "get$task",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.deployment.install.initial_config.remote_psc.thumbprint": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "spec"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.vcha.cluster": [
+        {
+          "name": "failover$task",
+          "kind": "write",
+          "params": [
+            "planned"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "vc_spec",
+            "partial"
+          ]
+        },
+        {
+          "name": "deploy$task",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "undeploy$task",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.vcha.operations": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.vcenter.system_config.psc_registration": [
+        {
+          "name": "repoint",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.vcenter.system_config.deployment_type": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        },
+        {
+          "name": "reconfigure",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.trusted_infrastructure.trust_authority_clusters.attestation.os.esx.base_images": [
+        {
+          "name": "list$task",
+          "kind": "read",
+          "params": [
+            "cluster",
+            "spec"
+          ]
+        },
+        {
+          "name": "get$task",
+          "kind": "read",
+          "params": [
+            "cluster",
+            "version"
+          ]
+        },
+        {
+          "name": "import_from_imgdb$task",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "imgdb"
+          ]
+        },
+        {
+          "name": "delete$task",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "version"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.trusted_infrastructure.trusted_clusters.kms.services_applied_config": [
+        {
+          "name": "list$task",
+          "kind": "read",
+          "params": [
+            "cluster",
+            "spec"
+          ]
+        },
+        {
+          "name": "get$task",
+          "kind": "read",
+          "params": [
+            "cluster",
+            "address"
+          ]
+        },
+        {
+          "name": "update$task",
+          "kind": "write",
+          "params": [
+            "cluster"
+          ]
+        },
+        {
+          "name": "delete$task",
+          "kind": "write",
+          "params": [
+            "cluster"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.trusted_infrastructure.trusted_clusters.kms.services": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "cluster",
+            "service"
+          ]
+        },
+        {
+          "name": "create$task",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "cluster",
+            "spec"
+          ]
+        },
+        {
+          "name": "delete$task",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "service"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.deployment.install.psc.replicated": [
+        {
+          "name": "check",
+          "kind": "read",
+          "params": [
+            "spec"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.deployment.install.psc.standalone": [
+        {
+          "name": "check",
+          "kind": "read",
+          "params": [
+            "spec"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.trusted_infrastructure.attestation.services": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "service"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "service"
+          ]
+        }
+      ]
+    }
+  },
+  "com.vmware.vcenter.authentication": {
+    "services": {
+      "com.vmware.vcenter.authentication.token": [
+        {
+          "name": "issue",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        }
+      ]
+    }
+  },
+  "com.vmware.vcenter.compute": {
+    "services": {
+      "com.vmware.vcenter.compute.policies.tag_usage": [
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "filter"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.compute.policies.capabilities": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "capability"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.vcenter.compute.policies": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "policy"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "policy"
+          ]
+        }
+      ]
+    }
+  },
+  "com.vmware.vcenter.content.registries": {
+    "services": {
+      "com.vmware.vcenter.content.registries.harbor": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "registry"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "client_token",
+            "spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "registry"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.content.registries.health": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "registry"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.content.registries.harbor.projects": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "registry",
+            "project"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "registry",
+            "spec"
+          ]
+        },
+        {
+          "name": "purge",
+          "kind": "write",
+          "params": [
+            "registry",
+            "project"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "registry"
+          ]
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "registry",
+            "project"
+          ]
+        }
+      ]
+    }
+  },
+  "com.vmware.vcenter.hvc": {
+    "services": {
+      "com.vmware.vcenter.hvc.management.administrators": [
+        {
+          "name": "add",
+          "kind": "write",
+          "params": [
+            "group_name"
+          ]
+        },
+        {
+          "name": "set",
+          "kind": "write",
+          "params": [
+            "group_names"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        },
+        {
+          "name": "remove",
+          "kind": "write",
+          "params": [
+            "group_name"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.hvc.links": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "link"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "delete_with_credentials",
+          "kind": "write",
+          "params": [
+            "link",
+            "credentials"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "link"
+          ]
+        }
+      ]
+    }
+  },
+  "com.vmware.vcenter.inventory": {
+    "services": {
+      "com.vmware.vcenter.inventory.datastore": [
+        {
+          "name": "find",
+          "kind": "read",
+          "params": [
+            "datastores"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.inventory.network": [
+        {
+          "name": "find",
+          "kind": "read",
+          "params": [
+            "networks"
+          ]
+        }
+      ]
+    }
+  },
+  "com.vmware.vcenter.iso": {
+    "services": {
+      "com.vmware.vcenter.iso.image": [
+        {
+          "name": "unmount",
+          "kind": "write",
+          "params": [
+            "vm",
+            "cdrom"
+          ]
+        },
+        {
+          "name": "mount",
+          "kind": "write",
+          "params": [
+            "library_item",
+            "vm"
+          ]
+        }
+      ]
+    }
+  },
+  "com.vmware.vcenter.lcm": {
+    "services": {
+      "com.vmware.vcenter.lcm.discovery.associated_products": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "product"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "update",
+          "kind": "write",
+          "params": [
+            "product",
+            "spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "product"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.lcm.discovery.product_catalog": [
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.vcenter.lcm.discovery.interop_report": [
+        {
+          "name": "create$task",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.lcm.reports": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "report"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.lcm.update.precheck_report": [
+        {
+          "name": "create$task",
+          "kind": "write",
+          "params": [
+            "version"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.lcm.update.pending": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "version"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        }
+      ]
+    }
+  },
+  "com.vmware.vcenter.namespace_management": {
+    "services": {
+      "com.vmware.vcenter.namespace_management.software.clusters": [
+        {
+          "name": "upgrade",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "spec"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        },
+        {
+          "name": "upgrade_multiple",
+          "kind": "write",
+          "params": [
+            "specs"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.vcenter.namespace_management.supervisors.recovery.restore.jobs": [
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "supervisor",
+            "archive"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.namespace_management.clusters.topology": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.namespace_management.supervisors.recovery.backup.jobs": [
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "supervisor",
+            "spec"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.namespace_management.supervisors.recovery.backup.archives": [
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "filter"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.namespace_management.networks.nsx.edges.compatibility": [
+        {
+          "name": "check",
+          "kind": "read",
+          "params": [
+            "filter"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.namespace_management.supervisor_services.versions": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "supervisor_service",
+            "version"
+          ]
+        },
+        {
+          "name": "activate",
+          "kind": "write",
+          "params": [
+            "supervisor_service",
+            "version"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "supervisor_service",
+            "spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "supervisor_service"
+          ]
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "supervisor_service",
+            "version"
+          ]
+        },
+        {
+          "name": "deactivate",
+          "kind": "write",
+          "params": [
+            "supervisor_service",
+            "version"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.namespace_management.supervisor_services.cluster_supervisor_services": [
+        {
+          "name": "set",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "supervisor_service",
+            "spec"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "cluster",
+            "supervisor_service"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "supervisor_service"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.namespace_management.software.supervisors.prechecks": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "supervisor",
+            "filter"
+          ]
+        },
+        {
+          "name": "run",
+          "kind": "write",
+          "params": [
+            "supervisor",
+            "spec"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.namespace_management.stats.time_series": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "spec"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.namespace_management.storage.profiles": [
+        {
+          "name": "check",
+          "kind": "read",
+          "params": [
+            "filter"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.namespace_management.networks.nsx.edges": [
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "filter"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.namespace_management.networks.nsx.distributed_switches": [
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "filter"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.namespace_management.supervisors.identity.providers": [
+        {
+          "name": "set",
+          "kind": "write",
+          "params": [
+            "supervisor",
+            "provider",
+            "spec"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "supervisor",
+            "provider"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "supervisor",
+            "spec"
+          ]
+        },
+        {
+          "name": "update",
+          "kind": "write",
+          "params": [
+            "supervisor",
+            "provider",
+            "spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "supervisor"
+          ]
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "supervisor",
+            "provider"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.namespace_management.supervisors.conditions": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "supervisor"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.namespace_management.supervisors.topology": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "supervisor"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.namespace_management.supervisors.container_image_registries": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "supervisor",
+            "container_image_registry"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "supervisor",
+            "spec"
+          ]
+        },
+        {
+          "name": "update",
+          "kind": "write",
+          "params": [
+            "supervisor",
+            "container_image_registry",
+            "spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "supervisor"
+          ]
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "supervisor",
+            "container_image_registry"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.namespace_management.supervisors.summary": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "supervisor"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "filter"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.namespace_management.supervisors.supervisor_services": [
+        {
+          "name": "precheck",
+          "kind": "write",
+          "params": [
+            "supervisor",
+            "supervisor_service",
+            "spec"
+          ]
+        },
+        {
+          "name": "get_precheck_result",
+          "kind": "read",
+          "params": [
+            "supervisor",
+            "supervisor_service",
+            "target_version"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.namespace_management.virtual_machine_classes": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "vm_class"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "update",
+          "kind": "write",
+          "params": [
+            "vm_class",
+            "spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "vm_class"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.namespace_management.cluster_compatibility": [
+        {
+          "name": "list_v2",
+          "kind": "read",
+          "params": [
+            "zone_filter",
+            "cluster_filter"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "filter"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.namespace_management.supervisors": [
+        {
+          "name": "enable_on_compute_cluster",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "spec"
+          ]
+        },
+        {
+          "name": "enable_on_zones",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.namespace_management.cluster_available_versions": [
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.vcenter.namespace_management.clusters": [
+        {
+          "name": "set",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "spec"
+          ]
+        },
+        {
+          "name": "enable",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "spec"
+          ]
+        },
+        {
+          "name": "disable",
+          "kind": "write",
+          "params": [
+            "cluster"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        },
+        {
+          "name": "rotate_password",
+          "kind": "write",
+          "params": [
+            "cluster"
+          ]
+        },
+        {
+          "name": "update",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.vcenter.namespace_management.cluster_size_info": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.vcenter.namespace_management.load_balancers": [
+        {
+          "name": "set",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "id",
+            "spec"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "cluster",
+            "id"
+          ]
+        },
+        {
+          "name": "update",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "id",
+            "spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.namespace_management.hosts_config": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.vcenter.namespace_management.distributed_switch_compatibility": [
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "cluster",
+            "filter"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.namespace_management.NSX_tier0_gateway": [
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "distributed_switch"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.namespace_management.supervisor_services": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "supervisor_service"
+          ]
+        },
+        {
+          "name": "activate",
+          "kind": "write",
+          "params": [
+            "supervisor_service"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "update",
+          "kind": "write",
+          "params": [
+            "supervisor_service",
+            "spec"
+          ]
+        },
+        {
+          "name": "check_content",
+          "kind": "read",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "supervisor_service"
+          ]
+        },
+        {
+          "name": "deactivate",
+          "kind": "write",
+          "params": [
+            "supervisor_service"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.namespace_management.support_bundle": [
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "cluster"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.namespace_management.edge_cluster_compatibility": [
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "cluster",
+            "distributed_switch",
+            "filter"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.namespace_management.namespace_resource_options": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.namespace_management.networks": [
+        {
+          "name": "set",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "network",
+            "spec"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "cluster",
+            "network"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "spec"
+          ]
+        },
+        {
+          "name": "update",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "network",
+            "spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "network"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.namespace_management.networks.nsx.distributed_switches.compatibility": [
+        {
+          "name": "check",
+          "kind": "read",
+          "params": [
+            "filter"
+          ]
+        }
+      ]
+    }
+  },
+  "com.vmware.vcenter.namespaces": {
+    "services": {
+      "com.vmware.vcenter.namespaces.user.instances": [
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "filter"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.namespaces.instances": [
+        {
+          "name": "set",
+          "kind": "write",
+          "params": [
+            "namespace",
+            "spec"
+          ]
+        },
+        {
+          "name": "create_v2",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "list_v2",
+          "kind": "read",
+          "params": []
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "namespace"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "update",
+          "kind": "write",
+          "params": [
+            "namespace",
+            "spec"
+          ]
+        },
+        {
+          "name": "register_VM",
+          "kind": "write",
+          "params": [
+            "namespace",
+            "spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "namespace"
+          ]
+        },
+        {
+          "name": "get_v2",
+          "kind": "read",
+          "params": [
+            "namespace"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.namespaces.access": [
+        {
+          "name": "set",
+          "kind": "write",
+          "params": [
+            "namespace",
+            "domain",
+            "subject",
+            "type",
+            "spec"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "namespace",
+            "domain",
+            "subject",
+            "type"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "namespace",
+            "domain",
+            "subject",
+            "type",
+            "spec"
+          ]
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "namespace",
+            "domain",
+            "subject",
+            "type"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.namespaces.namespace_self_service": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        },
+        {
+          "name": "activate",
+          "kind": "write",
+          "params": [
+            "cluster"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        },
+        {
+          "name": "deactivate",
+          "kind": "write",
+          "params": [
+            "cluster"
+          ]
+        },
+        {
+          "name": "activate_with_template",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "spec"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.namespaces.namespace_templates": [
+        {
+          "name": "update_v2",
+          "kind": "write",
+          "params": [
+            "supervisor",
+            "template",
+            "spec"
+          ]
+        },
+        {
+          "name": "list_v2",
+          "kind": "read",
+          "params": [
+            "supervisor"
+          ]
+        },
+        {
+          "name": "create_v2",
+          "kind": "write",
+          "params": [
+            "supervisor",
+            "spec"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "cluster",
+            "template"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "spec"
+          ]
+        },
+        {
+          "name": "update",
+          "kind": "write",
+          "params": [
+            "cluster",
+            "template",
+            "spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "cluster"
+          ]
+        },
+        {
+          "name": "get_v2",
+          "kind": "read",
+          "params": [
+            "supervisor",
+            "template"
+          ]
+        }
+      ]
+    }
+  },
+  "com.vmware.vcenter.ovf": {
+    "services": {
+      "com.vmware.vcenter.ovf.import_flag": [
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "rp"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.ovf.export_flag": [
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.vcenter.ovf.library_item": [
+        {
+          "name": "filter",
+          "kind": "write",
+          "params": [
+            "ovf_library_item_id",
+            "target"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "client_token",
+            "source",
+            "target",
+            "create_spec"
+          ]
+        },
+        {
+          "name": "deploy",
+          "kind": "write",
+          "params": [
+            "client_token",
+            "ovf_library_item_id",
+            "target",
+            "deployment_spec"
+          ]
+        }
+      ]
+    }
+  },
+  "com.vmware.vcenter.phm": {
+    "services": {
+      "com.vmware.vcenter.phm.about": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.vcenter.phm.hardware_support_managers": [
+        {
+          "name": "set",
+          "kind": "write",
+          "params": [
+            "key",
+            "spec"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "key"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "key"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.phm.hardware_support_managers.managed_hosts": [
+        {
+          "name": "update",
+          "kind": "write",
+          "params": [
+            "key",
+            "spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "key"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.phm.hardware_support_managers.resource_bundle": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "key"
+          ]
+        },
+        {
+          "name": "update",
+          "kind": "write",
+          "params": [
+            "key",
+            "spec"
+          ]
+        }
+      ]
+    }
+  },
+  "com.vmware.vcenter.tokenservice": {
+    "services": {
+      "com.vmware.vcenter.tokenservice.token_exchange": [
+        {
+          "name": "exchange",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        }
+      ]
+    }
+  },
+  "com.vmware.vcenter.vm.compute": {
+    "services": {
+      "com.vmware.vcenter.vm.compute.policies": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "vm",
+            "policy"
+          ]
+        }
+      ]
+    }
+  },
+  "com.vmware.vcenter.vm_template": {
+    "services": {
+      "com.vmware.vcenter.vm_template.library_items.check_outs": [
+        {
+          "name": "check_out",
+          "kind": "read",
+          "params": [
+            "template_library_item",
+            "spec"
+          ]
+        },
+        {
+          "name": "check_in",
+          "kind": "read",
+          "params": [
+            "template_library_item",
+            "vm",
+            "spec"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "template_library_item",
+            "vm"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "template_library_item"
+          ]
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "template_library_item",
+            "vm"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.vm_template.library_items.versions": [
+        {
+          "name": "rollback",
+          "kind": "write",
+          "params": [
+            "template_library_item",
+            "version",
+            "spec"
+          ]
+        },
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "template_library_item",
+            "version"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "template_library_item"
+          ]
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "template_library_item",
+            "version"
+          ]
+        }
+      ],
+      "com.vmware.vcenter.vm_template.library_items": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "template_library_item"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "deploy",
+          "kind": "write",
+          "params": [
+            "template_library_item",
+            "spec"
+          ]
+        }
+      ]
+    }
+  },
+  "com.vmware.vstats": {
+    "services": {
+      "com.vmware.vstats.resource_types": [
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.vstats.counter_sets": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "counter_set"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.vstats.resource_addresses": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "filter"
+          ]
+        }
+      ],
+      "com.vmware.vstats.counters": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "cid"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "filter"
+          ]
+        }
+      ],
+      "com.vmware.vstats.acq_specs": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "create",
+          "kind": "write",
+          "params": [
+            "acq_spec"
+          ]
+        },
+        {
+          "name": "update",
+          "kind": "write",
+          "params": [
+            "id",
+            "acq_spec"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "filter"
+          ]
+        },
+        {
+          "name": "delete",
+          "kind": "write",
+          "params": [
+            "id"
+          ]
+        }
+      ],
+      "com.vmware.vstats.data": [
+        {
+          "name": "query_data_points",
+          "kind": "read",
+          "params": [
+            "filter"
+          ]
+        }
+      ],
+      "com.vmware.vstats.resource_address_schemas": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "id"
+          ]
+        }
+      ],
+      "com.vmware.vstats.counter_metadata": [
+        {
+          "name": "get",
+          "kind": "read",
+          "params": [
+            "cid",
+            "mid"
+          ]
+        },
+        {
+          "name": "get_default",
+          "kind": "read",
+          "params": [
+            "cid"
+          ]
+        },
+        {
+          "name": "list",
+          "kind": "read",
+          "params": [
+            "cid",
+            "filter"
+          ]
+        }
+      ],
+      "com.vmware.vstats.providers": [
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        }
+      ],
+      "com.vmware.vstats.metrics": [
+        {
+          "name": "list",
+          "kind": "read",
+          "params": []
+        }
+      ]
+    }
+  }
+}

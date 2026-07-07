@@ -1,0 +1,37 @@
+[project]
+name = "mcp-vmware"
+version = "0.1.0"
+description = "MCP server to pilot VMware vCenter (vSphere 8) via pyvmomi"
+requires-python = ">=3.12"
+dependencies = [
+    "mcp>=1.2.0",
+    "pyvmomi>=8.0.0",
+]
+
+[project.scripts]
+mcp-vmware = "mcp_vmware.server:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = false
+ignore_missing_imports = true
+
+# Les stubs embarques par pyvmomi sont incomplets (attributs presents au runtime
+# mais absents des annotations) : on traite vim/vmodl comme non types.
+[[tool.mypy.overrides]]
+module = ["pyVmomi", "pyVmomi.*", "pyVim", "pyVim.*"]
+follow_imports = "skip"
