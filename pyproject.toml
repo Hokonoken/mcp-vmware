@@ -9,7 +9,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=8", "ruff", "mypy"]
+dev = ["pytest>=8", "ruff", "mypy", "hypothesis>=6"]
 
 [project.scripts]
 mcp-vmware = "mcp_vmware.server:main"

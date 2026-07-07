@@ -150,7 +150,7 @@ def _md_cell(value: Any) -> str:
     if value is None:
         return ""
     if isinstance(value, list):
-        return ", ".join(str(v) for v in value)
+        value = ", ".join(str(v) for v in value)
     return str(value).replace("|", "\\|").replace("\n", " ")
 
 
