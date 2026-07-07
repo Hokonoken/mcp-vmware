@@ -135,8 +135,9 @@ docker build --network=host \
 ## Developpement
 
 ```bash
-./.venv/bin/ruff check src tools && ./.venv/bin/ruff format src tools
+./.venv/bin/ruff check src tools tests && ./.venv/bin/ruff format src tools tests
 ./.venv/bin/mypy src
+./.venv/bin/pytest          # suite locale, pyvmomi mocke, aucun vCenter requis
 ```
 
 Ajout d'un outil : implementer dans le module `tools_*.py` adequat avec le

@@ -5,11 +5,13 @@ Les operations destructrices (delete) exigent en plus confirm=True.
 
 from typing import Annotated, Any
 
+import anyio
+from mcp.server.fastmcp import Context
 from pydantic import Field
 from pyVmomi import vim
 
 from .app import tool
-from .helpers import error_text, find_vm, to_json, vm_summary, wait_for_task
+from .helpers import error_text, find_vm, vm_summary, wait_for_task, wait_for_task_async
 from .roles import deny_message, group_allowed
 
 POWER_ACTIONS = ("on", "off", "reset", "suspend", "shutdown_guest", "reboot_guest")
@@ -29,11 +31,13 @@ def _find_snapshot(node_list: list[Any], name: str) -> vim.vm.Snapshot | None:
     return None
 
 
-def _done(action: str, vm_obj: vim.VirtualMachine, extra: dict[str, Any] | None = None) -> str:
-    result = {"action": action, "status": "success", "vm": vm_summary(vm_obj)}
+def _done(
+    action: str, vm_obj: vim.VirtualMachine, extra: dict[str, Any] | None = None
+) -> dict[str, Any]:
+    result: dict[str, Any] = {"action": action, "status": "success", "vm": vm_summary(vm_obj)}
     if extra:
         result.update(extra)
-    return to_json(result)
+    return result
 
 
 @tool("vmware_power_vm", "Alimentation d'une VM", group="vm.power", destructive=True)
@@ -46,7 +50,7 @@ def vmware_power_vm(
             "passent par VMware Tools (arret/redemarrage propre)."
         ),
     ],
-) -> str:
+) -> dict[str, Any] | str:
     """Change l'etat d'alimentation d'une VM: on, off, reset, suspend, shutdown_guest,
     reboot_guest.
 
@@ -87,7 +91,7 @@ def vmware_snapshot_create(
     quiesce: Annotated[
         bool, Field(description="Geler le filesystem via VMware Tools (VM allumee uniquement)")
     ] = False,
-) -> str:
+) -> dict[str, Any] | str:
     """Cree un snapshot de la VM. Retourne un JSON {action, status, snapshot, vm:{...}}."""
     if msg := _gate("vm.snapshot"):
         return msg
@@ -107,7 +111,7 @@ def vmware_snapshot_create(
 def vmware_snapshot_revert(
     vm: Annotated[str, Field(description="Nom exact ou MoID de la VM")],
     snapshot_name: Annotated[str, Field(description="Nom exact du snapshot cible")],
-) -> str:
+) -> dict[str, Any] | str:
     """Restaure la VM a l'etat d'un snapshot. L'etat disque actuel (non snapshotte) est perdu.
 
     Retourne un JSON {action, status, snapshot, vm:{...}}.
@@ -137,7 +141,7 @@ def vmware_snapshot_delete(
     remove_children: Annotated[
         bool, Field(description="Supprimer aussi les snapshots enfants")
     ] = False,
-) -> str:
+) -> dict[str, Any] | str:
     """Supprime un snapshot (consolide les disques). Retourne un JSON {action, status, ...}."""
     if msg := _gate("vm.snapshot"):
         return msg
@@ -164,7 +168,7 @@ def vmware_reconfigure_vm(
     memory_mb: Annotated[
         int | None, Field(ge=128, le=4194304, description="Nouvelle RAM en MB")
     ] = None,
-) -> str:
+) -> dict[str, Any] | str:
     """Change le nombre de vCPU et/ou la RAM d'une VM.
 
     Si le hot-add n'est pas active, la VM doit etre eteinte (verifier avec vmware_get_vm).
@@ -191,14 +195,15 @@ def vmware_reconfigure_vm(
 
 
 @tool("vmware_clone_vm", "Cloner une VM", group="vm.lifecycle")
-def vmware_clone_vm(
+async def vmware_clone_vm(
     vm: Annotated[str, Field(description="VM ou template source (nom exact ou MoID)")],
     new_name: Annotated[str, Field(min_length=1, max_length=80, description="Nom du clone")],
+    ctx: Context,
     power_on: Annotated[bool, Field(description="Demarrer le clone apres creation")] = False,
     datastore: Annotated[
         str | None, Field(description="Datastore cible (defaut: celui de la source)")
     ] = None,
-) -> str:
+) -> dict[str, Any] | str:
     """Clone une VM ou deploie une VM depuis un template, dans le meme dossier que la source.
 
     Operation potentiellement longue (copie des disques). Retourne un JSON
@@ -207,19 +212,26 @@ def vmware_clone_vm(
     if msg := _gate("vm.lifecycle"):
         return msg
     try:
-        src = find_vm(vm)
-        relocate = vim.vm.RelocateSpec()
-        if datastore:
-            from .helpers import container_view
 
-            with container_view(vim.Datastore) as stores:
-                match = [d for d in stores if d.name.lower() == datastore.lower()]
-            if not match:
-                return f"Erreur: datastore '{datastore}' introuvable (vmware_list_datastores)."
-            relocate.datastore = match[0]
-        spec = vim.vm.CloneSpec(location=relocate, powerOn=power_on, template=False)
-        clone = wait_for_task(
-            src.CloneVM_Task(folder=src.parent, name=new_name, spec=spec), timeout_s=3600
+        def _prepare() -> Any:
+            src = find_vm(vm)
+            relocate = vim.vm.RelocateSpec()
+            if datastore:
+                from .helpers import container_view
+
+                with container_view(vim.Datastore) as stores:
+                    match = [d for d in stores if d.name.lower() == datastore.lower()]
+                if not match:
+                    raise ValueError(
+                        f"datastore '{datastore}' introuvable (vmware_list_datastores)."
+                    )
+                relocate.datastore = match[0]
+            spec = vim.vm.CloneSpec(location=relocate, powerOn=power_on, template=False)
+            return src.CloneVM_Task(folder=src.parent, name=new_name, spec=spec)
+
+        task = await anyio.to_thread.run_sync(_prepare)
+        clone = await wait_for_task_async(
+            task, timeout_s=3600, progress=ctx.report_progress, label=f"clone {new_name}"
         )
         return _done("clone", clone)
     except Exception as e:
@@ -232,7 +244,7 @@ def vmware_delete_vm(
     confirm: Annotated[
         bool, Field(description="Doit etre true pour executer. Sans cela l'outil refuse.")
     ] = False,
-) -> str:
+) -> dict[str, Any] | str:
     """DETRUIT une VM : suppression definitive de la VM et de ses disques du datastore.
 
     Irreversible. Exige confirm=true et une VM eteinte. Retourne un JSON {action, status,
@@ -254,23 +266,26 @@ def vmware_delete_vm(
                 "(vmware_power_vm action=off), puis reessayer."
             )
         wait_for_task(obj.Destroy_Task())
-        return to_json(
-            {"action": "delete", "status": "success", "deleted_vm": {"name": name, "moid": moid}}
-        )
+        return {
+            "action": "delete",
+            "status": "success",
+            "deleted_vm": {"name": name, "moid": moid},
+        }
     except Exception as e:
         return error_text(e)
 
 
 @tool("vmware_migrate_vm", "Migrer une VM (vMotion)", group="vm.lifecycle")
-def vmware_migrate_vm(
+async def vmware_migrate_vm(
     vm: Annotated[str, Field(description="Nom exact ou MoID de la VM")],
+    ctx: Context,
     target_host: Annotated[
         str | None, Field(description="Hote ESXi cible (nom, cf. vmware_list_hosts)")
     ] = None,
     target_datastore: Annotated[
         str | None, Field(description="Datastore cible (storage vMotion)")
     ] = None,
-) -> str:
+) -> dict[str, Any] | str:
     """Migre une VM a chaud : vers un autre hote (vMotion), un autre datastore
     (storage vMotion), ou les deux. Fournir au moins une cible.
 
@@ -281,24 +296,31 @@ def vmware_migrate_vm(
     if not target_host and not target_datastore:
         return "Erreur: fournir target_host et/ou target_datastore."
     try:
-        from .helpers import container_view
 
-        obj = find_vm(vm)
-        relocate = vim.vm.RelocateSpec()
-        if target_host:
-            with container_view(vim.HostSystem) as hosts:
-                match = [h for h in hosts if h.name.lower() == target_host.lower()]
-            if not match:
-                return f"Erreur: hote '{target_host}' introuvable (vmware_list_hosts)."
-            relocate.host = match[0]
-            relocate.pool = match[0].parent.resourcePool
-        if target_datastore:
-            with container_view(vim.Datastore) as stores:
-                match = [d for d in stores if d.name.lower() == target_datastore.lower()]
-            if not match:
-                return f"Erreur: datastore '{target_datastore}' introuvable."
-            relocate.datastore = match[0]
-        wait_for_task(obj.RelocateVM_Task(spec=relocate), timeout_s=3600)
+        def _prepare() -> tuple[Any, Any]:
+            from .helpers import container_view
+
+            obj = find_vm(vm)
+            relocate = vim.vm.RelocateSpec()
+            if target_host:
+                with container_view(vim.HostSystem) as hosts:
+                    match = [h for h in hosts if h.name.lower() == target_host.lower()]
+                if not match:
+                    raise ValueError(f"hote '{target_host}' introuvable (vmware_list_hosts).")
+                relocate.host = match[0]
+                relocate.pool = match[0].parent.resourcePool
+            if target_datastore:
+                with container_view(vim.Datastore) as stores:
+                    match = [d for d in stores if d.name.lower() == target_datastore.lower()]
+                if not match:
+                    raise ValueError(f"datastore '{target_datastore}' introuvable.")
+                relocate.datastore = match[0]
+            return obj, obj.RelocateVM_Task(spec=relocate)
+
+        obj, task = await anyio.to_thread.run_sync(_prepare)
+        await wait_for_task_async(
+            task, timeout_s=3600, progress=ctx.report_progress, label=f"migration {vm}"
+        )
         return _done("migrate", obj)
     except Exception as e:
         return error_text(e)

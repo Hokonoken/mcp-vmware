@@ -13,11 +13,20 @@ from pydantic import Field
 from pyVmomi import vim
 
 from .app import tool
-from .helpers import error_text, find_host, fmt_bytes, to_json
+from .helpers import (
+    ResponseFormat,
+    error_text,
+    find_host,
+    fmt_bytes,
+    paginate,
+    render_listing,
+)
 from .roles import deny_message, group_allowed
 
 SERVICE_ACTIONS = ("start", "stop", "restart")
 SERVICE_POLICIES = ("on", "off", "automatic")
+
+FORMAT_FIELD = Field(description="markdown (defaut, tableau compact) ou json (structure complete)")
 
 
 def _gate(group: str) -> str | None:
@@ -37,16 +46,17 @@ def _manager(host: vim.HostSystem, name: str) -> Any:
 @tool("vmware_host_services", "Services d'un hote", group="read", read=True, idempotent=True)
 def vmware_host_services(
     host: Annotated[str, Field(description="Nom de l'hote ESXi")],
-) -> str:
+    response_format: Annotated[ResponseFormat, FORMAT_FIELD] = ResponseFormat.MARKDOWN,
+) -> dict[str, Any] | str:
     """Liste les services d'un hote ESXi (equivalent esxcli system service list).
 
-    Retourne un JSON {host, count, services:[{key, label, running, policy, required}]}.
+    En json : {host, count, services:[{key, label, running, policy, required}]}.
     Agir dessus avec vmware_host_service_action (host.config).
     """
     try:
         h = find_host(host)
         svc_system = _manager(h, "serviceSystem")
-        services = [
+        rows = [
             {
                 "key": s.key,
                 "label": s.label,
@@ -56,7 +66,13 @@ def vmware_host_services(
             }
             for s in svc_system.serviceInfo.service
         ]
-        return to_json({"host": h.name, "count": len(services), "services": services})
+        return render_listing(
+            f"Services de {h.name}",
+            "services",
+            rows,
+            response_format,
+            {"host": h.name, "count": len(rows)},
+        )
     except Exception as e:
         return error_text(e)
 
@@ -70,59 +86,57 @@ def vmware_host_services(
 )
 def vmware_host_network_config(
     host: Annotated[str, Field(description="Nom de l'hote ESXi")],
-) -> str:
+) -> dict[str, Any] | str:
     """Configuration reseau d'un hote (equivalent esxcli network) : vSwitches,
     portgroups, interfaces vmkernel, NICs physiques.
 
-    Retourne un JSON {host, vswitches:[...], portgroups:[...], vmkernel_nics:[...],
-    physical_nics:[...]}.
+    Retourne un objet structure {host, vswitches:[...], portgroups:[...],
+    vmkernel_nics:[...], physical_nics:[...]}.
     """
     try:
         h = find_host(host)
         info = _manager(h, "networkSystem").networkInfo
-        return to_json(
-            {
-                "host": h.name,
-                "vswitches": [
-                    {
-                        "name": v.name,
-                        "ports": v.numPorts,
-                        "mtu": v.mtu,
-                        "uplinks": [p.rsplit("-", 1)[-1] for p in (v.pnic or [])],
-                    }
-                    for v in (info.vswitch or [])
-                ],
-                "portgroups": [
-                    {
-                        "name": p.spec.name,
-                        "vlan": p.spec.vlanId,
-                        "vswitch": p.spec.vswitchName,
-                    }
-                    for p in (info.portgroup or [])
-                ],
-                "vmkernel_nics": [
-                    {
-                        "device": v.device,
-                        "ip": v.spec.ip.ipAddress if v.spec.ip else None,
-                        "netmask": v.spec.ip.subnetMask if v.spec.ip else None,
-                        "mac": v.spec.mac,
-                        "mtu": v.spec.mtu,
-                        "portgroup": v.portgroup or None,
-                    }
-                    for v in (info.vnic or [])
-                ],
-                "physical_nics": [
-                    {
-                        "device": p.device,
-                        "driver": p.driver,
-                        "mac": p.mac,
-                        "link_speed_mb": p.linkSpeed.speedMb if p.linkSpeed else None,
-                        "full_duplex": p.linkSpeed.duplex if p.linkSpeed else None,
-                    }
-                    for p in (info.pnic or [])
-                ],
-            }
-        )
+        return {
+            "host": h.name,
+            "vswitches": [
+                {
+                    "name": v.name,
+                    "ports": v.numPorts,
+                    "mtu": v.mtu,
+                    "uplinks": [p.rsplit("-", 1)[-1] for p in (v.pnic or [])],
+                }
+                for v in (info.vswitch or [])
+            ],
+            "portgroups": [
+                {
+                    "name": p.spec.name,
+                    "vlan": p.spec.vlanId,
+                    "vswitch": p.spec.vswitchName,
+                }
+                for p in (info.portgroup or [])
+            ],
+            "vmkernel_nics": [
+                {
+                    "device": v.device,
+                    "ip": v.spec.ip.ipAddress if v.spec.ip else None,
+                    "netmask": v.spec.ip.subnetMask if v.spec.ip else None,
+                    "mac": v.spec.mac,
+                    "mtu": v.spec.mtu,
+                    "portgroup": v.portgroup or None,
+                }
+                for v in (info.vnic or [])
+            ],
+            "physical_nics": [
+                {
+                    "device": p.device,
+                    "driver": p.driver,
+                    "mac": p.mac,
+                    "link_speed_mb": p.linkSpeed.speedMb if p.linkSpeed else None,
+                    "full_duplex": p.linkSpeed.duplex if p.linkSpeed else None,
+                }
+                for p in (info.pnic or [])
+            ],
+        }
     except Exception as e:
         return error_text(e)
 
@@ -130,11 +144,15 @@ def vmware_host_network_config(
 @tool("vmware_host_storage", "Stockage d'un hote", group="read", read=True, idempotent=True)
 def vmware_host_storage(
     host: Annotated[str, Field(description="Nom de l'hote ESXi")],
-) -> str:
-    """Stockage d'un hote (equivalent esxcli storage) : adaptateurs HBA, LUNs,
-    chemins multipath.
+    limit: Annotated[int, Field(ge=1, le=500, description="Nombre max de LUNs")] = 50,
+    offset: Annotated[int, Field(ge=0, description="Decalage de pagination des LUNs")] = 0,
+    response_format: Annotated[ResponseFormat, FORMAT_FIELD] = ResponseFormat.MARKDOWN,
+) -> dict[str, Any] | str:
+    """Stockage d'un hote (equivalent esxcli storage) : adaptateurs HBA et LUNs pagines
+    avec chemins multipath.
 
-    Retourne un JSON {host, adapters:[...], luns:[{name, model, capacity, paths}]}.
+    En json : {host, adapters:[...], total, count, offset, has_more, next_offset,
+    luns:[{canonical_name, model, type, capacity, operational_state, paths}]}.
     Rescan avec vmware_host_rescan_storage (host.config).
     """
     try:
@@ -145,13 +163,13 @@ def vmware_host_storage(
         if dev.multipathInfo:
             for lun in dev.multipathInfo.lun or []:
                 paths_per_lun[lun.lun] = len(lun.path or [])
-        luns = []
+        all_luns = []
         for lun in dev.scsiLun or []:
             capacity = None
             block_info = getattr(lun, "capacity", None)
             if block_info:
                 capacity = fmt_bytes(block_info.block * block_info.blockSize)
-            luns.append(
+            all_luns.append(
                 {
                     "canonical_name": lun.canonicalName,
                     "model": f"{lun.vendor.strip()} {lun.model.strip()}"
@@ -163,6 +181,7 @@ def vmware_host_storage(
                     "paths": paths_per_lun.get(lun.key),
                 }
             )
+        page, meta = paginate(all_luns, limit, offset)
         adapters = [
             {
                 "device": a.device,
@@ -172,7 +191,24 @@ def vmware_host_storage(
             }
             for a in (dev.hostBusAdapter or [])
         ]
-        return to_json({"host": h.name, "adapters": adapters, "luns": luns})
+        if response_format == ResponseFormat.JSON:
+            return {"host": h.name, "adapters": adapters, **meta, "luns": page}
+        from .helpers import md_table
+
+        return "\n".join(
+            [
+                f"# Stockage de {h.name}",
+                "",
+                f"## Adaptateurs ({len(adapters)})",
+                "",
+                md_table(adapters),
+                "",
+                f"## LUNs ({meta['count']} affichees sur {meta['total']}"
+                + (f", suite avec offset={meta['next_offset']})" if meta["has_more"] else ")"),
+                "",
+                md_table(page),
+            ]
+        )
     except Exception as e:
         return error_text(e)
 
@@ -181,12 +217,12 @@ def vmware_host_storage(
 def vmware_host_firewall(
     host: Annotated[str, Field(description="Nom de l'hote ESXi")],
     enabled_only: Annotated[bool, Field(description="Ne montrer que les rulesets actifs")] = False,
-) -> str:
+) -> dict[str, Any] | str:
     """Firewall d'un hote (equivalent esxcli network firewall) : politique par defaut
     et rulesets.
 
-    Retourne un JSON {host, default_policy, count, rulesets:[{key, label, enabled,
-    all_ips_allowed, allowed_ips}]}. Toggle avec vmware_host_firewall_ruleset.
+    Retourne un objet structure {host, default_policy, count, rulesets:[{key, label,
+    enabled, all_ips_allowed, allowed_ips}]}. Toggle avec vmware_host_firewall_ruleset.
     """
     try:
         h = find_host(host)
@@ -204,17 +240,15 @@ def vmware_host_firewall(
                     "allowed_ips": list(r.allowedHosts.ipAddress or []) if r.allowedHosts else [],
                 }
             )
-        return to_json(
-            {
-                "host": h.name,
-                "default_policy": {
-                    "incoming_blocked": fw.defaultPolicy.incomingBlocked,
-                    "outgoing_blocked": fw.defaultPolicy.outgoingBlocked,
-                },
-                "count": len(rulesets),
-                "rulesets": rulesets,
-            }
-        )
+        return {
+            "host": h.name,
+            "default_policy": {
+                "incoming_blocked": fw.defaultPolicy.incomingBlocked,
+                "outgoing_blocked": fw.defaultPolicy.outgoingBlocked,
+            },
+            "count": len(rulesets),
+            "rulesets": rulesets,
+        }
     except Exception as e:
         return error_text(e)
 
@@ -232,16 +266,16 @@ def vmware_host_advanced_settings(
         str,
         Field(
             min_length=2,
-            description="Prefixe de cle, ex: Net., Mem., NFS., "
-            "UserVars. (obligatoire, >1000 parametres)",
+            description="Prefixe de cle, ex: Net., Mem., NFS., UserVars. "
+            "(obligatoire, >1000 parametres)",
         ),
     ],
-) -> str:
+) -> dict[str, Any] | str:
     """Parametres avances d'un hote (equivalent esxcli system settings advanced list),
     filtres par prefixe de cle.
 
-    Retourne un JSON {host, filter, count, settings:[{key, value}]}. Modifier avec
-    vmware_host_set_advanced_setting (host.config).
+    Retourne un objet structure {host, filter, count, settings:[{key, value}]}.
+    Modifier avec vmware_host_set_advanced_setting (host.config).
     """
     try:
         h = find_host(host)
@@ -251,9 +285,12 @@ def vmware_host_advanced_settings(
         except vim.fault.InvalidName:
             return f"Erreur: aucun parametre ne commence par '{filter_prefix}' sur '{h.name}'."
         settings = [{"key": o.key, "value": o.value} for o in options]
-        return to_json(
-            {"host": h.name, "filter": filter_prefix, "count": len(settings), "settings": settings}
-        )
+        return {
+            "host": h.name,
+            "filter": filter_prefix,
+            "count": len(settings),
+            "settings": settings,
+        }
     except Exception as e:
         return error_text(e)
 
@@ -265,12 +302,14 @@ def vmware_host_vibs(
         str | None, Field(description="Sous-chaine a chercher dans le nom du VIB")
     ] = None,
     limit: Annotated[int, Field(ge=1, le=500, description="Nombre max de resultats")] = 100,
-) -> str:
+    offset: Annotated[int, Field(ge=0, description="Decalage de pagination")] = 0,
+    response_format: Annotated[ResponseFormat, FORMAT_FIELD] = ResponseFormat.MARKDOWN,
+) -> dict[str, Any] | str:
     """Paquets logiciels (VIBs) installes sur un hote (equivalent esxcli software vib list)
     et profil d'image.
 
-    Retourne un JSON {host, image_profile, total, count, vibs:[{name, version, vendor,
-    acceptance_level}]}.
+    En json : {host, image_profile, total, count, offset, has_more, next_offset,
+    vibs:[{name, version, vendor, acceptance_level}]}. En markdown : tableau.
     """
     try:
         h = find_host(host)
@@ -278,29 +317,27 @@ def vmware_host_vibs(
         packages = img.FetchSoftwarePackages()
         if name_filter:
             packages = [p for p in packages if name_filter.lower() in p.name.lower()]
-        total = len(packages)
-        profile = None
+        packages.sort(key=lambda p: p.name)
+        page, meta = paginate(packages, limit, offset)
         try:
             profile = img.HostImageConfigGetProfile().name
         except Exception:
             profile = None
-        vibs = [
+        rows = [
             {
                 "name": p.name,
                 "version": p.version,
                 "vendor": p.vendor,
                 "acceptance_level": p.acceptanceLevel,
             }
-            for p in packages[:limit]
+            for p in page
         ]
-        return to_json(
-            {
-                "host": h.name,
-                "image_profile": profile,
-                "total": total,
-                "count": len(vibs),
-                "vibs": vibs,
-            }
+        return render_listing(
+            f"VIBs de {h.name} (profil: {profile})",
+            "vibs",
+            rows,
+            response_format,
+            {"host": h.name, "image_profile": profile, **meta},
         )
     except Exception as e:
         return error_text(e)
@@ -312,12 +349,12 @@ def vmware_host_health(
     all_sensors: Annotated[
         bool, Field(description="Lister tous les capteurs (defaut: seulement les anormaux)")
     ] = False,
-) -> str:
+) -> dict[str, Any] | str:
     """Capteurs de sante materielle d'un hote (equivalent esxcli hardware) : etat
     global CPU/memoire/stockage et capteurs en alerte.
 
-    Retourne un JSON {host, summary:{green, yellow, red, unknown}, sensors:[{name,
-    state, reading}]} — par defaut seuls les capteurs non verts sont listes.
+    Retourne un objet structure {host, sensor_count, summary:{green, yellow, red, unknown},
+    sensors:[{name, state, reading}]} — par defaut seuls les capteurs non verts sont listes.
     """
     try:
         h = find_host(host)
@@ -338,14 +375,12 @@ def vmware_host_health(
                 if s.currentReading is not None and s.unitModifier is not None:
                     reading = f"{s.currentReading * (10**s.unitModifier)} {s.baseUnits or ''}"
                 out.append({"name": s.name, "state": state, "reading": reading})
-        return to_json(
-            {
-                "host": h.name,
-                "sensor_count": len(sensors),
-                "summary": summary,
-                "sensors": out,
-            }
-        )
+        return {
+            "host": h.name,
+            "sensor_count": len(sensors),
+            "summary": summary,
+            "sensors": out,
+        }
     except Exception as e:
         return error_text(e)
 
@@ -366,11 +401,11 @@ def vmware_host_service_action(
         str | None,
         Field(description=f"Politique de demarrage: {', '.join(SERVICE_POLICIES)}"),
     ] = None,
-) -> str:
+) -> dict[str, Any] | str:
     """Demarre/arrete/redemarre un service d'hote et/ou change sa politique de demarrage
     (equivalent esxcli system service).
 
-    Fournir action et/ou policy. Retourne un JSON {action, status, host, service, running}.
+    Fournir action et/ou policy. Retourne un objet {action, status, host, service, running}.
     """
     if msg := _gate("host.config"):
         return msg
@@ -399,16 +434,14 @@ def vmware_host_service_action(
             svc_system.RestartService(id=service_key)
         svc_system.RefreshServices()
         running = {s.key: s.running for s in svc_system.serviceInfo.service}.get(service_key)
-        return to_json(
-            {
-                "action": action or "policy_update",
-                "status": "success",
-                "host": h.name,
-                "service": service_key,
-                "policy": policy,
-                "running": running,
-            }
-        )
+        return {
+            "action": action or "policy_update",
+            "status": "success",
+            "host": h.name,
+            "service": service_key,
+            "policy": policy,
+            "running": running,
+        }
     except Exception as e:
         return error_text(e)
 
@@ -418,11 +451,11 @@ def vmware_host_firewall_ruleset(
     host: Annotated[str, Field(description="Nom de l'hote ESXi")],
     ruleset_key: Annotated[str, Field(description="Cle du ruleset (cf. vmware_host_firewall)")],
     enabled: Annotated[bool, Field(description="true pour activer, false pour desactiver")],
-) -> str:
+) -> dict[str, Any] | str:
     """Active ou desactive un ruleset du firewall d'un hote (equivalent esxcli network
     firewall ruleset set).
 
-    Retourne un JSON {action, status, host, ruleset, enabled}.
+    Retourne un objet {action, status, host, ruleset, enabled}.
     """
     if msg := _gate("host.config"):
         return msg
@@ -439,15 +472,13 @@ def vmware_host_firewall_ruleset(
             fw.EnableRuleset(id=ruleset_key)
         else:
             fw.DisableRuleset(id=ruleset_key)
-        return to_json(
-            {
-                "action": "firewall_ruleset",
-                "status": "success",
-                "host": h.name,
-                "ruleset": ruleset_key,
-                "enabled": enabled,
-            }
-        )
+        return {
+            "action": "firewall_ruleset",
+            "status": "success",
+            "host": h.name,
+            "ruleset": ruleset_key,
+            "enabled": enabled,
+        }
     except Exception as e:
         return error_text(e)
 
@@ -457,11 +488,11 @@ def vmware_host_set_advanced_setting(
     host: Annotated[str, Field(description="Nom de l'hote ESXi")],
     key: Annotated[str, Field(description="Cle exacte du parametre, ex: NFS.MaxVolumes")],
     value: Annotated[str, Field(description="Nouvelle valeur (convertie au type actuel)")],
-) -> str:
+) -> dict[str, Any] | str:
     """Modifie un parametre avance d'un hote (equivalent esxcli system settings advanced
     set). La valeur est convertie au type de la valeur actuelle (bool/int/str).
 
-    Retourne un JSON {action, status, host, key, old_value, new_value}.
+    Retourne un objet {action, status, host, key, old_value, new_value}.
     """
     if msg := _gate("host.config"):
         return msg
@@ -487,16 +518,14 @@ def vmware_host_set_advanced_setting(
         else:
             new_value = value
         adv.UpdateOptions(changedValue=[vim.option.OptionValue(key=key, value=new_value)])
-        return to_json(
-            {
-                "action": "set_advanced_setting",
-                "status": "success",
-                "host": h.name,
-                "key": key,
-                "old_value": old,
-                "new_value": new_value,
-            }
-        )
+        return {
+            "action": "set_advanced_setting",
+            "status": "success",
+            "host": h.name,
+            "key": key,
+            "old_value": old,
+            "new_value": new_value,
+        }
     except Exception as e:
         return error_text(e)
 
@@ -507,11 +536,11 @@ def vmware_host_rescan_storage(
     rescan_vmfs: Annotated[
         bool, Field(description="Chercher aussi de nouveaux volumes VMFS")
     ] = True,
-) -> str:
+) -> dict[str, Any] | str:
     """Rescan des HBA d'un hote pour detecter de nouvelles LUNs, et optionnellement de
     nouveaux volumes VMFS (equivalent esxcli storage core adapter rescan).
 
-    Operation sans risque mais qui peut durer 1 a 2 minutes. Retourne un JSON
+    Operation sans risque mais qui peut durer 1 a 2 minutes. Retourne un objet
     {action, status, host}.
     """
     if msg := _gate("host.config"):
@@ -522,13 +551,11 @@ def vmware_host_rescan_storage(
         storage.RescanAllHba()
         if rescan_vmfs:
             storage.RescanVmfs()
-        return to_json(
-            {
-                "action": "rescan_storage",
-                "status": "success",
-                "host": h.name,
-                "vmfs_rescanned": rescan_vmfs,
-            }
-        )
+        return {
+            "action": "rescan_storage",
+            "status": "success",
+            "host": h.name,
+            "vmfs_rescanned": rescan_vmfs,
+        }
     except Exception as e:
         return error_text(e)

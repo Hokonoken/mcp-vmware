@@ -1,14 +1,22 @@
 """Utilitaires partages : resolution d'objets, vues d'inventaire, taches, serialisation."""
 
 import json
-from collections.abc import Iterator
+from collections.abc import Callable, Iterator
 from contextlib import contextmanager
 from datetime import datetime
+from enum import StrEnum
 from typing import Any
 
 from pyVmomi import vim
 
 from .connection import get_si
+
+
+class ResponseFormat(StrEnum):
+    """Format de sortie des outils de listing."""
+
+    MARKDOWN = "markdown"
+    JSON = "json"
 
 
 @contextmanager
@@ -84,6 +92,100 @@ def wait_for_task(task: vim.Task, timeout_s: int = 600) -> Any:
     raise RuntimeError(
         f"Tache vCenter non terminee apres {timeout_s}s (elle continue cote vCenter)."
     )
+
+
+async def wait_for_task_async(
+    task: vim.Task,
+    timeout_s: int = 600,
+    progress: Callable[..., Any] | None = None,
+    label: str = "",
+) -> Any:
+    """Version async de wait_for_task avec remontee de progression.
+
+    `progress` est une coroutine (typiquement ctx.report_progress) appelee avec
+    (progression, total=100, message) a chaque changement de pourcentage.
+    """
+    import time
+
+    import anyio
+
+    deadline = time.monotonic() + timeout_s
+    last: float | None = None
+    while time.monotonic() < deadline:
+        info = await anyio.to_thread.run_sync(lambda: task.info)
+        if info.state == vim.TaskInfo.State.success:
+            if progress is not None:
+                await progress(100.0, 100.0, f"{label} termine" if label else None)
+            return info.result
+        if info.state == vim.TaskInfo.State.error:
+            msg = getattr(info.error, "msg", None) or "erreur inconnue"
+            raise RuntimeError(f"Tache vCenter en echec: {msg}")
+        if progress is not None and info.progress is not None and info.progress != last:
+            last = info.progress
+            await progress(float(info.progress), 100.0, label or None)
+        await anyio.sleep(1)
+    raise RuntimeError(
+        f"Tache vCenter non terminee apres {timeout_s}s (elle continue cote vCenter)."
+    )
+
+
+def paginate(items: list[Any], limit: int, offset: int) -> tuple[list[Any], dict[str, Any]]:
+    """Decoupe une liste et retourne (page, metadonnees de pagination)."""
+    total = len(items)
+    page = items[offset : offset + limit]
+    end = offset + len(page)
+    return page, {
+        "total": total,
+        "count": len(page),
+        "offset": offset,
+        "has_more": end < total,
+        "next_offset": end if end < total else None,
+    }
+
+
+def _md_cell(value: Any) -> str:
+    if value is None:
+        return ""
+    if isinstance(value, list):
+        return ", ".join(str(v) for v in value)
+    return str(value).replace("|", "\\|").replace("\n", " ")
+
+
+def md_table(rows: list[dict[str, Any]], columns: list[str] | None = None) -> str:
+    """Rend une liste de dicts plats en tableau markdown."""
+    if not rows:
+        return "(aucun element)"
+    cols = columns or list(rows[0].keys())
+    lines = [
+        "| " + " | ".join(cols) + " |",
+        "| " + " | ".join("---" for _ in cols) + " |",
+    ]
+    lines.extend("| " + " | ".join(_md_cell(r.get(c)) for c in cols) + " |" for r in rows)
+    return "\n".join(lines)
+
+
+def render_listing(
+    title: str,
+    key: str,
+    rows: list[dict[str, Any]],
+    fmt: ResponseFormat,
+    meta: dict[str, Any] | None = None,
+    columns: list[str] | None = None,
+) -> dict[str, Any] | str:
+    """Sortie uniforme des listings : dict (JSON structure) ou tableau markdown."""
+    meta = meta if meta is not None else {"count": len(rows)}
+    if fmt == ResponseFormat.JSON:
+        return {**meta, key: rows}
+    parts = [f"# {title}", ""]
+    if "total" in meta:
+        shown = f"{meta['count']} affiche(s) sur {meta['total']}"
+        if meta.get("has_more"):
+            shown += f" — suite avec offset={meta['next_offset']}"
+        parts.append(shown)
+    else:
+        parts.append(f"{meta.get('count', len(rows))} element(s)")
+    parts.extend(["", md_table(rows, columns)])
+    return "\n".join(parts)
 
 
 def to_json(data: Any) -> str:

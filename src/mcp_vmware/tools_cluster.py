@@ -6,7 +6,7 @@ from pydantic import Field
 from pyVmomi import vim
 
 from .app import tool
-from .helpers import error_text, find_cluster, find_vm, to_json, wait_for_task
+from .helpers import error_text, find_cluster, find_vm, wait_for_task
 from .roles import deny_message, group_allowed
 
 DRS_BEHAVIORS = ("manual", "partiallyAutomated", "fullyAutomated")
@@ -42,7 +42,7 @@ def _rule_summary(rule: Any) -> dict[str, Any]:
 )
 def vmware_get_cluster_config(
     cluster: Annotated[str, Field(description="Nom du cluster (cf. vmware_list_clusters)")],
-) -> str:
+) -> dict[str, Any] | str:
     """Configuration detaillee HA (DAS) et DRS d'un cluster + capacite de failover.
 
     Retourne un JSON {name, ha:{enabled, admission_control_enabled, failover_level,
@@ -72,20 +72,18 @@ def vmware_get_cluster_config(
         policy = das.admissionControlPolicy if das else None
         if isinstance(policy, vim.cluster.FailoverLevelAdmissionControlPolicy):
             ha["failover_level"] = policy.failoverLevel
-        return to_json(
-            {
-                "name": c.name,
-                "moid": c._moId,
-                "ha": ha,
-                "drs": {
-                    "enabled": drs.enabled if drs else None,
-                    "behavior": str(drs.defaultVmBehavior) if drs else None,
-                    "vmotion_rate": drs.vmotionRate if drs else None,
-                },
-                "rules_count": len(cfg.rule or []),
-                "das_runtime_present": runtime is not None,
-            }
-        )
+        return {
+            "name": c.name,
+            "moid": c._moId,
+            "ha": ha,
+            "drs": {
+                "enabled": drs.enabled if drs else None,
+                "behavior": str(drs.defaultVmBehavior) if drs else None,
+                "vmotion_rate": drs.vmotionRate if drs else None,
+            },
+            "rules_count": len(cfg.rule or []),
+            "das_runtime_present": runtime is not None,
+        }
     except Exception as e:
         return error_text(e)
 
@@ -94,7 +92,7 @@ def vmware_get_cluster_config(
 def vmware_drs_recommendations(
     cluster: Annotated[str, Field(description="Nom du cluster")],
     refresh: Annotated[bool, Field(description="Forcer un recalcul avant lecture")] = False,
-) -> str:
+) -> dict[str, Any] | str:
     """Liste les recommandations DRS en attente d'un cluster (migrations proposees).
 
     Retourne un JSON {cluster, count, recommendations:[{key, type, reason, target,
@@ -124,7 +122,7 @@ def vmware_drs_recommendations(
                     "actions": actions,
                 }
             )
-        return to_json({"cluster": c.name, "count": len(recs), "recommendations": recs})
+        return {"cluster": c.name, "count": len(recs), "recommendations": recs}
     except Exception as e:
         return error_text(e)
 
@@ -132,7 +130,7 @@ def vmware_drs_recommendations(
 @tool("vmware_list_affinity_rules", "Regles d'affinite", group="read", read=True, idempotent=True)
 def vmware_list_affinity_rules(
     cluster: Annotated[str, Field(description="Nom du cluster")],
-) -> str:
+) -> dict[str, Any] | str:
     """Liste les regles d'affinite / anti-affinite / VM-hote d'un cluster.
 
     Retourne un JSON {cluster, count, rules:[{key, name, type, enabled, vms}]}.
@@ -140,7 +138,7 @@ def vmware_list_affinity_rules(
     try:
         c = find_cluster(cluster)
         rules = [_rule_summary(r) for r in (c.configurationEx.rule or [])]
-        return to_json({"cluster": c.name, "count": len(rules), "rules": rules})
+        return {"cluster": c.name, "count": len(rules), "rules": rules}
     except Exception as e:
         return error_text(e)
 
@@ -157,7 +155,7 @@ def vmware_set_drs(
         int | None,
         Field(ge=1, le=5, description="Agressivite des migrations (1=conservateur, 5=agressif)"),
     ] = None,
-) -> str:
+) -> dict[str, Any] | str:
     """Modifie la configuration DRS d'un cluster (activation, mode, agressivite).
 
     Fournir au moins un parametre. Retourne un JSON {action, status, cluster, changes}.
@@ -183,9 +181,7 @@ def vmware_set_drs(
             changes["vmotion_rate"] = vmotion_rate
         spec = vim.cluster.ConfigSpecEx(drsConfig=drs)
         wait_for_task(c.ReconfigureComputeResource_Task(spec, True))
-        return to_json(
-            {"action": "set_drs", "status": "success", "cluster": c.name, "changes": changes}
-        )
+        return {"action": "set_drs", "status": "success", "cluster": c.name, "changes": changes}
     except Exception as e:
         return error_text(e)
 
@@ -197,7 +193,7 @@ def vmware_set_ha(
     admission_control: Annotated[
         bool | None, Field(description="Activer le controle d'admission (capacite de failover)")
     ] = None,
-) -> str:
+) -> dict[str, Any] | str:
     """Active ou desactive vSphere HA (DAS) sur un cluster.
 
     Retourne un JSON {action, status, cluster, changes}.
@@ -213,9 +209,7 @@ def vmware_set_ha(
             changes["admission_control"] = admission_control
         spec = vim.cluster.ConfigSpecEx(dasConfig=das)
         wait_for_task(c.ReconfigureComputeResource_Task(spec, True))
-        return to_json(
-            {"action": "set_ha", "status": "success", "cluster": c.name, "changes": changes}
-        )
+        return {"action": "set_ha", "status": "success", "cluster": c.name, "changes": changes}
     except Exception as e:
         return error_text(e)
 
@@ -226,7 +220,7 @@ def vmware_apply_drs_recommendation(
     key: Annotated[
         str, Field(description="Cle de la recommandation (cf. vmware_drs_recommendations)")
     ],
-) -> str:
+) -> dict[str, Any] | str:
     """Applique une recommandation DRS en attente (declenche les migrations proposees).
 
     Retourne un JSON {action, status, cluster, key}.
@@ -242,14 +236,12 @@ def vmware_apply_drs_recommendation(
                 f"Cles en attente: {', '.join(known) or 'aucune'}."
             )
         c.ApplyRecommendation(key)
-        return to_json(
-            {
-                "action": "apply_drs_recommendation",
-                "status": "success",
-                "cluster": c.name,
-                "key": key,
-            }
-        )
+        return {
+            "action": "apply_drs_recommendation",
+            "status": "success",
+            "cluster": c.name,
+            "key": key,
+        }
     except Exception as e:
         return error_text(e)
 
@@ -270,7 +262,7 @@ def vmware_set_affinity_rule(
         list[str] | None,
         Field(description="VMs concernees (noms ou MoIDs), minimum 2. Requis pour create."),
     ] = None,
-) -> str:
+) -> dict[str, Any] | str:
     """Cree ou supprime une regle d'affinite/anti-affinite VM-VM sur un cluster.
 
     Retourne un JSON {action, status, cluster, rule}.
@@ -304,8 +296,6 @@ def vmware_set_affinity_rule(
             rule_spec = vim.cluster.RuleSpec(operation="add", info=info)
         spec = vim.cluster.ConfigSpecEx(rulesSpec=[rule_spec])
         wait_for_task(c.ReconfigureComputeResource_Task(spec, True))
-        return to_json(
-            {"action": f"rule_{action}", "status": "success", "cluster": c.name, "rule": name}
-        )
+        return {"action": f"rule_{action}", "status": "success", "cluster": c.name, "rule": name}
     except Exception as e:
         return error_text(e)
