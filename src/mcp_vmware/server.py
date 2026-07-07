@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: 2026 Hokonoken
+
 """Point d'entree du serveur MCP VMware (transport stdio).
 
 Lance sur la machine rebond ; Claude Code s'y connecte via `ssh jumphost ...`.

@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: 2026 Hokonoken
+
 """Roles, groupes de droits et messages de refus."""
 
 import mcp_vmware.roles as roles

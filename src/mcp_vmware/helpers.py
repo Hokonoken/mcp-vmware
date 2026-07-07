@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: 2026 Hokonoken
+
 """Utilitaires partages : resolution d'objets, vues d'inventaire, taches, serialisation."""
 
 import json

@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: 2026 Hokonoken
+
 """Outils cluster : lecture fine HA/DRS (groupe read) et pilotage (groupe cluster.ops)."""
 
 from typing import Annotated, Any

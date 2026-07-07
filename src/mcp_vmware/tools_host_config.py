@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: 2026 Hokonoken
+
 """Outils de configuration fine des hotes ESXi — equivalent des namespaces esxcli.
 
 Lecture (groupe read) : services, reseau, stockage, firewall, parametres avances,

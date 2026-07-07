@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: 2026 Hokonoken
+
 """Fixtures communes : environnement isole et fabriques d'objets pyvmomi factices."""
 
 from types import SimpleNamespace

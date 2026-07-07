@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: 2026 Hokonoken
+
 """Instance FastMCP partagee et enregistrement des outils filtre par role."""
 
 from collections.abc import Callable

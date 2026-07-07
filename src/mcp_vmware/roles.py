@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: 2026 Hokonoken
+
 """Groupes de droits et roles d'acces du serveur MCP.
 
 Le role courant est defini par MCP_VMWARE_ROLE dans le fichier env (defaut: viewer).

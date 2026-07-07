@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: 2026 Hokonoken
+
 """Helpers : formatage, pagination, resolution d'objets, taches."""
 
 import asyncio

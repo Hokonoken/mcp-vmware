@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: 2026 Hokonoken
+
 """Gestion de la session vCenter : connexion paresseuse et reconnexion.
 
 Les identifiants sont lus depuis un fichier env (defaut ~/VMware/.vcenter.env,

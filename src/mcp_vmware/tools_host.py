@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: 2026 Hokonoken
+
 """Outils hotes ESXi : detail (groupe read) et operations (groupe host.ops).
 
 Les operations d'hote sont les plus sensibles du serveur : maintenance et

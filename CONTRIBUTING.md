@@ -39,6 +39,23 @@ smoke test of the containerized server.
 - No emojis in code or output. Actionable error messages.
 - No secrets in the repo: credentials live in an env file outside the tree
   (`.vcenter.env`, chmod 600).
+- Every source file carries an SPDX header
+  (`# SPDX-License-Identifier: MIT`).
+
+## Signed commits
+
+Signed commits are expected on contributions (a supply-chain hygiene standard).
+Configure SSH commit signing once:
+
+```bash
+ssh-keygen -t ed25519 -C "git-signing" -f ~/.ssh/id_ed25519_signing
+git config gpg.format ssh
+git config user.signingkey ~/.ssh/id_ed25519_signing.pub
+git config commit.gpgsign true
+# then add the .pub as a "Signing Key" in GitHub > Settings > SSH and GPG keys
+```
+
+Commits must also carry a `Signed-off-by` line (DCO): use `git commit -s`.
 
 ## Reporting a security issue
 

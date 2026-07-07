@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: 2026 Hokonoken
+
 """Gates d'ecriture : refus par role, validations d'entree, confirmations destructives."""
 
 import asyncio

@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: 2026 Hokonoken
+
 """Exposition des outils par role : le serveur ne montre que ce que le role couvre.
 
 Ces tests rechargent le package pour rejouer l'enregistrement des outils avec

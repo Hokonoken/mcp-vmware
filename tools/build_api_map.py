@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: 2026 Hokonoken
+
 """Cartographie la surface d'API du vCenter, versionnée au build.
 
 Produit dans api-map/<version>-<build>/ :

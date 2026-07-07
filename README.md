@@ -1,6 +1,8 @@
 # mcp-vmware
 
 [![CI](https://github.com/Hokonoken/mcp-vmware/actions/workflows/ci.yml/badge.svg)](https://github.com/Hokonoken/mcp-vmware/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/Hokonoken/mcp-vmware/actions/workflows/codeql.yml/badge.svg)](https://github.com/Hokonoken/mcp-vmware/actions/workflows/codeql.yml)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/Hokonoken/mcp-vmware/badge)](https://scorecard.dev/viewer/?uri=github.com/Hokonoken/mcp-vmware)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](pyproject.toml)
 [![MCP](https://img.shields.io/badge/protocol-MCP-8A2BE2)](https://modelcontextprotocol.io)
@@ -156,7 +158,23 @@ Adding a tool: implement it in the relevant `tools_*.py` module with the
 `tool(name, title, group=...)` decorator (write tools call `_gate()` first),
 update `api-map/coverage.yaml` in the same commit, deploy, smoke test.
 
-See [CONTRIBUTING.md](CONTRIBUTING.md).
+See [CONTRIBUTING.md](CONTRIBUTING.md) and
+[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
+
+## Security & supply chain
+
+Standard supply-chain hygiene, all with SHA-pinned GitHub Actions:
+
+- **CodeQL** static analysis (SAST) on every push/PR and weekly.
+- **OpenSSF Scorecard** weekly, results published.
+- **Dependabot** for Python and GitHub Actions updates.
+- **Dependency Review** on pull requests (fails on high-severity additions).
+- **SPDX** license headers on every source file.
+- **Signed commits** expected from contributors (see
+  [CONTRIBUTING.md](CONTRIBUTING.md)).
+- Minimal workflow permissions (`contents: read` by default).
+
+Report vulnerabilities privately: see [SECURITY.md](SECURITY.md).
 
 ## Disclaimer
 

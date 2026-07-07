@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: 2026 Hokonoken
+
 """Outils MCP d'ecriture sur les VMs — exposes selon le role (cf. roles.py).
 
 Les operations destructrices (delete) exigent en plus confirm=True.

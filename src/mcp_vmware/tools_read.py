@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: 2026 Hokonoken
+
 """Outils MCP en lecture seule — toujours actifs.
 
 Les listings acceptent response_format (markdown par defaut, json pour la structure
