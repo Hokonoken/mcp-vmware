@@ -1,5 +1,10 @@
 # mcp-vmware
 
+[![CI](https://github.com/Hokonoken/mcp-vmware/actions/workflows/ci.yml/badge.svg)](https://github.com/Hokonoken/mcp-vmware/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](pyproject.toml)
+[![MCP](https://img.shields.io/badge/protocol-MCP-8A2BE2)](https://modelcontextprotocol.io)
+
 Serveur MCP pour piloter un vCenter VMware (vSphere 7/8) depuis Claude Code ou tout
 client MCP, avec **deux modes de deploiement** selon votre topologie reseau :
 

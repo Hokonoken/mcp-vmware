@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    name: Lint, types, tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: "3.12"
+
+      - name: Install
+        run: pip install -e ".[dev]"
+
+      - name: Ruff (lint + format)
+        run: |
+          ruff check src tools tests
+          ruff format --check src tools tests
+
+      - name: Mypy
+        run: mypy src
+
+      - name: Pytest (pyvmomi mocke, aucun vCenter requis)
+        run: pytest -q
+
+  container:
+    name: Build image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Docker build
+        run: docker build -t mcp-vmware -f Containerfile .
+
+      - name: Smoke test stdio (initialize + tools/list)
+        run: |
+          python3 - << 'EOF'
+          import json, subprocess
+          proc = subprocess.Popen(
+              ["docker", "run", "-i", "--rm",
+               "-e", "VC_HOST=vcenter.example.com", "-e", "VC_USER=x", "-e", "VC_PASS=x",
+               "-e", "MCP_VMWARE_ROLE=infra_admin", "mcp-vmware"],
+              stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True)
+          def send(m): proc.stdin.write(json.dumps(m) + "\n"); proc.stdin.flush()
+          def read(): return json.loads(proc.stdout.readline())
+          send({"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {
+              "protocolVersion": "2024-11-05", "capabilities": {},
+              "clientInfo": {"name": "ci", "version": "0"}}})
+          assert read()["result"]["serverInfo"]["name"] == "vmware_mcp"
+          send({"jsonrpc": "2.0", "method": "notifications/initialized"})
+          send({"jsonrpc": "2.0", "id": 2, "method": "tools/list"})
+          tools = read()["result"]["tools"]
+          assert len(tools) == 39, f"attendu 39 outils, obtenu {len(tools)}"
+          print(f"OK: {len(tools)} outils exposes")
+          proc.stdin.close(); proc.wait(timeout=15)
+          EOF
