@@ -101,6 +101,37 @@ ssh jumphost 'VMware/mcp-vmware/run.sh' <<'EOF'
 EOF
 ```
 
+## Conteneur (Docker / Podman)
+
+Pour executer le serveur la ou le vCenter est joignable, sans installer Python :
+
+```bash
+docker build -t mcp-vmware -f Containerfile .
+docker run -i --rm --env-file .vcenter.env mcp-vmware
+```
+
+Declaration dans `.mcp.json` (le client MCP parle stdio au conteneur) :
+
+```json
+{
+  "mcpServers": {
+    "vmware": {
+      "command": "docker",
+      "args": ["run", "-i", "--rm", "--env-file", "/chemin/.vcenter.env", "mcp-vmware"]
+    }
+  }
+}
+```
+
+Build derriere un proxy d'entreprise (interception TLS comprise) :
+
+```bash
+docker build --network=host \
+  --build-arg http_proxy --build-arg https_proxy --build-arg no_proxy \
+  --build-arg PIP_TRUSTED_HOST="pypi.org files.pythonhosted.org" \
+  -t mcp-vmware -f Containerfile .
+```
+
 ## Developpement
 
 ```bash

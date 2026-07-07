@@ -1,0 +1,14 @@
+.git
+.venv
+.claude
+.mcp.json
+api-map
+docs
+tools
+deploy.sh
+run.sh
+README.md
+LICENSE
+*.md
+__pycache__
+*.egg-info
