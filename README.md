@@ -1,10 +1,14 @@
 # mcp-vmware
 
 Serveur MCP pour piloter un vCenter VMware (vSphere 7/8) depuis Claude Code ou tout
-client MCP, concu pour le cas frequent en entreprise ou le poste de travail n'a
-**pas d'acces direct au vCenter** : le serveur tourne sur une machine rebond
-(jump host) et le client s'y connecte en stdio a travers SSH. Aucun credential ne
-quitte la machine rebond.
+client MCP, avec **deux modes de deploiement** selon votre topologie reseau :
+
+- **Direct** : la machine qui execute le client MCP a une route vers le vCenter
+  (homelab, poste d'admin). Demarrage en 2 minutes via Docker ou pip.
+- **Jump host** : le poste de travail n'a pas d'acces au reseau de management
+  (cas frequent en entreprise). Le serveur tourne sur une machine rebond et le
+  client s'y connecte en stdio a travers SSH — les credentials vCenter ne
+  quittent jamais la zone securisee.
 
 Points cles :
 
@@ -14,11 +18,53 @@ Points cles :
   sans SSH vers les hotes).
 - **4 roles a groupes de droits** (viewer/operator/vm_admin/infra_admin) : les
   outils hors role ne sont meme pas exposes au LLM.
+- **Ergonomie LLM** : listings en markdown compact ou JSON structure
+  (structuredContent), pagination uniforme, progression en temps reel des
+  operations longues.
 - **Carte d'API versionnee au build vCenter** : la surface complete de l'API
   (1409 methodes SOAP, 1064 operations REST) est cartographiee et versionnee, la
   matrice de couverture pilote l'evolution du serveur.
 
-## Architecture
+## Demarrage rapide (acces direct au vCenter)
+
+```bash
+cp .vcenter.env.example .vcenter.env && chmod 600 .vcenter.env && vi .vcenter.env
+
+# Docker / Podman (rien d'autre a installer) :
+docker build -t mcp-vmware -f Containerfile .
+docker run -i --rm --env-file .vcenter.env mcp-vmware
+
+# ou en Python (>= 3.12) :
+pip install . && MCP_VMWARE_ENV_FILE=./.vcenter.env python -m mcp_vmware
+```
+
+Declaration dans `.mcp.json` (le client MCP parle stdio au conteneur) :
+
+```json
+{
+  "mcpServers": {
+    "vmware": {
+      "command": "docker",
+      "args": ["run", "-i", "--rm", "--env-file", "/chemin/.vcenter.env", "mcp-vmware"]
+    }
+  }
+}
+```
+
+Build derriere un proxy d'entreprise (interception TLS comprise) :
+
+```bash
+docker build --network=host \
+  --build-arg http_proxy --build-arg https_proxy --build-arg no_proxy \
+  --build-arg PIP_TRUSTED_HOST="pypi.org files.pythonhosted.org" \
+  -t mcp-vmware -f Containerfile .
+```
+
+## Mode jump host (reseaux d'entreprise cloisonnes)
+
+Quand le vCenter vit dans un reseau de management inaccessible depuis les postes
+de travail, le serveur s'installe sur la machine rebond officielle. MCP parle
+stdio a travers SSH nativement : pas de tunnel, pas de port expose.
 
 ```
 Poste de travail (Claude Code / client MCP)
@@ -30,26 +76,32 @@ jumphost (Linux, venv Python 3.12)
 vcenter.example.com (vSphere 8)
 ```
 
-- Le code vit dans ce repo (poste de travail) et est deploye sur la machine rebond
-  par `./deploy.sh` (rsync + `pip install -e` dans `~/VMware/venv`).
-- Les identifiants vCenter restent sur la machine rebond, dans `~/VMware/.vcenter.env`
-  (chmod 600, modele dans `.vcenter.env.example`), jamais dans le repo.
-
-## Installation
+Avantages : cloisonnement reseau respecte, credentials confines a la machine
+rebond (`~/VMware/.vcenter.env`, chmod 600, jamais dans le repo ni sur le poste),
+point d'audit unique.
 
 ```bash
-# 1. Machine rebond : venv + dependances (une fois)
+# 1. Machine rebond : venv (une fois)
 ssh jumphost 'mkdir -p ~/VMware && python3.12 -m venv ~/VMware/venv'
 
-# 2. Identifiants sur la machine rebond (jamais dans le repo)
+# 2. Identifiants sur la machine rebond
 scp .vcenter.env.example jumphost:VMware/.vcenter.env
 ssh jumphost 'chmod 600 ~/VMware/.vcenter.env && vi ~/VMware/.vcenter.env'
 
-# 3. Deployer le serveur
+# 3. Deployer le serveur (rsync + pip install -e)
 ./deploy.sh
 
-# 4. Adapter .mcp.json (nom d'hote SSH) — Claude Code detecte le fichier
-#    a la racine du repo et se connecte tout seul.
+# 4. Adapter .mcp.json :
+#    {"mcpServers": {"vmware": {"command": "ssh",
+#                               "args": ["jumphost", "VMware/mcp-vmware/run.sh"]}}}
+```
+
+Verification rapide hors client MCP :
+
+```bash
+ssh jumphost 'VMware/mcp-vmware/run.sh' <<'EOF'
+{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"test","version":"0"}}}
+EOF
 ```
 
 ## Roles et groupes de droits
@@ -78,59 +130,13 @@ par compte (`MCP_VMWARE_ENV_FILE`).
 L'evolution du serveur est pilotee par une cartographie complete de l'API,
 versionnee au build du vCenter :
 
-- `tools/build_api_map.py` (execute sur la machine rebond) genere
+- `tools/build_api_map.py` (execute la ou le vCenter est joignable) genere
   `api-map/<version>-<build>/` : surface SOAP vim25 complete (introspection pyvmomi)
   et surface REST vAPI (metamodel du vCenter live).
 - `api-map/coverage.yaml` relie chaque zone d'API a un outil MCP avec un statut
   (todo / in_progress / done / wontdo) et porte le backlog v2.
 - A chaque upgrade du vCenter : relancer le script, committer le nouveau snapshot,
   le diff git montre l'evolution de l'API.
-
-## Utilisation
-
-```bash
-./deploy.sh                      # deployer sur la machine rebond
-# Claude Code detecte .mcp.json a la racine du repo et se connecte tout seul.
-```
-
-Verification rapide hors Claude Code :
-
-```bash
-ssh jumphost 'VMware/mcp-vmware/run.sh' <<'EOF'
-{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"test","version":"0"}}}
-EOF
-```
-
-## Conteneur (Docker / Podman)
-
-Pour executer le serveur la ou le vCenter est joignable, sans installer Python :
-
-```bash
-docker build -t mcp-vmware -f Containerfile .
-docker run -i --rm --env-file .vcenter.env mcp-vmware
-```
-
-Declaration dans `.mcp.json` (le client MCP parle stdio au conteneur) :
-
-```json
-{
-  "mcpServers": {
-    "vmware": {
-      "command": "docker",
-      "args": ["run", "-i", "--rm", "--env-file", "/chemin/.vcenter.env", "mcp-vmware"]
-    }
-  }
-}
-```
-
-Build derriere un proxy d'entreprise (interception TLS comprise) :
-
-```bash
-docker build --network=host \
-  --build-arg http_proxy --build-arg https_proxy --build-arg no_proxy \
-  --build-arg PIP_TRUSTED_HOST="pypi.org files.pythonhosted.org" \
-  -t mcp-vmware -f Containerfile .
-```
 
 ## Developpement
 
@@ -142,7 +148,7 @@ docker build --network=host \
 
 Ajout d'un outil : implementer dans le module `tools_*.py` adequat avec le
 decorateur `tool(name, title, group=...)` (les outils write appellent `_gate()` en
-tete), mettre a jour `api-map/coverage.yaml` dans le meme commit, `./deploy.sh`,
+tete), mettre a jour `api-map/coverage.yaml` dans le meme commit, deployer,
 smoke test.
 
 ## Avertissement
