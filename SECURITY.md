@@ -1,28 +1,28 @@
-# Politique de securite
+# Security Policy
 
-## Versions supportees
+## Supported versions
 
-| Version | Supportee |
+| Version | Supported |
 |---|---|
-| 0.1.x | Oui |
+| 0.1.x | Yes |
 
-## Signaler une vulnerabilite
+## Reporting a vulnerability
 
-Ce serveur donne a un LLM la capacite d'agir sur une infrastructure de
-virtualisation : les questions de securite sont prises au serieux.
+This server gives an LLM the ability to act on virtualization infrastructure:
+security reports are taken seriously.
 
-- **Ne pas ouvrir d'issue publique** pour une vulnerabilite.
-- Utiliser les [GitHub Security Advisories](../../security/advisories/new)
-  (signalement prive).
-- Decrire l'impact, les etapes de reproduction et la version concernee.
+- **Do not open a public issue** for a vulnerability.
+- Use [GitHub Security Advisories](../../security/advisories/new) (private
+  reporting).
+- Describe the impact, reproduction steps and the affected version.
 
-Reponse initiale sous 7 jours.
+Initial response within 7 days.
 
-## Perimetre
+## Scope
 
-Sont notamment considerees comme vulnerabilites :
+The following are considered vulnerabilities, among others:
 
-- Contournement du systeme de roles (execution d'un outil hors role).
-- Contournement des confirmations destructives (`confirm=true`).
-- Fuite d'identifiants vCenter via les sorties d'outils ou les logs.
-- Injection dans les parametres transmis a l'API vCenter.
+- Bypassing the role system (executing a tool outside the active role).
+- Bypassing destructive confirmations (`confirm=true`).
+- Leaking vCenter credentials through tool output or logs.
+- Injection through parameters passed to the vCenter API.

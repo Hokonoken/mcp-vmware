@@ -1,34 +1,35 @@
 # Changelog
 
-Le format suit [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) et le
-versionnage [SemVer](https://semver.org/lang/fr/).
+The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and
+[SemVer](https://semver.org/).
 
 ## [0.1.0] - 2026-07-07
 
-Premiere version publique.
+First public release.
 
-### Ajoute
+### Added
 
-- Serveur MCP stdio pour vCenter (vSphere 7/8) via pyvmomi, 39 outils :
-  - VMs : inventaire, detail, power, snapshots, reconfiguration CPU/RAM,
-    clone, suppression, migration vMotion.
-  - Clusters : config HA/DRS, recommandations DRS, regles d'affinite
-    (lecture et ecriture).
-  - Hotes ESXi : detail, maintenance, reboot/arret, connexion, et equivalent
-    esxcli via l'API officielle (services, reseau, stockage, firewall,
-    parametres avances, VIBs, capteurs sante).
-- 4 roles a groupes de droits (`MCP_VMWARE_ROLE`) : viewer (20 outils),
-  operator (24), vm_admin (28), infra_admin (39). Les outils hors role ne sont
-  pas exposes au LLM ; templates de privileges vCenter dans `docs/roles.md`.
-- Confirmations destructives (`confirm=true`) sur delete VM, maintenance et
-  reboot/arret d'hote ; reboot refuse hors maintenance sauf `force=true`.
-- Deux modes de deploiement : direct (Docker/pip) et jump host (stdio via SSH).
-- Ergonomie LLM : `response_format` markdown/json, structuredContent +
-  outputSchema, pagination uniforme, progression temps reel des operations
-  longues (`ctx.report_progress`).
-- Carte d'API versionnee au build vCenter (`api-map/`) et matrice de
-  couverture (`coverage.yaml`).
-- Suite pytest locale (56 tests, pyvmomi mocke, aucun vCenter requis) et CI
-  GitHub Actions (ruff, mypy, pytest, build + smoke test de l'image).
+- Stdio MCP server for vCenter (vSphere 7/8) via pyvmomi, 39 tools:
+  - VMs: inventory, detail, power, snapshots, CPU/RAM reconfiguration, clone,
+    delete, vMotion migration.
+  - Clusters: HA/DRS config, DRS recommendations, affinity rules (read and
+    write).
+  - ESXi hosts: detail, maintenance, reboot/shutdown, connection, and esxcli
+    equivalent through the official API (services, network, storage, firewall,
+    advanced settings, VIBs, health sensors).
+- 4 roles with permission groups (`MCP_VMWARE_ROLE`): viewer (20 tools),
+  operator (24), vm_admin (28), infra_admin (39). Tools outside the active role
+  are not exposed to the LLM; vCenter privilege templates in `docs/roles.md`.
+- Destructive confirmations (`confirm=true`) on VM delete, host maintenance and
+  host reboot/shutdown; host reboot refused outside maintenance unless
+  `force=true`.
+- Two deployment modes: direct (Docker/pip) and SSH jump host (stdio over SSH).
+- LLM ergonomics: `response_format` markdown/json, structuredContent +
+  outputSchema, uniform pagination, real-time progress for long operations
+  (`ctx.report_progress`).
+- API map versioned to the vCenter build (`api-map/`) and coverage matrix
+  (`coverage.yaml`).
+- Local pytest suite (56 tests, mocked pyvmomi, no vCenter required) and GitHub
+  Actions CI (ruff, mypy, pytest, image build + smoke test).
 
 [0.1.0]: https://github.com/Hokonoken/mcp-vmware/releases/tag/v0.1.0

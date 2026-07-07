@@ -1,83 +1,84 @@
-# Roles d'acces du serveur MCP et templates vCenter
+# MCP server access roles and vCenter templates
 
-## Principe : deux couches de droits
+## Principle: two layers of permissions
 
-1. **Cote MCP** — `MCP_VMWARE_ROLE` dans `~/VMware/.vcenter.env` sur la machine rebond.
-   Les outils hors role ne sont pas exposes au LLM (absents de tools/list).
-2. **Cote vCenter** — le compte de service utilise dans `.vcenter.env` doit porter un
-   role vSphere *aligne sur le meme plafond*. C'est la vraie barriere de securite :
-   meme si la couche MCP etait contournee, le vCenter refuserait.
+1. **MCP side** — `MCP_VMWARE_ROLE` in the env file (`.vcenter.env`). Tools
+   outside the active role are not exposed to the LLM (absent from tools/list).
+2. **vCenter side** — the service account used in `.vcenter.env` must carry a
+   vSphere role *aligned with the same ceiling*. This is the real security
+   boundary: even if the MCP layer were bypassed, vCenter would refuse.
 
-Regle : **un compte de service par role**, jamais un compte Administrator derriere un
-role MCP `viewer`.
+Rule: **one service account per role**, never an Administrator account behind a
+`viewer` MCP role.
 
-## Les 4 roles MCP
+## The 4 MCP roles
 
-| Role MCP | Groupes | Outils exposes |
+| MCP role | Groups | Exposed tools |
 |---|---|---|
-| `viewer` (defaut) | read | 20 outils de lecture (inventaire + config hotes) |
+| `viewer` (default) | read | 20 read-only tools (inventory + host config) |
 | `operator` | + vm.power, vm.snapshot | + power_vm, snapshot_create/revert/delete |
 | `vm_admin` | + vm.config, vm.lifecycle | + reconfigure, clone, delete, migrate |
-| `infra_admin` | + cluster.ops, host.ops, host.config | + HA/DRS/regles, maintenance/reboot/connexion hotes, services/firewall/parametres avances/rescan (equivalent esxcli) |
+| `infra_admin` | + cluster.ops, host.ops, host.config | + HA/DRS/rules, host maintenance/reboot/connection, services/firewall/advanced settings/rescan (esxcli equivalent) |
 
-Compat : `MCP_VMWARE_ALLOW_WRITE=1` sans role defini equivaut a `vm_admin`.
+Compatibility: `MCP_VMWARE_ALLOW_WRITE=1` without a role set is equivalent to
+`vm_admin`.
 
-## Templates de privileges vSphere par role
+## vSphere privilege templates per role
 
-A creer dans vCenter (Administration > Access Control > Roles), puis assigner au compte
-de service sur l'objet racine (ou le datacenter) avec propagation. Verifier les
-libelles exacts dans votre version de vSphere.
+Create them in vCenter (Administration > Access Control > Roles), then assign
+to the service account on the root object (or the datacenter) with propagation.
+Check the exact labels in your vSphere version.
 
-### viewer — utiliser le role integre "Read-Only"
+### viewer — use the built-in "Read-Only" role
 
-Aucun role a creer : assigner **Read-Only** (integre).
+Nothing to create: assign the built-in **Read-Only** role.
 
-### operator — role "MCP-Operator"
+### operator — "MCP-Operator" role
 
-Partir de Read-Only et ajouter :
+Start from Read-Only and add:
 
-- Virtual machine > Interaction : Power on, Power off, Suspend, Reset
-- Virtual machine > Snapshot management : Create snapshot, Revert to snapshot,
+- Virtual machine > Interaction: Power on, Power off, Suspend, Reset
+- Virtual machine > Snapshot management: Create snapshot, Revert to snapshot,
   Remove snapshot, Rename snapshot
 
-(Equivalent proche du sample role integre "Virtual Machine Power User".)
+(Close to the built-in sample role "Virtual Machine Power User".)
 
-### vm_admin — role "MCP-VMAdmin"
+### vm_admin — "MCP-VMAdmin" role
 
-Partir de MCP-Operator et ajouter :
+Start from MCP-Operator and add:
 
-- Virtual machine > Configuration : Change CPU count, Change memory,
+- Virtual machine > Configuration: Change CPU count, Change memory,
   Advanced configuration
-- Virtual machine > Provisioning : Clone virtual machine, Deploy template
-- Virtual machine > Inventory : Create from existing, Remove
-- Virtual machine > Edit inventory : Remove (selon version)
-- Datastore : Allocate space
-- Network : Assign network
-- Resource : Assign virtual machine to resource pool, Migrate powered on virtual
-  machine, Migrate powered off virtual machine
+- Virtual machine > Provisioning: Clone virtual machine, Deploy template
+- Virtual machine > Inventory: Create from existing, Remove
+- Datastore: Allocate space
+- Network: Assign network
+- Resource: Assign virtual machine to resource pool, Migrate powered on
+  virtual machine, Migrate powered off virtual machine
 
-### infra_admin — role "MCP-InfraAdmin"
+### infra_admin — "MCP-InfraAdmin" role
 
-Partir de MCP-VMAdmin et ajouter :
+Start from MCP-VMAdmin and add:
 
-- Host > Configuration : Maintenance, Network configuration, Storage partition
-  configuration, Advanced settings, Security profile and firewall, Change settings
-- Host > Inventory : Add host to cluster, Remove host, Modify cluster
-- Global : Diagnostics (lecture des taches/evenements etendue)
-- Resource : toutes les entrees restantes (recommendations DRS)
+- Host > Configuration: Maintenance, Network configuration, Storage partition
+  configuration, Advanced settings, Security profile and firewall,
+  Change settings
+- Host > Inventory: Add host to cluster, Remove host, Modify cluster
+- Global: Diagnostics
+- Resource: all remaining entries (DRS recommendations)
 
-Pour reboot/shutdown d'hote : Host > Configuration > Power (sinon laisser hors du
-role vCenter pour l'interdire physiquement meme en role MCP infra_admin).
+For host reboot/shutdown: Host > Configuration > Power (or leave it out of the
+vCenter role to physically forbid it even under the infra_admin MCP role).
 
-## Mise en place type
+## Typical setup
 
 ```bash
-# Sur la machine rebond, un fichier env par compte/role si besoin :
-#   ~/VMware/.vcenter.env            (viewer par defaut, compte read-only)
-#   ~/VMware/.vcenter-admin.env      (infra_admin, compte MCP-InfraAdmin)
-# Le serveur lit MCP_VMWARE_ENV_FILE pour choisir le fichier :
+# On the machine running the server, one env file per account/role if needed:
+#   ~/VMware/.vcenter.env            (default viewer, read-only account)
+#   ~/VMware/.vcenter-admin.env      (infra_admin, MCP-InfraAdmin account)
+# The server reads MCP_VMWARE_ENV_FILE to pick the file:
 ssh jumphost 'MCP_VMWARE_ENV_FILE=~/VMware/.vcenter-admin.env VMware/mcp-vmware/run.sh'
 ```
 
-Dans `.mcp.json`, declarer un serveur MCP par role si l'on veut les deux en parallele
-(ex. `vmware` en viewer et `vmware-admin` en infra_admin).
+In `.mcp.json`, declare one MCP server per role if both are needed in parallel
+(e.g. `vmware` as viewer and `vmware-admin` as infra_admin).

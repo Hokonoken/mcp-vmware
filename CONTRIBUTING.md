@@ -1,21 +1,21 @@
-# Contribuer
+# Contributing
 
-Merci de votre interet pour mcp-vmware.
+Thanks for your interest in mcp-vmware.
 
-## Prerequis
+## Prerequisites
 
 - Python 3.12+
-- Un vCenter de test est un plus mais n'est **pas requis** : la suite de tests
-  mocke pyvmomi entierement.
+- A test vCenter is a plus but is **not required**: the test suite fully mocks
+  pyvmomi.
 
-## Mise en place
+## Setup
 
 ```bash
 python3.12 -m venv .venv
 ./.venv/bin/pip install -e ".[dev]"
 ```
 
-## Avant d'ouvrir une PR
+## Before opening a PR
 
 ```bash
 ./.venv/bin/ruff check src tools tests
@@ -24,22 +24,22 @@ python3.12 -m venv .venv
 ./.venv/bin/pytest
 ```
 
-La CI rejoue exactement ces verifications, plus le build de l'image et un smoke
-test stdio du serveur conteneurise.
+CI replays exactly these checks, plus the container image build and a stdio
+smoke test of the containerized server.
 
-## Regles du projet
+## Project rules
 
-- **Tout nouvel outil MCP** passe par le decorateur `tool(name, title, group=...)`
-  de `app.py` (jamais `mcp.tool` direct) : c'est lui qui applique les roles.
-- Les outils d'ecriture appellent `_gate("<groupe>")` en tete de fonction et les
-  operations destructrices exigent `confirm=true`.
-- Les listings supportent `response_format` (markdown/json) et la pagination
-  uniforme via `paginate()` + `render_listing()`.
-- Mettre a jour `api-map/coverage.yaml` dans le meme commit que l'outil.
-- Pas d'emojis dans le code ni les sorties. Messages d'erreur actionnables.
-- Aucun secret dans le repo : les identifiants vivent dans un fichier env hors
-  depot (`.vcenter.env`, chmod 600).
+- **Every new MCP tool** goes through the `tool(name, title, group=...)`
+  decorator from `app.py` (never `mcp.tool` directly): it enforces the roles.
+- Write tools call `_gate("<group>")` at the top of the function, and
+  destructive operations require `confirm=true`.
+- Listings support `response_format` (markdown/json) and uniform pagination via
+  `paginate()` + `render_listing()`.
+- Update `api-map/coverage.yaml` in the same commit as the tool.
+- No emojis in code or output. Actionable error messages.
+- No secrets in the repo: credentials live in an env file outside the tree
+  (`.vcenter.env`, chmod 600).
 
-## Signaler un bug de securite
+## Reporting a security issue
 
-Ne pas ouvrir d'issue publique : voir [SECURITY.md](SECURITY.md).
+Do not open a public issue: see [SECURITY.md](SECURITY.md).
